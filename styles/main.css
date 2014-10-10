@@ -12,6 +12,9 @@ body {
   color: #1b1b1b;
 }
 
+ul {
+  list-style-position: inside;
+}
 
 /** Header **/
 
@@ -125,14 +128,16 @@ header,
   border-left: 10px solid #558abb;
 }
 
-.content-container pre {
+.content-container pre:not(.structure-preview),
+.example-container {
   margin: 30px -100%;
   padding: 20px 0;
 
   background-color: #f5f5f5;
 }
 
-.content-container pre code {
+.content-container pre:not(.structure-preview) code,
+.example-wrapper {
   display: block;
 
   width: 80%;
@@ -143,11 +148,13 @@ header,
 }
 
 @media screen and (max-width: 1200px) {
-  .content-container pre {
+  .content-container pre:not(.structure-preview),
+  .example-container {
     margin: 30px 10px;
   }
 
-  .content-container pre code {
+  .content-container pre:not(.structure-preview) code,
+  .example-wrapper {
     display: block;
     width: 95%;
     margin: 0 auto;
@@ -163,6 +170,36 @@ header,
 }
 
 /** // Content **/
+
+
+
+/** Components */
+
+.example-wrapper {
+  max-height: 500px;
+  min-height: 400px;
+  position: relative;
+}
+
+
+.structure-preview {
+  width: 50%;
+  max-width: 450px;
+  min-width: 200px;
+  overflow: auto;
+  float: right;
+
+  max-height: 100%;
+  overflow: auto;
+  position: absolute;
+  top: 0;
+  right: 0;
+  border: 0;
+
+  border-left: 5px solid #558abb;
+  padding-left: 10px;
+}
+
 
 
 /* Helpers */

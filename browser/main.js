@@ -9,8 +9,9 @@ var React = require('react');
 var RRouter = require('rrouter'),
     Routes  = RRouter.Routes,
     Route   = RRouter.Route,
-    Link = RRouter.Link;
+    Link    = RRouter.Link;
 
+var logo = fs.readFileSync(__dirname + '/../assets/logo.svg', 'utf-8');
 
 marked.setOptions({
   highlight: function (code) {
@@ -28,9 +29,36 @@ var structure = immstruct({
   ]
 });
 
+
+var Navigation = component(function () {
+  return React.DOM.ul({},
+              React.DOM.li({}, Link({ to: "/main"  }, "Home")),
+              React.DOM.li({}, Link({ to: "/examples" }, "Examples")));
+});
+
+var Header = component(function (cursor) {
+  return React.DOM.div({ className: 'header-container' },
+    React.DOM.header(null,
+      React.DOM.h1({ className: 'cf' },
+
+        Link({ to: '/main', dangerouslySetInnerHTML: {
+            __html: logo.toString()
+          }
+        })
+      ),
+
+      React.DOM.nav({ className: 'navigation' },
+        Navigation(null)
+      )
+    )
+  );
+});
+
 var StructureView = component(function (cursor) {
   if (!cursor) {
-    return React.DOM.p(null, 'No state');
+    return React.DOM.pre({ className: 'structure-preview' },
+      React.DOM.code(null, 'No state')
+    );
   }
 
   var data = JSON.stringify(cursor.toJSON(), null, 2);
@@ -40,17 +68,10 @@ var StructureView = component(function (cursor) {
     React.DOM.code({
       className: 'lang-json',
       dangerouslySetInnerHTML: {
-        __html: highlight.highlightAuto(JSON.stringify(cursor.toJSON())).value
+        __html: highlight.highlightAuto(JSON.stringify(cursor.toJSON(), null, 2)).value
       }
     })
   );
-});
-
-
-var Navigation = component(function () {
-  return React.DOM.ul({},
-              React.DOM.li({}, Link({ to: "/main"  }, "Home")),
-              React.DOM.li({}, Link({ to: "/examples" }, "Examples")));
 });
 
 var Example = function (example) {
@@ -58,8 +79,13 @@ var Example = function (example) {
   var cursor = structure ? structure.cursor() : null;
   if (structure) structure.once('swap', rerender);
   return React.DOM.div({ key: example.get('name') },
-    example.get('component')(structure),
-    StructureView(cursor)
+    React.DOM.h2({}, example.get('name')),
+    React.DOM.div({ className: 'example-container' },
+      React.DOM.div({ className: 'example-wrapper cf' },
+        StructureView(cursor),
+        example.get('component')(structure)
+      )
+    )
   );
 };
 
@@ -67,8 +93,11 @@ var ExampleList = component(function (routeProps) {
   var examples = routeProps.data.cursor('examples').toArray().map(Example);
 
   return React.DOM.div({},
-    Navigation(),
-    examples
+    Header(),
+
+    React.DOM.div({ className: 'content-container' },
+      examples
+    )
   );
 });
 
@@ -76,12 +105,14 @@ var Index = component(function (routeProps) {
   var cursor = routeProps.data.cursor();
 
   return React.DOM.div({},
-    Navigation(),
-    React.DOM.div({
-      dangerouslySetInnerHTML: {
-        __html:marked(cursor.get('index'))
-      }
-    })
+    Header(),
+    React.DOM.div({ className: 'content-container' },
+      React.DOM.div({
+        dangerouslySetInnerHTML: {
+          __html:marked(cursor.get('index'))
+        }
+      })
+    )
   );
 });
 
@@ -90,7 +121,7 @@ var routes = Routes({},
   Route({ name: 'examples', path: '/examples', view: ExampleList, data: structure })
 );
 
-var container = document.querySelector('.content-container');
+var container = document.querySelector('.page-container');
 var routing = RRouter.start(routes, function (view) {
   React.renderComponent(view, container);
 });

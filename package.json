@@ -20,7 +20,10 @@
   "homepage": "https://github.com/omniscientjs/omniscientjs.github.io",
   "dependencies": {
     "highlight.js": "^8.3.0",
-    "marked": "^0.3.2"
+    "immstruct": "^0.7.0",
+    "marked": "^0.3.2",
+    "omniscient": "^0.1.0",
+    "react": "^0.11.2"
   },
   "browserify": {
     "transform": [

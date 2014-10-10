@@ -23,7 +23,8 @@
     "immstruct": "^0.7.0",
     "marked": "^0.3.2",
     "omniscient": "^0.1.0",
-    "react": "^0.11.2"
+    "react": "^0.11.2",
+    "rrouter": "^0.4.2"
   },
   "browserify": {
     "transform": [

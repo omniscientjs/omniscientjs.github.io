@@ -3,13 +3,15 @@ var component = require('omniscient');
 var highlight = require('highlight.js');
 var immstruct = require('immstruct');
 
+var githubBaseUrl = require('./urls').examplesUrl;
+
+
 var rerender = function () {
   var globalStructure = immstruct('global');
   globalStructure.forceHasSwapped();
 };
 
 var Header = require('./headerView');
-
 
 var StructureView = component(function (cursor) {
   if (!cursor) {
@@ -30,14 +32,21 @@ var StructureView = component(function (cursor) {
   );
 });
 
-
 var Example = function (example) {
   var structure = example.get('structure');
   var cursor = structure ? structure.cursor() : null;
   if (structure) structure.once('swap', rerender);
 
+  var link = githubBaseUrl + example.get('name');
+
   return React.DOM.div({ key: example.get('name') },
-    React.DOM.h2({}, example.get('name')),
+    React.DOM.h2({},
+      React.DOM.text(null, example.get('name')),
+      React.DOM.a({
+        className: 'link-example',
+        href: link
+      }, 'Go to source')
+    ),
     React.DOM.div({ className: 'example-container' },
       React.DOM.div({ className: 'example-wrapper cf' },
         StructureView(cursor),

@@ -181,6 +181,19 @@ header,
   position: relative;
 }
 
+.link-example {
+  float: right;
+  font-size: 0.5em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #555;
+  text-shadow: 0 -1px 0 #222;
+  font-weight: bold;
+  transition: all ease-in-out 300ms;
+}
+.link-example:hover {
+  color: #222;
+}
 
 .structure-preview {
   width: 50%;

@@ -7,7 +7,7 @@ var data = JSON.parse(require('fs').readFileSync(__dirname + '/../sourceData.jso
 var structure = immstruct('reactions', data);
 
 var PhotoBooth = require('./components/photobooth');
-var setPropsMixin = require('immstruct/mixins/setProps');
+var setPropsMixin = require('omniscient-mixins/mixins/swapProps');
 
 var members = {
   handleSubmit: function (e) {
@@ -27,15 +27,12 @@ var ReactionBox = component(mixins, function (cursor) {
   var events = new EventEmitter();
   events.on('close', this.handleClose);
 
-  var statics = {
-    shared: { isInAddMode: cursor.get('isInAddMode') },
-    events: events
-  };
+  var sharedState = { isInAddMode: cursor.get('isInAddMode') };
 
   return (
     React.DOM.div({ className: 'container' },
       React.DOM.h1(null, 'Reactions'),
-      PhotoBooth(cursor.get('pb'), statics),
+      PhotoBooth([cursor.get('pb'), sharedState], { events: events }),
       React.DOM.button({ onClick: this.handleSubmit, className: 'btn-start ' + hiddenClass }, 'Try Your Reaction')
     )
   );
@@ -48,4 +45,4 @@ function render () {
 }
 
 render();
-structure.on('render', render);
+structure.on('swap', render);

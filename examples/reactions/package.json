@@ -18,9 +18,10 @@
   },
   "dependencies": {
     "gifshot": "git://github.com/yahoo/gifshot",
-    "immstruct": "^0.6.0",
+    "immstruct": "^0.8.1",
     "inherits": "^2.0.1",
-    "omniescent": "0.0.6",
+    "omniscient": "^1.0.1",
+    "omniscient-mixins": "^1.0.1",
     "promise": "^6.0.0",
     "react": "^0.11.2"
   },

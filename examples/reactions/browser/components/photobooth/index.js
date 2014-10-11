@@ -1,6 +1,6 @@
 var React = require('react');
 var component = require('omniscient');
-var setPropsMixin = require('immstruct/mixins/setProps');
+var setPropsMixin = require('omniscient-mixins/mixins/swapProps');
 
 
 var ImageComponent = require('./image');
@@ -71,8 +71,8 @@ var members = {
 };
 
 var mixins = [members, setPropsMixin];
-module.exports = component(mixins, function (cursor, statics) {
-  var hiddenClass = statics.shared.isInAddMode ? '' : 'hidden';
+module.exports = component(mixins, function (cursor, shared, statics) {
+  var hiddenClass = shared.isInAddMode ? '' : 'hidden';
 
   return (
     React.DOM.div({ className: 'photobooth'},

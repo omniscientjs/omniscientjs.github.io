@@ -7,7 +7,7 @@ This function creates a wrapped React.js component to which you should pass a cu
 
 Passing a cursor of the immutable data structure allows the components to change their own piece of the immutable structure from within each component, that in turn replaces the whole of the immutable structure, and causes a re render.
 
-Using immutable data structures with React in this way actually allows for super fast re renders of the whole of your component tree, as references checks in `shouldComponentUpdate` will suffice for knowing if the compoents' data have changed. In this way, only component subtrees holding changed data will *actually* re render.
+Using immutable data structures with React in this way actually allows for super fast re renders of the whole of your component tree, as references checks in `shouldComponentUpdate` will suffice for knowing if the components' data have changed. In this way, only component subtrees holding changed data will *actually* re render.
 
 ## Installing
 

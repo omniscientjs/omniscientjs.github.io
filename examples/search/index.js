@@ -69,7 +69,7 @@ var structure = immstruct({
 // structure.on('swap', render);
 
 module.exports = {
-  name: 'Search',
+  name: 'search',
   component: function (structure) {
     return Search(structure.cursor());
   },

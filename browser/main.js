@@ -29,9 +29,9 @@ var structure = immstruct('global', {
   ]
 });
 
-var Index = require('./indexView');
-var Documentation = require('./documentationView');
-var ExampleList = require('./examplesView');
+var Index = require('./views/index');
+var Documentation = require('./views/documentation');
+var ExampleList = require('./views/examples');
 
 var routes = Routes({},
   Route({ name: 'main', path: '/', view: Index, data: structure }),

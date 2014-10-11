@@ -3,15 +3,14 @@ var component = require('omniscient');
 var highlight = require('highlight.js');
 var immstruct = require('immstruct');
 
-var githubBaseUrl = require('./urls').examplesUrl;
-
+var githubBaseUrl = require('../urls').examplesUrl;
 
 var rerender = function () {
   var globalStructure = immstruct('global');
   globalStructure.forceHasSwapped();
 };
 
-var Header = require('./headerView');
+var Header = require('./header');
 
 var StructureView = component(function (cursor) {
   if (!cursor) {

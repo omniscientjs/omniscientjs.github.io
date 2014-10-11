@@ -1,11 +1,91 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+var http = require('http');
+
+module.exports = function (doc, cursor) {
+  var url = '/documents/' + doc + '.md';
+  return http.get({ path : url }, function (response) {
+    if (response.statusCode !== 200) {
+      return cursor.set(doc, '## Could not find the document "' + doc + '"');
+    }
+
+    response.on('data', function (buf) {
+      var orig = cursor.get(doc);
+      orig = orig || '';
+      cursor.set(doc, orig + buf);
+    });
+  });
+};
+
+},{"http":61}],2:[function(require,module,exports){
+
+
+var immstruct = require('immstruct');
+var React = require('react');
+
+var highlight = require('highlight.js');
+var marked = require('marked');
+
+marked.setOptions({
+  highlight: function (code) {
+    return highlight.highlightAuto(code).value;
+  }
+});
+
+var RRouter = require('rrouter'),
+    Routes  = RRouter.Routes,
+    Route   = RRouter.Route;
+
+var structure = immstruct('global', {
+  index: "Omniscient.js\n=========\n\n<img src=\"https://raw.githubusercontent.com/torgeir/omniscient/master/omniscient_logo.png\" align=\"right\" width=\"150px\">\n> A library providing an abstraction for React components that allows for top-down rendering of immutable data. Using cursors into immutable datastructures the nested components does not need knowledge of the entire immutable data structure, but are still capable of swapping out their own piece of data to trigger a re render of affected components.\n\n> Omniscient pairs the simplicity of [Quiescent](https://github.com/levand/quiescent) with\nthe cursors of [Om](https://github.com/swannodette/om), for js, using\n[Immutable.js](https://github.com/facebook/immutable-js).\n\n```js\nvar React     = require('react'),\n    immstruct = require('immstruct'),\n    component = require('omniscient');\n\nvar NameInput = component(function (cursor) {\n  var onChange = function (e) {\n    cursor.update('name', function (name) {\n      return e.currentTarget.value;\n    });\n  };\n  return React.DOM.input({ value: cursor.get('name'), onChange: onChange });\n});\n\nvar Welcome = component(function (cursor) {\n  var guest = cursor.get('guest');\n  var name = guest.get('name') ? \", \" + guest.get('name') : \"\";\n  return React.DOM.p({}, cursor.get('greeting'), name, \"!\",\n                         NameInput(guest));\n});\n\nvar structure = immstruct({ greeting: 'Welcome', guest: { name: '' } });\n\nfunction render () {\n  React.renderComponent(\n    Welcome(structure.cursor()),\n    document.querySelector('.app'));\n}\n\nrender();\nstructure.on('swap', render);\n```\n\n[`immstruct`](https://github.com/mikaelbr/immstruct) is a simple wrapper for [`Immutable.js`](https://github.com/facebook/immutable-js) that ease handling re-render when an immutable data structure is replaced through the use of cursors. `immstruct` is not a requirement for Omniscient, but makes a great fit.\n\n### Reuseable mixins\n\nOmniscient is fully compatible with exising react components, and encourages reuse of your existing mixins.\n\n```js\nvar SelectOnRender = {\n  componentDidMount: function () {\n    this.getDOMNode().select();\n  }\n};\n\nvar FocusingInput = component(SelectOnRender, function (cursor) {\n  return React.DOM.input({ value: cursor.get('text') });\n});\n```\n\nYou can also share other commonly used functions through mixins.\n\n```js\nvar Props = {\n  swapProps: function (props) {\n    this.props.cursor.update(function (state) {\n      return state.mergeDeep(props);\n    };\n  }\n};\n\nvar SaveOnEdit = {\n  onEdit: function (e) {\n    this.swapProps({ text: e.currentTarget.value });\n  }\n};\n\nvar SavingFocusingInput = component([Props, SaveOnEdit, SelectOnRender], function (cursor) {\n  return React.DOM.input({ value: cursor.get('text'), onChange: onEdit });\n});\n```\n\n### Statics\n\nWhen you need to provide other data for your component than what its rendering is based off of, you pass statics. By default, changing a static's value does not result in a re-rendering of a component.\n\nStatics can be passed as second argument to your component.\n\n```js\nvar FocusingInput = component(SelectOnRender, function (cursor, statics) {\n  var onChange = statics.onChange || function () {};\n  return React.DOM.input({ value: cursor.get('text'), onChange: onChange });\n});\n\nvar SomeForm = component(function (cursor) {\n  return React.DOM.form({}, FocusingInput(cursor, { onChange: console.log.bind(console) }));\n});\n```\n\n#### Talking back from child to parent\n\nCommunicating information back to the parent component from a child component can be done by making an event emitter available as a static for your child component.\n\n```js\nvar Item = component(function (cursor, statics) {\n  var onClick = function () {\n    statics.events.emit('data', cursor);\n  };\n  return React.DOM.li({ onClick: onClick }, React.DOM.text({}, cursor.get('text')));\n});\n\nvar events = new EventEmitter();\nevents.on('data', function (item) {\n  console.log('Hello from', item);\n});\n\nvar List = component(function (cursor) {\n  return React.DOM.ul({}, cursor.toArray().map(function (item) {\n    return Item(item, { events: events });\n  });\n});\n```\n\n### State\n\nOmniscient allows for component local state. That is, all the usual react component methods are available on `this` for use through mixins. You are free to `this.setState({ .. })` for component local view state.\n\n#### Sharing state between parent and child\n\nSome times you need to share state between a parent and child component. A special kind of [`static`](#statics) called `shared` can hold this sort of information.\n\n*Unlike all other statics, changing a `shared` static will cause the view to re-render*.\n\n```js\nvar Item = component(function (cursor, statics) {\n  // re-renders when `statics.shared.fromParent` changes\n  if (statics.shared.fromParent) {\n    return React.DOM.text({}, cursor.get('text'));\n  }\n  return React.DOM.li({ onClick: onClick }, React.DOM.text({}, cursor.get('text')));\n});\n\nvar List = component(function (cursor) {\n  return React.DOM.ul({}, cursor.toArray().map(function (itemCursor) {\n    return Item(itemCursor, {\n      shared: { fromParent: cursor.get('valueFromParent') }\n    });\n  });\n});\n```\n\n### Providing component keys\n\nFor correct merging of states and components between render cycles, React needs a `key` as part of the props of a component. With Omniscient, such a key can be passed as the first argument to the `component` function.\n\n```js\nvar Item = component(function (cursor) {\n  return React.DOM.li({}, React.DOM.text(cursor.get('text')));\n});\n\nvar List = component(function (cursor) {\n  return React.DOM.ul({}, cursor.toArray().map(function (item, key) {\n    return Item(key, item);\n  });\n});\n```\n\n### Efficient shouldComponentUpdate\n\nOmniscient provides an [efficient default](https://github.com/torgeir/omniscient/blob/master/component.js#L47-L64) `shouldComponentUpdate` that works well with the immutable data structures of Immutable.js.\n\n#### Overriding shouldCompontentUpdate\n\nHowever, an individual component's `shouldComponentUpdate` can easily be changed through the use of mixins:\n\n```js\nvar ShouldComponentUpdateMixin = {\n  shouldComponentUpdate: function (newProps, newState) {\n    // your custom implementation\n    return true; // don't do this\n  };\n};\n\nvar InefficientAlwaysRenderingText = component(ShouldComponentUpdateMixin, function (cursor) {\n  return React.DOM.text(cursor.get('text'));\n});\n```\n\n#### Overriding the default shouldCompontentUpdate globally\n\nIf you want to override `shouldCompontentUpdate` across your entire project, you can do this by setting the `shouldCompontentUpdate` method from Omniscient.\n\n```js\ncomponent.shouldComponentUpdate = function (newProps, newState) {\n  // your custom implementation\n  return true; // don't do do this\n};\n\nvar InefficientAlwaysRenderingText = component(function (cursor) {\n  return React.DOM.text(cursor.get('text'));\n});\n```\n\n### Immstruct\n\nImmstruct is not a requirement for Omniscient, and you are free to choose any other cursor implementation, or you can use Immutable.js directly.\n\nIf you are using something other than the cursors from Immutable.js, however, make sure to provide a custom implementation of `shouldComponentUpdate` for efficient rendering.\n\nSee [how to use immstruct](https://github.com/mikaelbr/immstruct/blob/master/README.md) for more information.\n\n[npm-url]: https://npmjs.org/package/omniscient\n[npm-image]: http://img.shields.io/npm/v/omniscient.svg?style=flat\n\n[depstat-url]: https://gemnasium.com/torgeir/omniscient\n[depstat-image]: http://img.shields.io/gemnasium/torgeir/omniscient.svg?style=flat\n\n---\n\n*Logo is composed by icons from [Iconmoon](http://www.icomoon.io)\nand [Picol](http://picol.org). Licensed under [CC BY 3.0](http://creativecommons.org/licenses/by/3.0/)*\n",
+  documentation: null,
+  // install: null,
+
+  examples: [
+    require('../examples/intro'),
+    require('../examples/entry-list'),
+    require('../examples/events'),
+    require('../examples/inline-edit')
+  ]
+});
+
+var Index = require('./views/index');
+var Documentation = require('./views/documentation');
+var ExampleList = require('./views/examples');
+
+var routes = Routes({},
+  Route({ name: 'main', path: '/', view: Index, data: structure }),
+  Route({ name: 'examples', path: '/examples', view: ExampleList, data: structure }),
+  Route({ name: 'documentation', path: '/documentation', view: Documentation, data: structure })
+);
+
+var container = document.querySelector('.page-container');
+var routing = RRouter.start(routes, function (view) {
+  React.renderComponent(view, container);
+});
+
+// lister for change and redraw
+structure.on('swap', rerender);
+function rerender () {
+  routing.update();
+}
+
+},{"../examples/entry-list":9,"../examples/events":13,"../examples/inline-edit":16,"../examples/intro":19,"./views/documentation":4,"./views/examples":5,"./views/index":7,"highlight.js":89,"immstruct":193,"marked":198,"react":345,"rrouter":356}],3:[function(require,module,exports){
+var githubOrganizationLinkUrl = 'https://github.com/omniscientjs';
+
+module.exports = {
+  organizationUrl: githubOrganizationLinkUrl,
+  mainProjectUrl: githubOrganizationLinkUrl + '/omniscient',
+  examplesUrl: githubOrganizationLinkUrl + '/omniscientjs.github.io/tree/master/examples/',
+};
+
+},{}],4:[function(require,module,exports){
 var component = require('omniscient');
 var React = require('react');
 
-var Header = require('./headerView');
+var Header = require('./header');
 var marked = require('marked');
 
-var loadContentToCursor = require('./lib/loadContentToCursor');
+var loadContentToCursor = require('../lib/loadContentToCursor');
 
 var doc = 'documentation';
 
@@ -33,21 +113,20 @@ module.exports = component(function (routeProps) {
   );
 });
 
-},{"./headerView":3,"./lib/loadContentToCursor":5,"marked":198,"omniscient":199,"react":345}],2:[function(require,module,exports){
+},{"../lib/loadContentToCursor":1,"./header":6,"marked":198,"omniscient":199,"react":345}],5:[function(require,module,exports){
 var component = require('omniscient');
 
 var highlight = require('highlight.js');
 var immstruct = require('immstruct');
 
-var githubBaseUrl = require('./urls').examplesUrl;
-
+var githubBaseUrl = require('../urls').examplesUrl;
 
 var rerender = function () {
   var globalStructure = immstruct('global');
   globalStructure.forceHasSwapped();
 };
 
-var Header = require('./headerView');
+var Header = require('./header');
 
 var StructureView = component(function (cursor) {
   if (!cursor) {
@@ -104,12 +183,12 @@ module.exports = component(function (routeProps) {
   );
 });
 
-},{"./headerView":3,"./urls":7,"highlight.js":89,"immstruct":193,"omniscient":199}],3:[function(require,module,exports){
+},{"../urls":3,"./header":6,"highlight.js":89,"immstruct":193,"omniscient":199}],6:[function(require,module,exports){
 var component = require('omniscient');
 
 var Link = require('rrouter').Link;
 
-var mainProjectUrl = require('./urls').mainProjectUrl;
+var mainProjectUrl = require('../urls').mainProjectUrl;
 
 var logo = "<svg viewBox=\"0 0 640 400\">\n  <g class=\"logo-bit\">\n    <path d=\"m416.873962,103.126556c25.875885,25.8759 40.126068,60.279999 40.126068,96.873978s-14.250702,70.997604 -40.126068,96.873428c-25.876404,25.875366 -60.279999,40.126038 -96.873932,40.126038s-70.997589,-14.250671 -96.873993,-40.126038c-25.875351,-25.875824 -40.126053,-60.279449 -40.126053,-96.873428s14.249634,-70.998093 40.126053,-96.873978s60.279968,-40.126556 96.873993,-40.126556s70.997528,14.250671 96.873932,40.126556zm-12.109436,181.638428c16.872894,-16.872925 28.091919,-37.891312 32.717834,-60.756882c-3.605408,5.307693 -7.054443,7.277054 -9.189819,-4.603958c-2.199463,-19.37001 -19.990173,-6.996109 -31.177582,-13.876587c-11.774506,7.935806 -38.238556,-15.429062 -33.741058,10.923599c6.939331,11.886398 37.463074,-15.908005 22.248596,9.242767c-9.706177,17.557953 -35.492126,56.44072 -32.137756,76.596359c0.423279,29.365082 -30.004639,6.12323 -40.488342,-3.617737c-7.052277,-19.511749 -2.403381,-53.616165 -20.843781,-63.171387c-20.015381,-0.869095 -37.194427,-2.68811 -44.951538,-25.064056c-4.668152,-16.008682 4.967316,-39.84079 22.122833,-43.519989c25.112213,-15.77803 34.082458,18.477341 57.633636,19.114182c7.312408,-7.651138 27.243744,-10.083954 28.896362,-18.663574c-15.452667,-2.726624 19.604858,-12.993073 -1.479218,-18.832657c-11.631653,1.367828 -19.125916,12.060776 -12.942749,21.127396c-22.540314,5.255783 -23.262207,-32.61879 -44.929047,-20.672546c-0.550659,18.888336 -35.379791,6.123779 -12.05069,2.293671c8.015564,-3.502045 -13.073914,-13.650772 -1.680359,-11.806595c5.596619,-0.303986 24.438416,-6.906754 19.339447,-11.345871c10.49176,-6.512856 19.308472,15.597137 29.577576,-0.503555c7.414032,-12.379776 -3.109314,-14.665443 -12.402313,-8.390175c-5.239136,-5.866417 9.250214,-18.536766 22.030273,-24.011932c4.259308,-1.824898 8.327606,-2.819214 11.437988,-2.537704c6.437317,7.436531 18.342377,8.72464 18.965332,-0.894264c-15.942291,-7.635071 -33.520569,-11.668556 -51.720123,-11.668556c-26.121552,0 -50.965668,8.301338 -71.525818,23.651237c5.525497,2.531273 8.662079,5.682831 3.338867,9.712013c-4.135681,12.323067 -20.91658,28.865273 -35.647858,26.52343c-7.648972,13.190521 -12.686386,27.722687 -14.839874,42.953796c12.338593,4.082153 15.183472,12.161407 12.532303,14.863937c-6.287018,5.482147 -10.150848,13.253189 -12.141647,21.760544c4.016357,24.573288 15.565536,47.220566 33.519516,65.175095c22.641373,22.640869 52.744461,35.109924 84.764511,35.109924c32.01944,0 62.123016,-12.469116 84.764496,-35.109924l0,0z\" id=\"svg_7\" stroke=\"null\"/>\n    <path d=\"m320,5.3125c-194.6875,0 -311.5,193.480423 -311.5,193.480423s116.8125,195.894577 311.5,195.894577s311.5,-194.6875 311.5,-194.6875s-116.8125,-194.6875 -311.5,-194.6875zm0,350.4375c-170.351563,0 -262.828125,-155.75 -262.828125,-155.75s92.476563,-155.75 262.828125,-155.75s262.828125,155.75 262.828125,155.75s-92.476563,155.75 -262.828125,155.75z\"/>\n  </g>\n</svg>\n";
 
@@ -140,11 +219,11 @@ module.exports = component(function (cursor) {
   );
 });
 
-},{"./urls":7,"omniscient":199,"rrouter":356}],4:[function(require,module,exports){
+},{"../urls":3,"omniscient":199,"rrouter":356}],7:[function(require,module,exports){
 var component = require('omniscient');
 var React = require('react');
 
-var Header = require('./headerView');
+var Header = require('./header');
 
 var marked = require('marked');
 
@@ -163,87 +242,7 @@ module.exports = component(function (routeProps) {
   );
 });
 
-},{"./headerView":3,"marked":198,"omniscient":199,"react":345}],5:[function(require,module,exports){
-var http = require('http');
-
-module.exports = function (doc, cursor) {
-  var url = '/documents/' + doc + '.md';
-  return http.get({ path : url }, function (response) {
-    if (response.statusCode !== 200) {
-      return cursor.set(doc, '## Could not find the document "' + doc + '"');
-    }
-
-    response.on('data', function (buf) {
-      var orig = cursor.get(doc);
-      orig = orig || '';
-      cursor.set(doc, orig + buf);
-    });
-  });
-};
-
-},{"http":61}],6:[function(require,module,exports){
-
-
-var immstruct = require('immstruct');
-var React = require('react');
-
-var highlight = require('highlight.js');
-var marked = require('marked');
-
-marked.setOptions({
-  highlight: function (code) {
-    return highlight.highlightAuto(code).value;
-  }
-});
-
-var RRouter = require('rrouter'),
-    Routes  = RRouter.Routes,
-    Route   = RRouter.Route;
-
-var structure = immstruct('global', {
-  index: "Omniscient.js\n=========\n\n<img src=\"https://raw.githubusercontent.com/torgeir/omniscient/master/omniscient_logo.png\" align=\"right\" width=\"150px\">\n> A library providing an abstraction for React components that allows for top-down rendering of immutable data. Using cursors into immutable datastructures the nested components does not need knowledge of the entire immutable data structure, but are still capable of swapping out their own piece of data to trigger a re render of affected components.\n\n> Omniscient pairs the simplicity of [Quiescent](https://github.com/levand/quiescent) with\nthe cursors of [Om](https://github.com/swannodette/om), for js, using\n[Immutable.js](https://github.com/facebook/immutable-js).\n\n```js\nvar React     = require('react'),\n    immstruct = require('immstruct'),\n    component = require('omniscient');\n\nvar NameInput = component(function (cursor) {\n  var onChange = function (e) {\n    cursor.update('name', function (name) {\n      return e.currentTarget.value;\n    });\n  };\n  return React.DOM.input({ value: cursor.get('name'), onChange: onChange });\n});\n\nvar Welcome = component(function (cursor) {\n  var guest = cursor.get('guest');\n  var name = guest.get('name') ? \", \" + guest.get('name') : \"\";\n  return React.DOM.p({}, cursor.get('greeting'), name, \"!\",\n                         NameInput(guest));\n});\n\nvar structure = immstruct({ greeting: 'Welcome', guest: { name: '' } });\n\nfunction render () {\n  React.renderComponent(\n    Welcome(structure.cursor()),\n    document.querySelector('.app'));\n}\n\nrender();\nstructure.on('swap', render);\n```\n\n[`immstruct`](https://github.com/mikaelbr/immstruct) is a simple wrapper for [`Immutable.js`](https://github.com/facebook/immutable-js) that ease handling re-render when an immutable data structure is replaced through the use of cursors. `immstruct` is not a requirement for Omniscient, but makes a great fit.\n\n### Reuseable mixins\n\nOmniscient is fully compatible with exising react components, and encourages reuse of your existing mixins.\n\n```js\nvar SelectOnRender = {\n  componentDidMount: function () {\n    this.getDOMNode().select();\n  }\n};\n\nvar FocusingInput = component(SelectOnRender, function (cursor) {\n  return React.DOM.input({ value: cursor.get('text') });\n});\n```\n\nYou can also share other commonly used functions through mixins.\n\n```js\nvar Props = {\n  swapProps: function (props) {\n    this.props.cursor.update(function (state) {\n      return state.mergeDeep(props);\n    };\n  }\n};\n\nvar SaveOnEdit = {\n  onEdit: function (e) {\n    this.swapProps({ text: e.currentTarget.value });\n  }\n};\n\nvar SavingFocusingInput = component([Props, SaveOnEdit, SelectOnRender], function (cursor) {\n  return React.DOM.input({ value: cursor.get('text'), onChange: onEdit });\n});\n```\n\n### Statics\n\nWhen you need to provide other data for your component than what its rendering is based off of, you pass statics. By default, changing a static's value does not result in a re-rendering of a component.\n\nStatics can be passed as second argument to your component.\n\n```js\nvar FocusingInput = component(SelectOnRender, function (cursor, statics) {\n  var onChange = statics.onChange || function () {};\n  return React.DOM.input({ value: cursor.get('text'), onChange: onChange });\n});\n\nvar SomeForm = component(function (cursor) {\n  return React.DOM.form({}, FocusingInput(cursor, { onChange: console.log.bind(console) }));\n});\n```\n\n#### Talking back from child to parent\n\nCommunicating information back to the parent component from a child component can be done by making an event emitter available as a static for your child component.\n\n```js\nvar Item = component(function (cursor, statics) {\n  var onClick = function () {\n    statics.events.emit('data', cursor);\n  };\n  return React.DOM.li({ onClick: onClick }, React.DOM.text({}, cursor.get('text')));\n});\n\nvar events = new EventEmitter();\nevents.on('data', function (item) {\n  console.log('Hello from', item);\n});\n\nvar List = component(function (cursor) {\n  return React.DOM.ul({}, cursor.toArray().map(function (item) {\n    return Item(item, { events: events });\n  });\n});\n```\n\n### State\n\nOmniscient allows for component local state. That is, all the usual react component methods are available on `this` for use through mixins. You are free to `this.setState({ .. })` for component local view state.\n\n#### Sharing state between parent and child\n\nSome times you need to share state between a parent and child component. A special kind of [`static`](#statics) called `shared` can hold this sort of information.\n\n*Unlike all other statics, changing a `shared` static will cause the view to re-render*.\n\n```js\nvar Item = component(function (cursor, statics) {\n  // re-renders when `statics.shared.fromParent` changes\n  if (statics.shared.fromParent) {\n    return React.DOM.text({}, cursor.get('text'));\n  }\n  return React.DOM.li({ onClick: onClick }, React.DOM.text({}, cursor.get('text')));\n});\n\nvar List = component(function (cursor) {\n  return React.DOM.ul({}, cursor.toArray().map(function (itemCursor) {\n    return Item(itemCursor, {\n      shared: { fromParent: cursor.get('valueFromParent') }\n    });\n  });\n});\n```\n\n### Providing component keys\n\nFor correct merging of states and components between render cycles, React needs a `key` as part of the props of a component. With Omniscient, such a key can be passed as the first argument to the `component` function.\n\n```js\nvar Item = component(function (cursor) {\n  return React.DOM.li({}, React.DOM.text(cursor.get('text')));\n});\n\nvar List = component(function (cursor) {\n  return React.DOM.ul({}, cursor.toArray().map(function (item, key) {\n    return Item(key, item);\n  });\n});\n```\n\n### Efficient shouldComponentUpdate\n\nOmniscient provides an [efficient default](https://github.com/torgeir/omniscient/blob/master/component.js#L47-L64) `shouldComponentUpdate` that works well with the immutable data structures of Immutable.js.\n\n#### Overriding shouldCompontentUpdate\n\nHowever, an individual component's `shouldComponentUpdate` can easily be changed through the use of mixins:\n\n```js\nvar ShouldComponentUpdateMixin = {\n  shouldComponentUpdate: function (newProps, newState) {\n    // your custom implementation\n    return true; // don't do this\n  };\n};\n\nvar InefficientAlwaysRenderingText = component(ShouldComponentUpdateMixin, function (cursor) {\n  return React.DOM.text(cursor.get('text'));\n});\n```\n\n#### Overriding the default shouldCompontentUpdate globally\n\nIf you want to override `shouldCompontentUpdate` across your entire project, you can do this by setting the `shouldCompontentUpdate` method from Omniscient.\n\n```js\ncomponent.shouldComponentUpdate = function (newProps, newState) {\n  // your custom implementation\n  return true; // don't do do this\n};\n\nvar InefficientAlwaysRenderingText = component(function (cursor) {\n  return React.DOM.text(cursor.get('text'));\n});\n```\n\n### Immstruct\n\nImmstruct is not a requirement for Omniscient, and you are free to choose any other cursor implementation, or you can use Immutable.js directly.\n\nIf you are using something other than the cursors from Immutable.js, however, make sure to provide a custom implementation of `shouldComponentUpdate` for efficient rendering.\n\nSee [how to use immstruct](https://github.com/mikaelbr/immstruct/blob/master/README.md) for more information.\n\n[npm-url]: https://npmjs.org/package/omniscient\n[npm-image]: http://img.shields.io/npm/v/omniscient.svg?style=flat\n\n[depstat-url]: https://gemnasium.com/torgeir/omniscient\n[depstat-image]: http://img.shields.io/gemnasium/torgeir/omniscient.svg?style=flat\n\n---\n\n*Logo is composed by icons from [Iconmoon](http://www.icomoon.io)\nand [Picol](http://picol.org). Licensed under [CC BY 3.0](http://creativecommons.org/licenses/by/3.0/)*\n",
-  documentation: null,
-  // install: null,
-
-  examples: [
-    require('../examples/intro'),
-    require('../examples/entry-list'),
-    require('../examples/events'),
-    require('../examples/inline-edit')
-  ]
-});
-
-var Index = require('./indexView');
-var Documentation = require('./documentationView');
-var ExampleList = require('./examplesView');
-
-var routes = Routes({},
-  Route({ name: 'main', path: '/', view: Index, data: structure }),
-  Route({ name: 'examples', path: '/examples', view: ExampleList, data: structure }),
-  Route({ name: 'documentation', path: '/documentation', view: Documentation, data: structure })
-);
-
-var container = document.querySelector('.page-container');
-var routing = RRouter.start(routes, function (view) {
-  React.renderComponent(view, container);
-});
-
-// lister for change and redraw
-structure.on('swap', rerender);
-function rerender () {
-  routing.update();
-}
-
-},{"../examples/entry-list":9,"../examples/events":13,"../examples/inline-edit":16,"../examples/intro":19,"./documentationView":1,"./examplesView":2,"./indexView":4,"highlight.js":89,"immstruct":193,"marked":198,"react":345,"rrouter":356}],7:[function(require,module,exports){
-var githubOrganizationLinkUrl = 'https://github.com/omniscientjs';
-
-module.exports = {
-  organizationUrl: githubOrganizationLinkUrl,
-  mainProjectUrl: githubOrganizationLinkUrl + '/omniscient',
-  examplesUrl: githubOrganizationLinkUrl + '/omniscientjs.github.io/tree/master/examples/',
-};
-
-},{}],8:[function(require,module,exports){
+},{"./header":6,"marked":198,"omniscient":199,"react":345}],8:[function(require,module,exports){
 var React = require('react'),
     component = require('omniscient');
 
@@ -46124,4 +46123,4 @@ module.exports = {
   }
 };
 
-},{}]},{},[1,2,3,4,6,7]);
+},{}]},{},[2,3]);

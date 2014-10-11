@@ -1,10 +1,10 @@
 var component = require('omniscient');
 var React = require('react');
 
-var Header = require('./headerView');
+var Header = require('./header');
 var marked = require('marked');
 
-var loadContentToCursor = require('./lib/loadContentToCursor');
+var loadContentToCursor = require('../lib/loadContentToCursor');
 
 var doc = 'documentation';
 

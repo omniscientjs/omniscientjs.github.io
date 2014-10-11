@@ -1,7 +1,7 @@
 var component = require('omniscient');
 var React = require('react');
 
-var Header = require('./headerView');
+var Header = require('./header');
 
 var marked = require('marked');
 

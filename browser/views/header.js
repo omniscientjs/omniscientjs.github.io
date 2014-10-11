@@ -2,9 +2,9 @@ var component = require('omniscient');
 var fs = require('fs');
 var Link = require('rrouter').Link;
 
-var mainProjectUrl = require('./urls').mainProjectUrl;
+var mainProjectUrl = require('../urls').mainProjectUrl;
 
-var logo = fs.readFileSync(__dirname + '/../assets/logo.svg', 'utf-8');
+var logo = fs.readFileSync(__dirname + '/../../assets/logo.svg', 'utf-8');
 
 var Navigation = component(function () {
   return React.DOM.ul({},

@@ -97,7 +97,7 @@ var Component = component(Logging, function () {
 
 ### Wrapped `renderFunction`
 
-This is the render function that is passed off to React. The function is called with the following parameters.
+This is the component's render function that is passed off to React. The function is called with the following parameters.
 
 ```js
 function (cursor[, cursor2, ..][, statics]) { }

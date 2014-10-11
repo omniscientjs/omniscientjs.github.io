@@ -11,7 +11,7 @@ Using immutable data structures with React in this way actually allows for super
 
 ## Installing
 
-Omniscient strongly encourages the use [npm](https://www.npmjs.org/) and [browserify](http://browserify.org/). There are no distributed compiled file, as the project has a dependency to [React](http://facebook.github.io/react/) and we don't want to bundle React or rely on global variables. You can of course [bundle your own standalone module](#build-standalone).
+Omniscient strongly encourages the use of [npm](https://www.npmjs.org/) and [browserify](http://browserify.org/). There is no distributed compiled file, as the project has a dependency to [React](http://facebook.github.io/react/) and we don't want to bundle React or rely on global variables. You can of course [bundle your own standalone module](#build-standalone).
 
 ### Install from NPM
 
@@ -57,8 +57,8 @@ var Component = component([mixins, ]renderFunction);
 Component([key, ]cursor[, statics]);
 
 ```
-* `key` (*optional*) can be a key that is passed as props to the React component (e.g. for use in lists).
-* `cursor` should be a cursor to a part of an immutable data structure
+* `key` (*optional*) is a key that is passed verbatim to the React component as `props.key` (e.g. for use in lists with repeating elements).
+* `cursor` should be a cursor to a part of an immutable data structure, needed for your rendering your component
 * `statics` (*optional*) can be an object of static values that does not cause a component to re render on change.
 
 Example with all values
@@ -66,7 +66,7 @@ Example with all values
 ```js
 var key = 'keyPassedToReactComponent';
 Component(key, immutableStructure.cursor(), {
-  eventToChild: new EventEmitter()
+  eventsFromChild: new EventEmitter()
 });
 ```
 
@@ -94,8 +94,8 @@ This is the render function that is passed off to React. The function is called 
 function (cursor[, statics]) { }
 ```
 
-* `cursor` is the cursor to a part of an immutable data structure
-* `statics` (*optional*) can be an object of received static values that does not trigger a re render when changed.
+* `cursor` is the cursor to the part of the immutable data structure for the component
+* `statics` (*optional*) is an object of the received static values, that does not trigger a re render when changed.
 
 ---
 

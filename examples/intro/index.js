@@ -14,8 +14,9 @@ var NameInput = component(function (cursor) {
 var Welcome = component(function (cursor) {
   var guest = cursor.get('guest');
   var name = guest.get('name') ? ", " + guest.get('name') : "";
-  return React.DOM.p({}, cursor.get('greeting'), name, "!",
-                         NameInput(guest));
+  return React.DOM.section({},
+                           React.DOM.div({}, cursor.get('greeting'), name, "!"),
+                           React.DOM.div({}, NameInput(guest)));
 });
 
 var structure = immstruct({ greeting: 'Welcome', guest: { name: '' } });

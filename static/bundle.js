@@ -6864,7 +6864,7 @@ module.exports = component(EditMixin, function (cursor) {
   if (this.state.editing) {
     return d.form({ onSubmit: this.onSubmit },
                   FocusingInput(cursor, { onChange: this.onChange }),
-                  d.button({}, 'doit'));
+                  d.span({}, " ", d.button({}, 'done')));
   }
   return d.span({ onClick: this.onEdit }, cursor.get('text'));
 });

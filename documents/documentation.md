@@ -58,15 +58,26 @@ Component([key: String, ]cursor: Cursor | Array<Cursors> [, statics: Object]);
 
 ```
 * `key` (*optional*) a key that is passed verbatim to the React component as `props.key` (e.g. for use in lists with repeating elements).
-* `cursor` (*optional*) a cursor or an array of cursors to part(s) of an immutable data structure, needed for your rendering your component, changes will trigger re render.
+* `cursor` (*optional*) a cursor or an array of cursors to part(s) of an immutable data structure, needed for your rendering your component, changes to any of these will trigger re render.
 * `statics` (*optional*) an object with static properties, does not cause a component to re render on change.
 
-Example with all values
+E.g. passing a key, a single cursor and statics
 
 ```js
 var key = 'keyPassedToReactComponent';
-Component(key, immutableStructure.cursor(), { eventsFromChild: new EventEmitter() });
+Component(key, 
+  immutableStructure.cursor(),
+  { eventsFromChild: new EventEmitter() });
 ```
+
+E.g. passing multiple cursors and statics
+
+```js
+Component(
+  [immutableStructure.cursor(), immutableStructure.cursor(['somewhere', 'else'])], 
+  { eventsFromChild: new EventEmitter() });
+```
+
 
 ### Optional `mixins`
 

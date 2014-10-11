@@ -9,7 +9,8 @@ module.exports = component(function (cursor, statics) {
 
   events.on('delete', function (item) {
     cursor.update(function (state) {
-      return state.splice(state.indexOf(item), 1);
+      // Use toVector() https://github.com/facebook/immutable-js/issues/122
+      return state.splice(state.indexOf(item), 1).toVector();
     });
   });
 

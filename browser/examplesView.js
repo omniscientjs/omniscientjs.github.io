@@ -40,7 +40,7 @@ var Example = function (example) {
   var link = githubBaseUrl + example.get('name');
 
   return React.DOM.div({ key: example.get('name') },
-    React.DOM.h2({},
+    React.DOM.h2({ id: example.get('name') },
       React.DOM.text(null, example.get('name')),
       React.DOM.a({
         className: 'link-example',

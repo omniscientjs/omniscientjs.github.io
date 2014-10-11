@@ -11,6 +11,7 @@ var structure = immstruct('global', {
   index: fs.readFileSync(__dirname + '/../index.md', 'utf-8'),
 
   examples: [
+    require('../examples/intro'),
     require('../examples/entry-list'),
     require('../examples/events'),
     require('../examples/inline-edit')

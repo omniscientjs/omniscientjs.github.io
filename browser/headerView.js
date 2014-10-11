@@ -10,6 +10,7 @@ var Navigation = component(function () {
   return React.DOM.ul({},
     React.DOM.li({}, Link({ to: "/main"  }, "Home")),
     React.DOM.li({}, Link({ to: "/examples" }, "Examples")),
+    React.DOM.li({}, Link({ to: "/documentation" }, "Documentation")),
     React.DOM.li({ className: 'link-github' }, React.DOM.a({ href: mainProjectUrl }, 'Fork on Github'))
   );
 });

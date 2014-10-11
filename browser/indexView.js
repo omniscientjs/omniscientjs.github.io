@@ -3,15 +3,7 @@ var React = require('react');
 
 var Header = require('./headerView');
 
-var highlight = require('highlight.js');
 var marked = require('marked');
-
-marked.setOptions({
-  highlight: function (code) {
-    return highlight.highlightAuto(code).value;
-  }
-});
-
 
 module.exports = component(function (routeProps) {
   var cursor = routeProps.data.cursor();

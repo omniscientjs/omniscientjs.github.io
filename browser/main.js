@@ -22,7 +22,7 @@ var structure = immstruct('global', {
   // install: null,
 
   examples: [
-    require('../examples/intro'),
+    require('../examples/welcome'),
     require('../examples/entry-list'),
     require('../examples/events'),
     require('../examples/inline-edit')

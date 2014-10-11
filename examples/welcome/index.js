@@ -33,7 +33,7 @@ var structure = immstruct({ greeting: 'Welcome', guest: { name: '' } });
 
 
 module.exports = {
-  name: 'intro',
+  name: 'welcome',
   component: function (structure) {
     return Welcome(structure.cursor());
   },

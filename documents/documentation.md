@@ -112,6 +112,19 @@ If multiple `cursors` were passed as part of an object literal, e.g. `{ cursorOn
 
 `statics` are also available as `this.props.statics`.
 
+
+### Debugging
+
+For debugging purposes, Omniscient supports calling `component.debug()`. This enables logging on calls to `render` and `shouldComponentUpdate`.
+
+To improve logging, give your components a name
+
+```js
+var MyComponent = component("MyComponent", function () {
+  return React.DOM.text({}, "I output logging information on .shouldComponentUpdate() and .render()");
+});
+```
+
 ---
 
 ## Build Standalone

@@ -52,8 +52,7 @@ Then include `static/bundle.js` in your HTML.
 ## API
 
 ```js
-var Component = component([mixins, ]renderFunction);
-
+var Component = component([name, ][mixins, ]renderFunction);
 Component([key: String, ]cursor: Cursor | Object<String, Cursor> [, statics: Object]);
 
 ```
@@ -78,6 +77,9 @@ Component(
   { eventsFromChild: new EventEmitter() });
 ```
 
+### Optional `name`
+
+The optional argument `name` is used for debugging purposes, when `component.debug()` has been called.
 
 ### Optional `mixins`
 
@@ -114,6 +116,10 @@ If multiple `cursors` were passed as part of an object literal, e.g. `{ cursorOn
 
 
 ### Debugging
+
+```js
+component.debug()
+```
 
 For debugging purposes, Omniscient supports calling `component.debug()`. This enables logging on calls to `render` and `shouldComponentUpdate`.
 

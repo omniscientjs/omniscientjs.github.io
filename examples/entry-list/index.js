@@ -13,19 +13,13 @@ var structure = immstruct({
 
 var App = require('./app');
 
-// Use directly
-// render();
-// structure.on('swap', render);
-//
-// function render () {
-//   React.renderComponent(App(structure.cursor()), el);
-// }
+module.exports.name = 'entry-list';
+module.exports.structure = structure;
+module.exports.init = function (el) {
+  render();
+  structure.on('swap', render);
 
-
-module.exports = {
-  name: 'entry-list',
-  component: function () {
-    return App(structure.cursor())
-  },
-  structure: structure
-}
+  function render () {
+    React.renderComponent(App(structure.cursor()), el);
+  }
+};

@@ -12,12 +12,21 @@ var rerender = function () {
 
 var Header = require('./header');
 
-var StructureView = component(function (cursor) {
+var preventUpdateMixin = {
+  shouldComponentUpdate: function (newProps, newState) {
+    return false;
+  }
+};
+
+var StructureView = component(preventUpdateMixin, function (cursor, statics) {
   if (!cursor) {
     return React.DOM.pre({ className: 'structure-preview' },
       React.DOM.code(null, 'No state')
     );
   }
+
+  cursor = statics.structure.cursor();
+  statics.structure && statics.structure.once('swap', this.forceUpdate.bind(this));
 
   var data = JSON.stringify(cursor.toJSON(), null, 2);
 
@@ -31,16 +40,24 @@ var StructureView = component(function (cursor) {
   );
 });
 
-var Example = function (example) {
+var exampleMixin = {
+  componentDidMount: function () {
+    var node = this.getDOMNode().querySelector('.example-box');
+    if (!node) return;
+    this.props.cursor.get('init')(node);
+  }
+};
+
+var Example = component([preventUpdateMixin, exampleMixin], function (example) {
   var structure = example.get('structure');
   var cursor = structure ? structure.cursor() : null;
-  if (structure) structure.once('swap', rerender);
+  var name = example.get('name');
 
-  var link = githubBaseUrl + example.get('name');
+  var link = githubBaseUrl + name;
 
-  return React.DOM.div({ key: example.get('name') },
-    React.DOM.h2({ id: example.get('name') },
-      React.DOM.text(null, example.get('name')),
+  return React.DOM.div({ key: name },
+    React.DOM.h2({ id: name },
+      React.DOM.text(null, name),
       React.DOM.a({
         className: 'link-example',
         href: link
@@ -48,12 +65,12 @@ var Example = function (example) {
     ),
     React.DOM.div({ className: 'example-container' },
       React.DOM.div({ className: 'example-wrapper cf' },
-        StructureView(cursor),
-        example.get('component')(structure)
+        StructureView(cursor, { structure: structure }),
+        React.DOM.div({ className: 'example-box' })
       )
     )
   );
-};
+});
 
 module.exports = component(function (routeProps) {
   var examples = routeProps.data.cursor('examples').toArray().map(Example);

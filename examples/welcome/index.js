@@ -21,21 +21,13 @@ var Welcome = component(function (cursor) {
 
 var structure = immstruct({ greeting: 'Welcome', guest: { name: '' } });
 
-// To run stand-alone do
-// function render () {
-//   React.renderComponent(
-//     Welcome(structure.cursor()),
-//     document.querySelector('.app'));
-// }
-//
-// render();
-// structure.on('swap', render);
+module.exports.name = 'welcome';
+module.exports.structure = structure;
+module.exports.init = function (el) {
+  render();
+  structure.on('swap', render);
 
-
-module.exports = {
-  name: 'welcome',
-  component: function (structure) {
-    return Welcome(structure.cursor());
-  },
-  structure: structure
+  function render () {
+    React.renderComponent(Welcome(structure.cursor()), el);
+  };
 };

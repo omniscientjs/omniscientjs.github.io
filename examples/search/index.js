@@ -59,20 +59,13 @@ var structure = immstruct({
   ]
 });
 
-// To run stand-alone do
-// function render () {
-//   React.renderComponent(
-//     Search(structure.cursor()),
-//     document.querySelector('.app'));
-// }
-//
-// render();
-// structure.on('swap', render);
+module.exports.name = 'search';
+module.exports.structure = structure;
+module.exports.init = function (el) {
+  render();
+  structure.on('swap', render);
 
-module.exports = {
-  name: 'search',
-  component: function (structure) {
-    return Search(structure.cursor());
-  },
-  structure: structure
+  function render () {
+    React.renderComponent(Search(structure.cursor()), el);
+  }
 };

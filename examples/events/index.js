@@ -11,11 +11,9 @@ events.on('event', function (data) {
 
 
 var h = Heading({ text: 'Click me, I fire events in the console.' }, { events: events });
-// React.renderComponent(h, document.querySelector('body'));
 
-module.exports = {
-  name: 'events',
-  component: function (structure) {
-    return h;
-  }
+module.exports.name = 'events';
+module.exports.structure = null;
+module.exports.init = function (el) {
+  React.renderComponent(h, el);
 };

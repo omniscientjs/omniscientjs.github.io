@@ -19,7 +19,6 @@ var RRouter = require('rrouter'),
 var structure = immstruct('global', {
   index: fs.readFileSync(__dirname + '/../documents/index.md', 'utf-8'),
   documentation: null,
-  // install: null,
 
   examples: [
     require('../examples/welcome'),

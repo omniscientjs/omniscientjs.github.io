@@ -11,20 +11,13 @@ var data = immstruct({
   ]
 });
 
+module.exports.name = 'inline-edit';
+module.exports.structure = data;
+module.exports.init = function (el) {
+  render();
+  data.on('swap', render);
 
-// If using directly
-// data.on('swap', render);
-// render();
-//
-// function render () {
-//   React.renderComponent(List(data.cursor('items')), el);
-// }
-
-
-module.exports = {
-  name: 'inline-edit',
-  component: function () {
-    return List(data.cursor('items'));
-  },
-  structure: data
+  function render () {
+    React.renderComponent(List(data.cursor('items')), el);
+  }
 };

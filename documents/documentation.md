@@ -54,11 +54,11 @@ Then include `static/bundle.js` in your HTML.
 ```js
 var Component = component([mixins, ]renderFunction);
 
-Component([key: String, ]cursor: Cursor | Array<Cursors> [, statics: Object]);
+Component([key: String, ]cursor: Cursor | Object<String, Cursor> [, statics: Object]);
 
 ```
 * `key` (*optional*) a key that is passed verbatim to the React component as `props.key` (e.g. for use in lists with repeating elements).
-* `cursor` (*optional*) a cursor or an array of cursors to part(s) of an immutable data structure, needed for your rendering your component, changes to any of these will trigger re-render.
+* `cursor` (*optional*) a cursor or an object literal of cursors to part(s) of an immutable data structure, needed for your rendering your component, changes to any of these will trigger re-render.
 * `statics` (*optional*) an object with static properties, does not cause a component to re-render on change.
 
 E.g. passing a key, a single cursor and statics
@@ -74,7 +74,7 @@ E.g. passing multiple cursors and statics
 
 ```js
 Component(
-  [immutableStructure.cursor(), immutableStructure.cursor(['somewhere', 'else'])], 
+  { cursorOne: immutableStructure.cursor(), cursorTwo: immutableStructure.cursor(['somewhere', 'else']) }, 
   { eventsFromChild: new EventEmitter() });
 ```
 
@@ -100,13 +100,15 @@ var Component = component(Logging, function () {
 This is the component's render function that is passed off to React. The function is called with the following parameters.
 
 ```js
-function (cursor[, cursor2, ..][, statics]) { }
+function (cursor, [, statics]) { }
 ```
 
-* `cursor` (*optional*) is the cursor to the part of the immutable data structure for the component
+* `cursor` (*optional*) is the cursor or the object literal holding cursors to the part(s) of the immutable data structure for the component
 * `statics` (*optional*) is an object of the received static values, that does not trigger a re-render when changed.
 
-A component's passed `cursor` is also available on `this.props.cursor` for reach in mixins. If multiple `cursors` are passed, all of these are available on `this.props.cursors`. 
+A component's passed `cursor` is also available on `this.props.cursor` for reach in mixins. 
+
+If multiple `cursors` were passed as part of an object literal, e.g. `{ cursorOne: immutableStructure.cursor(), cursorTwo: immutableStructure.cursor(['somewhere', 'else']) }` all of these are available on `this.props.cursor`, as `this.props.cursor.cursorOne`and `this.props.cursor.cursorTwo` respectively. 
 
 `statics` are also available as `this.props.statics`.
 

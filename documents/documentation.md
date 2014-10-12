@@ -58,7 +58,7 @@ Component([key: String, ]cursor: Cursor | Object<String, Cursor> [, statics: Obj
 
 ```
 * `key` (*optional*) a key that is passed verbatim to the React component as `props.key` (e.g. for use in lists with repeating elements).
-* `cursor` (*optional*) a cursor or an object literal of cursors to part(s) of an immutable data structure, needed for your rendering your component, changes to any of these will trigger re-render.
+* `cursor` (*optional*) a cursor or an object literal holding cursors to part(s) of an immutable data structure, needed for your rendering your component, changes to any of these will trigger re-render.
 * `statics` (*optional*) an object with static properties, does not cause a component to re-render on change.
 
 E.g. passing a key, a single cursor and statics

@@ -46,6 +46,7 @@ var structure = immstruct({
     { title: "jQuery", url: "http://jquery.com/" },
     { title: "Prototype", url: "http://www.prototypejs.org/" },
     { title: "React", url: "http://facebook.github.io/react/" },
+    { title: "Omniscient": url: "https://github.com/omniscientjs/omniscient" },
     { title: "Ember", url: "http://emberjs.com/" },
     { title: "Knockout.js", url: "http://knockoutjs.com/" },
     { title: "Dojo", url: "http://dojotoolkit.org/" },

@@ -1,7 +1,7 @@
 Omniscient.js
 =========
 
-<img src="https://raw.githubusercontent.com/torgeir/omniscient/master/omniscient_logo.png" align="right" width="150px">
+<img src="https://raw.githubusercontent.com/omniscientjs/omniscient/master/omniscient_logo.png" align="right" width="150px">
 > A library providing an abstraction for React components that allows for top-down rendering of immutable data. Using cursors into immutable datastructures the nested components does not need knowledge of the entire immutable data structure, but are still capable of swapping out their own piece of data to trigger a re render of affected components.
 
 > Omniscient pairs the simplicity of [Quiescent](https://github.com/levand/quiescent) with
@@ -49,7 +49,7 @@ render();
 structure.on('swap', render);
 ```
 
-[`immstruct`](https://github.com/omniscient/immstruct) is a simple wrapper for [`Immutable.js`](https://github.com/facebook/immutable-js) that ease handling re-render when an immutable data structure is replaced through the use of cursors. `immstruct` is not a requirement for Omniscient, but makes a great fit.
+[`immstruct`](https://github.com/omniscientjs/immstruct) is a simple wrapper for [`Immutable.js`](https://github.com/facebook/immutable-js) that ease handling re-render when an immutable data structure is replaced through the use of cursors. `immstruct` is not a requirement for Omniscient, but makes a great fit.
 
 ### Reuseable mixins
 
@@ -159,7 +159,7 @@ var List = component(function (cursor) {
 
 ### Efficient shouldComponentUpdate
 
-Omniscient provides an [efficient default](https://github.com/torgeir/omniscient/blob/master/component.js#L47-L64) `shouldComponentUpdate` that works well with the immutable data structures of Immutable.js.
+Omniscient provides an [efficient default](https://github.com/omniscientjs/omniscient/blob/master/component.js#L47-L64) `shouldComponentUpdate` that works well with the immutable data structures of Immutable.js.
 
 #### Overriding shouldCompontentUpdate
 
@@ -199,7 +199,7 @@ Immstruct is not a requirement for Omniscient, and you are free to choose any ot
 
 If you are using something other than the cursors from Immutable.js, however, make sure to provide a custom implementation of `shouldComponentUpdate` for efficient rendering.
 
-See [how to use immstruct](https://github.com/omniscient/immstruct/blob/master/README.md) for more information.
+See [how to use immstruct](https://github.com/omniscientjs/immstruct/blob/master/README.md) for more information.
 
 [npm-url]: https://npmjs.org/package/omniscient
 [npm-image]: http://img.shields.io/npm/v/omniscient.svg?style=flat

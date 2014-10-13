@@ -3,11 +3,11 @@ Documentation
 
 Omniscient has a [very simple API](#api) only consisting of *one* function; `component`.
 
-This function creates a wrapped React.js component to which you should pass a cursor of an immutable data structure, instead of the usual props. This allows for components that does not need knowledge of your complete data structure, but only the parts needed for rendering each specific component.
+This function creates a wrapped React.js component to which you should pass a cursor of an immutable data structure needed for rendering a specific component, instead of the usual props. 
 
-Passing a cursor of the immutable data structure allows the components to change their own piece of the immutable structure from within each component, that in turn replaces the whole of the immutable structure, and causes a re-render.
+Why cursors? Passing cursors of an immutable data structure down your component tree allows for components that can swap their own piece of data inside the immutable data structure when changes happen, that in turn will replace the whole of the outer data structure, but without each component actually needing knowledge about the rest of the structure. (Nobody actually wan’t a global data structure that everyone reaches into, right?) 
 
-Using immutable data structures with React in this way actually allows for super fast re-renders of the whole of your component tree, as references checks in `shouldComponentUpdate` will suffice for knowing if the components' data have changed. In this way, only component subtrees holding changed data will *actually* re-render.
+You are able to listen for when this replacement happens, and make React re-render. Using immutable data structures with React in this way actually allows for super fast re-renders of the whole of your component tree, as references checks in shouldComponentUpdate will suffice for knowing if the components' data have changed, and determine if components need to re-render. This way, only component subtrees holding changed data will actually re-render.
 
 ## Installing
 

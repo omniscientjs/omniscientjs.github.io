@@ -71,8 +71,10 @@ var members = {
 };
 
 var mixins = [members, setPropsMixin];
-module.exports = component(mixins, function (cursor, shared, statics) {
-  var hiddenClass = shared.isInAddMode ? '' : 'hidden';
+module.exports = component(mixins, function (cursors, statics) {
+  var cursor = cursors.cursor;
+  var hiddenClass = cursors.shared.isInAddMode ? '' : 'hidden';
+  this.props.cursor = cursor;
 
   return (
     React.DOM.div({ className: 'photobooth'},

@@ -32,7 +32,10 @@ var ReactionBox = component(mixins, function (cursor) {
   return (
     React.DOM.div({ className: 'container' },
       React.DOM.h1(null, 'Reactions'),
-      PhotoBooth([cursor.get('pb'), sharedState], { events: events }),
+      PhotoBooth({
+        cursor: cursor.get('pb'),
+        shared: sharedState
+      }, { events: events }),
       React.DOM.button({ onClick: this.handleSubmit, className: 'btn-start ' + hiddenClass }, 'Try Your Reaction')
     )
   );

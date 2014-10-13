@@ -282,7 +282,7 @@ var d = React.DOM;
 module.exports = component(function (cursor, statics) {
   function addPost () {
     cursor.update(function (items) {
-      var lastId = items.last().get('id');
+      var lastId = (items && items.last()) ? items.last().get('id') : 0;
       var nextId = Number(lastId) + 1;
       return items.push(Immutable.Map({ id: nextId, title: 'Post #' + nextId, text: 'Foo bar baz' }));
     });
@@ -360,19 +360,21 @@ var EventEmitter = require("events").EventEmitter,
     component = require('omniscient');
 
 var Item = require('./item');
+var events = new EventEmitter();
 
 module.exports = component(function (cursor, statics) {
-  var events = new EventEmitter();
+  console.log("rerender");
+  var items = cursor.toArray().map(function (item, key) {
+    return Item("item-" + key, item, { events: events });
+  });
 
-  events.on('delete', function (item) {
-    cursor.update(function (state) {
+  // Will rerender, so remove all listeners.
+  events.removeAllListeners();
+  events.once('delete', function (item) {
+    cursor = cursor.update(function (state) {
       // Use toVector() https://github.com/facebook/immutable-js/issues/122
       return state.splice(state.indexOf(item), 1).toVector();
     });
-  });
-
-  var items = cursor.toArray().map(function (item, key) {
-    return Item("item-" + key, item, { events: events });
   });
 
   return React.DOM.section({},

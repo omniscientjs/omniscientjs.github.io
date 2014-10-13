@@ -41,7 +41,7 @@ render();
 structure.on('swap', render);
 ```
 
-[`immstruct`](https://github.com/mikaelbr/immstruct) is a simple wrapper for [`Immutable.js`](https://github.com/facebook/immutable-js) that ease handling re-render when an immutable data structure is replaced through the use of cursors. `immstruct` is not a requirement for Omniscient, but makes a great fit.
+[`immstruct`](https://github.com/omniscient/immstruct) is a simple wrapper for [`Immutable.js`](https://github.com/facebook/immutable-js) that ease handling re-render when an immutable data structure is replaced through the use of cursors. `immstruct` is not a requirement for Omniscient, but makes a great fit.
 
 ### Reuseable mixins
 
@@ -208,7 +208,7 @@ Immstruct is not a requirement for Omniscient, and you are free to choose any ot
 
 If you are using something other than the cursors from Immutable.js, however, make sure to provide a custom implementation of `shouldComponentUpdate` for efficient rendering.
 
-See [how to use immstruct](https://github.com/mikaelbr/immstruct/blob/master/README.md) for more information.
+See [how to use immstruct](https://github.com/omniscient/immstruct/blob/master/README.md) for more information.
 
 [npm-url]: https://npmjs.org/package/omniscient
 [npm-image]: http://img.shields.io/npm/v/omniscient.svg?style=flat

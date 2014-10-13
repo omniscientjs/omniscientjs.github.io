@@ -220,16 +220,9 @@ h1 code, h2 code, h3 code, p code, li code {
 }
 
 .structure-preview {
-  width: 50%;
   max-width: 450px;
   min-width: 200px;
   overflow: auto;
-  float: right;
-
-  max-height: 100%;
-  overflow: auto;
-  position: absolute;
-  top: 0;
   right: 0;
   border: 0;
 
@@ -237,7 +230,27 @@ h1 code, h2 code, h3 code, p code, li code {
   padding-left: 10px;
 }
 
+.example-box {
+  overflow: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-height: 100%;
+  width: 50%;
+}
 
+.structure-preview, .example-box {
+  overflow: auto;
+  position: absolute;
+  top: 0;
+  max-height: 100%;
+  width: 50%;
+}
+
+.example-box ul {
+  padding: 0;
+  border: 0;
+}
 
 /* Helpers */
 .cf:before,

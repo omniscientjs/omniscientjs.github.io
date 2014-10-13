@@ -8,10 +8,8 @@ module.exports = function (doc, cursor) {
     }
 
     response.on('data', function (buf) {
-      var orig = cursor.get(doc);
-      orig = orig || '';
-      cursor.update(function (state) {
-        return state.set(doc, orig + buf.toString());
+      cursor.update(doc, function (state) {
+        return (state || '') + buf.toString();
       });
     });
   });

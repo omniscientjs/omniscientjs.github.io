@@ -159,7 +159,7 @@ var List = component(function (cursor) {
 
 ### Efficient shouldComponentUpdate
 
-Omniscient provides an [efficient default](https://github.com/omniscientjs/omniscient/blob/master/component.js#L47-L64) `shouldComponentUpdate` that works well with the immutable data structures of Immutable.js.
+Omniscient provides an [efficient default](https://github.com/omniscientjs/omniscient/blob/master/component.js) `shouldComponentUpdate` that works well with the immutable data structures of Immutable.js.
 
 #### Overriding shouldCompontentUpdate
 

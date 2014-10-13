@@ -3,9 +3,9 @@ Documentation
 
 Omniscient has a [very simple API](#api) only consisting of *one* function; `component`.
 
-This function creates a wrapped React.js component to which you should pass a cursor of an immutable data structure needed for rendering a specific component, instead of the usual props. 
+This function creates a wrapped React.js component to which you should pass a cursor of an immutable data structure needed for rendering a specific component, instead of the usual props.
 
-Why cursors? Passing cursors of an immutable data structure down your component tree allows for components that can swap their own piece of data inside the immutable data structure when changes happen, that in turn will replace the whole of the outer data structure, but without each component actually needing knowledge about the rest of the structure. (Nobody actually wants a global data structure that everyone reaches into, right?) 
+Why cursors? Passing cursors of an immutable data structure down your component tree allows for components that can swap their own piece of data inside the immutable data structure when changes happen, that in turn will replace the whole of the outer data structure, but without each component actually needing knowledge about the rest of the structure. (Nobody actually wants a global data structure that everyone reaches into, right?)
 
 You are able to listen for when this replacement happens, and make React re-render. Using immutable data structures with React in this way actually allows for super fast re-renders of the whole of your component tree, as references checks in shouldComponentUpdate will suffice for knowing if the components' data have changed, and determine if they need to re-render. This way, only component subtrees holding changed data will actually re-render.
 
@@ -64,7 +64,7 @@ E.g. passing a key, a single cursor and statics
 
 ```js
 var key = 'keyPassedToReactComponent';
-Component(key, 
+Component(key,
   immutableStructure.cursor(),
   { eventsFromChild: new EventEmitter() });
 ```
@@ -73,7 +73,7 @@ E.g. passing multiple cursors and statics
 
 ```js
 Component(
-  { cursorOne: immutableStructure.cursor(), cursorTwo: immutableStructure.cursor(['somewhere', 'else']) }, 
+  { cursorOne: immutableStructure.cursor(), cursorTwo: immutableStructure.cursor(['somewhere', 'else']) },
   { eventsFromChild: new EventEmitter() });
 ```
 
@@ -108,9 +108,16 @@ function (cursor, [, statics]) { }
 * `cursor` (*optional*) is the cursor or the object literal holding cursors to the part(s) of the immutable data structure for the component
 * `statics` (*optional*) is an object of the received static values, that does not trigger a re-render when changed.
 
-A component's passed `cursor` is also available on `this.props.cursor` for reach in mixins. 
+A component's passed `cursor` is also available on `this.props.cursor` for reach in mixins.
 
-If multiple `cursors` were passed as part of an object literal, e.g. `{ cursorOne: immutableStructure.cursor(), cursorTwo: immutableStructure.cursor(['somewhere', 'else']) }` all of these are available on `this.props.cursor`, as `this.props.cursor.cursorOne`and `this.props.cursor.cursorTwo` respectively. 
+If multiple `cursors` were passed as part of an object literal, e.g.
+```js
+{
+  cursorOne: immutableStructure.cursor(),
+  cursorTwo: immutableStructure.cursor(['somewhere', 'else'])
+}
+```
+all of these are available on `this.props.cursor`, as `this.props.cursor.cursorOne`and `this.props.cursor.cursorTwo` respectively.
 
 `statics` are also available as `this.props.statics`.
 

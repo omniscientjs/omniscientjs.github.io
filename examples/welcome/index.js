@@ -23,7 +23,7 @@ var structure = immstruct({ greeting: 'Welcome', guest: { name: '' } });
 
 module.exports.name = 'welcome';
 module.exports.structure = structure;
-module.exports.init = function (el) {
+module.exports.init = function (el) {
   render();
   structure.on('swap', render);
 

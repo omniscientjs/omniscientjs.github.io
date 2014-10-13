@@ -11,7 +11,7 @@ var doc = 'documentation';
 module.exports = component(function (routeProps) {
   var structure = routeProps.cursor;
   var cursor = structure.cursor();
-  var documentation = cursor.get('documentation');
+  var documentation = cursor.get(doc);
 
   structure.once('swap', function () {
     if (this.isMounted()) {

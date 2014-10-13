@@ -8,7 +8,7 @@ module.exports = function (doc, cursor) {
     }
 
     response.on('data', function (buf) {
-      cursor.update(doc, function (state) {
+      cursor = cursor.update(doc, function (state) {
         return (state || '') + buf.toString();
       });
     });

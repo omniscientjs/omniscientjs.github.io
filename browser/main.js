@@ -25,7 +25,7 @@ var structure = immstruct('global', {
     require('../examples/entry-list'),
     require('../examples/events'),
     require('../examples/inline-edit'),
-    require('../examples/search'),
+    require('../examples/search')
   ]
 });
 
@@ -34,9 +34,9 @@ var Documentation = require('./views/documentation');
 var ExampleList = require('./views/examples');
 
 var routes = Routes({},
-  Route({ name: 'main', path: '/', view: Index, data: structure }),
-  Route({ name: 'examples', path: '/examples', view: ExampleList, data: structure }),
-  Route({ name: 'documentation', path: '/documentation', view: Documentation, data: structure })
+  Route({ name: 'main', path: '/', view: Index, cursor: structure }),
+  Route({ name: 'examples', path: '/examples', view: ExampleList, cursor: structure }),
+  Route({ name: 'documentation', path: '/documentation', view: Documentation, cursor: structure })
 );
 
 var container = document.querySelector('.page-container');

@@ -1,3 +1,4 @@
+var React = require('react');
 var component = require('omniscient');
 var fs = require('fs');
 var Link = require('rrouter').Link;

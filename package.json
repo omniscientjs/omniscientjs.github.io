@@ -20,9 +20,10 @@
   "homepage": "https://github.com/omniscientjs/omniscientjs.github.io",
   "dependencies": {
     "highlight.js": "^8.3.0",
-    "immstruct": "^0.8.0",
+    "immstruct": "^0.8.2",
+    "immutable": "^2.3.0",
     "marked": "^0.3.2",
-    "omniscient": "^1.0.2",
+    "omniscient": "^1.1.0",
     "react": "^0.11.2",
     "rrouter": "^0.4.2"
   },

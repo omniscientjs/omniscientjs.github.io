@@ -10,7 +10,9 @@ module.exports = function (doc, cursor) {
     response.on('data', function (buf) {
       var orig = cursor.get(doc);
       orig = orig || '';
-      cursor.set(doc, orig + buf.toString());
+      cursor.update(function (state) {
+        return state.set(doc, orig + buf.toString());
+      });
     });
   });
 };

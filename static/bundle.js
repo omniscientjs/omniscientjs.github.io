@@ -11,7 +11,9 @@ module.exports = function (doc, cursor) {
     response.on('data', function (buf) {
       var orig = cursor.get(doc);
       orig = orig || '';
-      cursor.set(doc, orig + buf.toString());
+      cursor.update(function (state) {
+        return state.set(doc, orig + buf.toString());
+      });
     });
   });
 };
@@ -44,7 +46,7 @@ var structure = immstruct('global', {
     require('../examples/entry-list'),
     require('../examples/events'),
     require('../examples/inline-edit'),
-    require('../examples/search'),
+    require('../examples/search')
   ]
 });
 
@@ -53,9 +55,9 @@ var Documentation = require('./views/documentation');
 var ExampleList = require('./views/examples');
 
 var routes = Routes({},
-  Route({ name: 'main', path: '/', view: Index, data: structure }),
-  Route({ name: 'examples', path: '/examples', view: ExampleList, data: structure }),
-  Route({ name: 'documentation', path: '/documentation', view: Documentation, data: structure })
+  Route({ name: 'main', path: '/', view: Index, cursor: structure }),
+  Route({ name: 'examples', path: '/examples', view: ExampleList, cursor: structure }),
+  Route({ name: 'documentation', path: '/documentation', view: Documentation, cursor: structure })
 );
 
 var container = document.querySelector('.page-container');
@@ -69,7 +71,7 @@ function rerender () {
   routing.update();
 }
 
-},{"../examples/entry-list":10,"../examples/events":14,"../examples/inline-edit":17,"../examples/search":20,"../examples/welcome":21,"./views/documentation":4,"./views/examples":5,"./views/index":7,"highlight.js":91,"immstruct":195,"marked":201,"react":493,"rrouter":504}],3:[function(require,module,exports){
+},{"../examples/entry-list":10,"../examples/events":14,"../examples/inline-edit":17,"../examples/search":20,"../examples/welcome":21,"./views/documentation":4,"./views/examples":5,"./views/index":7,"highlight.js":91,"immstruct":195,"marked":200,"react":348,"rrouter":359}],3:[function(require,module,exports){
 var githubOrganizationLinkUrl = 'https://github.com/omniscientjs';
 
 module.exports = {
@@ -90,8 +92,15 @@ var loadContentToCursor = require('../lib/loadContentToCursor');
 var doc = 'documentation';
 
 module.exports = component(function (routeProps) {
-  var cursor = routeProps.data.cursor();
+  var structure = routeProps.cursor;
+  var cursor = structure.cursor();
   var documentation = cursor.get('documentation');
+
+  structure.once('swap', function () {
+    if (this.isMounted()) {
+      this.forceUpdate()
+    }
+  }.bind(this));
 
   var content;
   if (!documentation) {
@@ -113,7 +122,8 @@ module.exports = component(function (routeProps) {
   );
 });
 
-},{"../lib/loadContentToCursor":1,"./header":6,"marked":201,"omniscient":202,"react":493}],5:[function(require,module,exports){
+},{"../lib/loadContentToCursor":1,"./header":6,"marked":200,"omniscient":201,"react":348}],5:[function(require,module,exports){
+var React = require('react');
 var component = require('omniscient');
 
 var highlight = require('highlight.js');
@@ -142,7 +152,11 @@ var StructureView = component(preventUpdateMixin, function (cursor, statics) {
   }
 
   cursor = statics.structure.cursor();
-  statics.structure && statics.structure.once('swap', this.forceUpdate.bind(this));
+  statics.structure && statics.structure.once('swap', function () {
+    if (this.isMounted()) {
+      this.forceUpdate()
+    }
+  }.bind(this));
 
   var data = JSON.stringify(cursor.toJSON(), null, 2);
 
@@ -168,7 +182,6 @@ var Example = component([preventUpdateMixin, exampleMixin], function (example) {
   var structure = example.get('structure');
   var cursor = structure ? structure.cursor() : null;
   var name = example.get('name');
-
   var link = githubBaseUrl + name;
 
   return React.DOM.div({ key: name },
@@ -189,7 +202,8 @@ var Example = component([preventUpdateMixin, exampleMixin], function (example) {
 });
 
 module.exports = component(function (routeProps) {
-  var examples = routeProps.data.cursor('examples').toArray().map(Example);
+
+  var examples = routeProps.cursor.cursor().get('examples').toArray().map(Example);
 
   return React.DOM.div({},
     Header(),
@@ -200,7 +214,8 @@ module.exports = component(function (routeProps) {
   );
 });
 
-},{"../urls":3,"./header":6,"highlight.js":91,"immstruct":195,"omniscient":202}],6:[function(require,module,exports){
+},{"../urls":3,"./header":6,"highlight.js":91,"immstruct":195,"omniscient":201,"react":348}],6:[function(require,module,exports){
+var React = require('react');
 var component = require('omniscient');
 
 var Link = require('rrouter').Link;
@@ -236,7 +251,7 @@ module.exports = component(function (cursor) {
   );
 });
 
-},{"../urls":3,"omniscient":202,"rrouter":504}],7:[function(require,module,exports){
+},{"../urls":3,"omniscient":201,"react":348,"rrouter":359}],7:[function(require,module,exports){
 var component = require('omniscient');
 var React = require('react');
 
@@ -245,7 +260,7 @@ var Header = require('./header');
 var marked = require('marked');
 
 module.exports = component(function (routeProps) {
-  var cursor = routeProps.data.cursor();
+  var cursor = routeProps.cursor.cursor();
 
   return React.DOM.div({},
     Header(),
@@ -259,7 +274,7 @@ module.exports = component(function (routeProps) {
   );
 });
 
-},{"./header":6,"marked":201,"omniscient":202,"react":493}],8:[function(require,module,exports){
+},{"./header":6,"marked":200,"omniscient":201,"react":348}],8:[function(require,module,exports){
 var React = require('react'),
     component = require('omniscient'),
     Immutable = require('immutable');
@@ -277,7 +292,7 @@ module.exports = component(function (cursor, statics) {
   return d.button({ onClick: addPost }, "Add");
 });
 
-},{"immutable":200,"omniscient":202,"react":493}],9:[function(require,module,exports){
+},{"immutable":199,"omniscient":201,"react":348}],9:[function(require,module,exports){
 var React = require('react'),
     component = require('omniscient');
 
@@ -293,7 +308,7 @@ module.exports = component(function (cursor, statics) {
   );
 });
 
-},{"./add-post":8,"./list":12,"omniscient":202,"react":493}],10:[function(require,module,exports){
+},{"./add-post":8,"./list":12,"omniscient":201,"react":348}],10:[function(require,module,exports){
 var React = require('react'),
     immstruct = require('immstruct');
 
@@ -320,7 +335,7 @@ module.exports.init = function (el) {
   }
 };
 
-},{"./app":9,"immstruct":195,"react":493}],11:[function(require,module,exports){
+},{"./app":9,"immstruct":195,"react":348}],11:[function(require,module,exports){
 var React = require('react'),
     component = require('omniscient');
 
@@ -341,7 +356,7 @@ module.exports = component(function (cursor, statics) {
   );
 });
 
-},{"omniscient":202,"react":493}],12:[function(require,module,exports){
+},{"omniscient":201,"react":348}],12:[function(require,module,exports){
 var EventEmitter = require("events").EventEmitter,
     React = require('react'),
     component = require('omniscient');
@@ -367,7 +382,7 @@ module.exports = component(function (cursor, statics) {
                                         : React.DOM.span({}, "No more posts."));
 });
 
-},{"./item":11,"events":62,"omniscient":202,"react":493}],13:[function(require,module,exports){
+},{"./item":11,"events":62,"omniscient":201,"react":348}],13:[function(require,module,exports){
 var React = require('react'),
     component = require('omniscient');
 
@@ -378,7 +393,7 @@ module.exports = component(function (data, statics) {
   return React.DOM.text({ onClick: onClick }, data.text);
 });
 
-},{"omniscient":202,"react":493}],14:[function(require,module,exports){
+},{"omniscient":201,"react":348}],14:[function(require,module,exports){
 var EventEmitter = require("events").EventEmitter,
     React = require('react'),
     component = require('omniscient');
@@ -399,7 +414,7 @@ module.exports.init = function (el) {
   React.renderComponent(h, el);
 };
 
-},{"./heading":13,"events":62,"omniscient":202,"react":493}],15:[function(require,module,exports){
+},{"./heading":13,"events":62,"omniscient":201,"react":348}],15:[function(require,module,exports){
 var React = require('react');
 var component = require('omniscient');
 var d = React.DOM;
@@ -437,7 +452,7 @@ module.exports = component(EditMixin, function (cursor) {
   return d.span({ onClick: this.onEdit }, cursor.get('text'));
 });
 
-},{"./focusing-input":16,"omniscient":202,"react":493}],16:[function(require,module,exports){
+},{"./focusing-input":16,"omniscient":201,"react":348}],16:[function(require,module,exports){
 var React = require('react');
 var component = require('omniscient');
 var d = React.DOM;
@@ -453,7 +468,7 @@ module.exports = component(FocusOnRender, function (cursor, statics) {
   return d.input({ value: cursor.get('text'), onChange: onChange });
 });
 
-},{"omniscient":202,"react":493}],17:[function(require,module,exports){
+},{"omniscient":201,"react":348}],17:[function(require,module,exports){
 var immstruct = require('immstruct');
     React     = require('react');
 
@@ -478,7 +493,7 @@ module.exports.init = function (el) {
   }
 };
 
-},{"./list":19,"immstruct":195,"react":493}],18:[function(require,module,exports){
+},{"./list":19,"immstruct":195,"react":348}],18:[function(require,module,exports){
 var component = require('omniscient');
 var React = require('react');
 var d = React.DOM;
@@ -490,7 +505,7 @@ module.exports = component(function (cursor) {
 });
 
 
-},{"./editable":15,"omniscient":202,"react":493}],19:[function(require,module,exports){
+},{"./editable":15,"omniscient":201,"react":348}],19:[function(require,module,exports){
 var component = require('omniscient');
 var React = require('react');
 var d = React.DOM;
@@ -503,7 +518,7 @@ module.exports = component(function (cursor) {
   }));
 });
 
-},{"./item":18,"omniscient":202,"react":493}],20:[function(require,module,exports){
+},{"./item":18,"omniscient":201,"react":348}],20:[function(require,module,exports){
 var React     = require('react'),
     immstruct = require('immstruct'),
     component = require('omniscient');
@@ -576,7 +591,7 @@ module.exports.init = function (el) {
   }
 };
 
-},{"immstruct":195,"omniscient":202,"react":493}],21:[function(require,module,exports){
+},{"immstruct":195,"omniscient":201,"react":348}],21:[function(require,module,exports){
 var React     = require('react'),
     immstruct = require('immstruct'),
     component = require('omniscient');
@@ -611,7 +626,7 @@ module.exports.init = function (el) {
   };
 };
 
-},{"immstruct":195,"omniscient":202,"react":493}],22:[function(require,module,exports){
+},{"immstruct":195,"omniscient":201,"react":348}],22:[function(require,module,exports){
 /**
  * Copyright (c) 2014 Petka Antonov
  * 
@@ -21486,2852 +21501,9 @@ module.exports = function (key, data) {
   return newInstance;
 };
 
-},{"./src/structure":198}],196:[function(require,module,exports){
-/**
- *  Copyright (c) 2014, Facebook, Inc.
- *  All rights reserved.
- *
- *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant
- *  of patent rights can be found in the PATENTS file in the same directory.
- */
-function universalModule() {
-  var $Object = Object;
-
-function createClass(ctor, methods, staticMethods, superClass) {
-  var proto;
-  if (superClass) {
-    var superProto = superClass.prototype;
-    proto = $Object.create(superProto);
-  } else {
-    proto = ctor.prototype;
-  }
-  $Object.keys(methods).forEach(function (key) {
-    proto[key] = methods[key];
-  });
-  $Object.keys(staticMethods).forEach(function (key) {
-    ctor[key] = staticMethods[key];
-  });
-  proto.constructor = ctor;
-  ctor.prototype = proto;
-  return ctor;
-}
-
-function superCall(self, proto, name, args) {
-  return $Object.getPrototypeOf(proto)[name].apply(self, args);
-}
-
-function defaultSuperCall(self, proto, args) {
-  superCall(self, proto, 'constructor', args);
-}
-
-var $traceurRuntime = {};
-$traceurRuntime.createClass = createClass;
-$traceurRuntime.superCall = superCall;
-$traceurRuntime.defaultSuperCall = defaultSuperCall;
-"use strict";
-var SHIFT = 5;
-var SIZE = 1 << SHIFT;
-var MASK = SIZE - 1;
-var NOT_SET = {};
-var CHANGE_LENGTH = {value: false};
-var DID_ALTER = {value: false};
-function MakeRef(ref) {
-  ref.value = false;
-  return ref;
-}
-function SetRef(ref) {
-  ref && (ref.value = true);
-}
-function OwnerID() {}
-function arrCopy(arr, offset) {
-  offset = offset || 0;
-  var len = Math.max(0, arr.length - offset);
-  var newArr = new Array(len);
-  for (var ii = 0; ii < len; ii++) {
-    newArr[ii] = arr[ii + offset];
-  }
-  return newArr;
-}
-var ITER_RESULT = {
-  value: undefined,
-  done: false
-};
-function iteratorValue(value) {
-  ITER_RESULT.value = value;
-  ITER_RESULT.done = false;
-  return ITER_RESULT;
-}
-function iteratorDone() {
-  ITER_RESULT.value = undefined;
-  ITER_RESULT.done = true;
-  return ITER_RESULT;
-}
-function invariant(condition, error) {
-  if (!condition)
-    throw new Error(error);
-}
-var DELETE = 'delete';
-var ITERATOR = typeof Symbol !== 'undefined' ? Symbol.iterator : '@@iterator';
-function hash(o) {
-  if (!o) {
-    return 0;
-  }
-  if (o === true) {
-    return 1;
-  }
-  var type = typeof o;
-  if (type === 'number') {
-    if ((o | 0) === o) {
-      return o & HASH_MAX_VAL;
-    }
-    o = '' + o;
-    type = 'string';
-  }
-  if (type === 'string') {
-    return o.length > STRING_HASH_CACHE_MIN_STRLEN ? cachedHashString(o) : hashString(o);
-  }
-  if (o.hashCode) {
-    return hash(typeof o.hashCode === 'function' ? o.hashCode() : o.hashCode);
-  }
-  return hashJSObj(o);
-}
-function cachedHashString(string) {
-  var hash = STRING_HASH_CACHE[string];
-  if (hash == null) {
-    hash = hashString(string);
-    if (STRING_HASH_CACHE_SIZE === STRING_HASH_CACHE_MAX_SIZE) {
-      STRING_HASH_CACHE_SIZE = 0;
-      STRING_HASH_CACHE = {};
-    }
-    STRING_HASH_CACHE_SIZE++;
-    STRING_HASH_CACHE[string] = hash;
-  }
-  return hash;
-}
-function hashString(string) {
-  var hash = 0;
-  for (var ii = 0; ii < string.length; ii++) {
-    hash = (31 * hash + string.charCodeAt(ii)) & HASH_MAX_VAL;
-  }
-  return hash;
-}
-function hashJSObj(obj) {
-  if (obj[UID_HASH_KEY]) {
-    return obj[UID_HASH_KEY];
-  }
-  var uid = ++UID_HASH_COUNT & HASH_MAX_VAL;
-  if (!isIE8) {
-    try {
-      Object.defineProperty(obj, UID_HASH_KEY, {
-        'enumerable': false,
-        'configurable': false,
-        'writable': false,
-        'value': uid
-      });
-      return uid;
-    } catch (e) {
-      isIE8 = true;
-    }
-  }
-  obj[UID_HASH_KEY] = uid;
-  return uid;
-}
-var HASH_MAX_VAL = 0x7FFFFFFF;
-var UID_HASH_COUNT = 0;
-var UID_HASH_KEY = '__immutablehash__';
-if (typeof Symbol !== 'undefined') {
-  UID_HASH_KEY = Symbol(UID_HASH_KEY);
-}
-var isIE8 = false;
-var STRING_HASH_CACHE_MIN_STRLEN = 16;
-var STRING_HASH_CACHE_MAX_SIZE = 255;
-var STRING_HASH_CACHE_SIZE = 0;
-var STRING_HASH_CACHE = {};
-var Sequence = function Sequence(value) {
-  return $Sequence.from(arguments.length === 1 ? value : Array.prototype.slice.call(arguments));
-};
-var $Sequence = Sequence;
-($traceurRuntime.createClass)(Sequence, {
-  toString: function() {
-    return this.__toString('Seq {', '}');
-  },
-  __toString: function(head, tail) {
-    if (this.length === 0) {
-      return head + tail;
-    }
-    return head + ' ' + this.map(this.__toStringMapper).join(', ') + ' ' + tail;
-  },
-  __toStringMapper: function(v, k) {
-    return k + ': ' + quoteString(v);
-  },
-  toJS: function() {
-    return this.map((function(value) {
-      return value instanceof $Sequence ? value.toJS() : value;
-    })).__toJS();
-  },
-  toArray: function() {
-    assertNotInfinite(this.length);
-    var array = new Array(this.length || 0);
-    this.valueSeq().forEach((function(v, i) {
-      array[i] = v;
-    }));
-    return array;
-  },
-  toObject: function() {
-    assertNotInfinite(this.length);
-    var object = {};
-    this.forEach((function(v, k) {
-      object[k] = v;
-    }));
-    return object;
-  },
-  toVector: function() {
-    assertNotInfinite(this.length);
-    return Vector.from(this);
-  },
-  toMap: function() {
-    assertNotInfinite(this.length);
-    return Map.from(this);
-  },
-  toOrderedMap: function() {
-    assertNotInfinite(this.length);
-    return OrderedMap.from(this);
-  },
-  toSet: function() {
-    assertNotInfinite(this.length);
-    return Set.from(this);
-  },
-  toKeyedSeq: function() {
-    return this;
-  },
-  hashCode: function() {
-    return this.__hash || (this.__hash = this.length === Infinity ? 0 : this.reduce((function(h, v, k) {
-      return (h + (hash(v) ^ (v === k ? 0 : hash(k)))) & HASH_MAX_VAL;
-    }), 0));
-  },
-  equals: function(other) {
-    if (this === other) {
-      return true;
-    }
-    if (!(other instanceof $Sequence)) {
-      return false;
-    }
-    if (this.length != null && other.length != null) {
-      if (this.length !== other.length) {
-        return false;
-      }
-      if (this.length === 0 && other.length === 0) {
-        return true;
-      }
-    }
-    if (this.__hash != null && other.__hash != null && this.__hash !== other.__hash) {
-      return false;
-    }
-    return this.__deepEquals(other);
-  },
-  __deepEquals: function(other) {
-    var entries = this.cacheResult().entrySeq().toArray();
-    var iterations = 0;
-    return other.every((function(v, k) {
-      var entry = entries[iterations++];
-      return is(k, entry[0]) && is(v, entry[1]);
-    }));
-  },
-  join: function(separator) {
-    separator = separator !== undefined ? '' + separator : ',';
-    var string = '';
-    var isFirst = true;
-    this.forEach((function(v, k) {
-      if (isFirst) {
-        isFirst = false;
-        string += (v != null ? v : '');
-      } else {
-        string += separator + (v != null ? v : '');
-      }
-    }));
-    return string;
-  },
-  count: function(predicate, thisArg) {
-    if (!predicate) {
-      if (this.length == null) {
-        this.length = this.forEach(returnTrue);
-      }
-      return this.length;
-    }
-    return this.filter(predicate, thisArg).count();
-  },
-  countBy: function(grouper, context) {
-    var $__0 = this;
-    var groupMap = {};
-    var groups = [];
-    this.forEach((function(v, k) {
-      var g = grouper.call(context, v, k, $__0);
-      var h = hash(g);
-      if (!groupMap.hasOwnProperty(h)) {
-        groupMap[h] = groups.length;
-        groups.push([g, 1]);
-      } else {
-        groups[groupMap[h]][1]++;
-      }
-    }));
-    return $Sequence(groups).fromEntrySeq();
-  },
-  concat: function() {
-    for (var values = [],
-        $__2 = 0; $__2 < arguments.length; $__2++)
-      values[$__2] = arguments[$__2];
-    var sequences = [this].concat(values.map((function(value) {
-      return $Sequence(value);
-    })));
-    var concatSequence = this.__makeSequence();
-    concatSequence.length = sequences.reduce((function(sum, seq) {
-      return sum != null && seq.length != null ? sum + seq.length : undefined;
-    }), 0);
-    concatSequence.__iterateUncached = (function(fn, reverse) {
-      var iterations = 0;
-      var stoppedIteration;
-      var lastIndex = sequences.length - 1;
-      for (var ii = 0; ii <= lastIndex && !stoppedIteration; ii++) {
-        var seq = sequences[reverse ? lastIndex - ii : ii];
-        iterations += seq.__iterate((function(v, k, c) {
-          if (fn(v, k, c) === false) {
-            stoppedIteration = true;
-            return false;
-          }
-        }), reverse);
-      }
-      return iterations;
-    });
-    return concatSequence;
-  },
-  reverse: function() {
-    var sequence = this;
-    var reversedSequence = sequence.__makeSequence();
-    reversedSequence.reverse = (function() {
-      return sequence;
-    });
-    reversedSequence.length = sequence.length;
-    reversedSequence.__iterateUncached = (function(fn, reverse) {
-      return sequence.__iterate(fn, !reverse);
-    });
-    return reversedSequence;
-  },
-  keySeq: function() {
-    return this.flip().valueSeq();
-  },
-  valueSeq: function() {
-    var sequence = this;
-    var valuesSequence = makeIndexedSequence(sequence);
-    valuesSequence.length = sequence.length;
-    valuesSequence.__iterateUncached = function(fn, reverse, reverseIndices) {
-      var $__0 = this;
-      var iterations = 0;
-      var predicate;
-      if (reverseIndices) {
-        var maxIndex = this.length - 1;
-        predicate = (function(v, k, c) {
-          return fn(v, maxIndex - iterations++, $__0) !== false;
-        });
-      } else {
-        predicate = (function(v, k, c) {
-          return fn(v, iterations++, $__0) !== false;
-        });
-      }
-      sequence.__iterate(predicate, reverse);
-      return iterations;
-    };
-    return valuesSequence;
-  },
-  entrySeq: function() {
-    var sequence = this;
-    if (sequence._cache) {
-      return $Sequence(sequence._cache);
-    }
-    var entriesSequence = sequence.map(entryMapper).valueSeq();
-    entriesSequence.fromEntries = (function() {
-      return sequence;
-    });
-    return entriesSequence;
-  },
-  forEach: function(sideEffect, thisArg) {
-    return this.__iterate(thisArg ? sideEffect.bind(thisArg) : sideEffect);
-  },
-  reduce: function(reducer, initialReduction, thisArg) {
-    var reduction;
-    var useFirst;
-    if (arguments.length < 2) {
-      useFirst = true;
-    } else {
-      reduction = initialReduction;
-    }
-    this.forEach((function(v, k, c) {
-      if (useFirst) {
-        useFirst = false;
-        reduction = v;
-      } else {
-        reduction = reducer.call(thisArg, reduction, v, k, c);
-      }
-    }));
-    return reduction;
-  },
-  reduceRight: function(reducer, initialReduction, thisArg) {
-    var reversed = this.toKeyedSeq().reverse();
-    return reversed.reduce.apply(reversed, arguments);
-  },
-  every: function(predicate, thisArg) {
-    var returnValue = true;
-    this.forEach((function(v, k, c) {
-      if (!predicate.call(thisArg, v, k, c)) {
-        returnValue = false;
-        return false;
-      }
-    }));
-    return returnValue;
-  },
-  some: function(predicate, thisArg) {
-    return !this.every(not(predicate), thisArg);
-  },
-  first: function() {
-    return this.find(returnTrue);
-  },
-  last: function() {
-    return this.findLast(returnTrue);
-  },
-  rest: function() {
-    return this.slice(1);
-  },
-  butLast: function() {
-    return this.slice(0, -1);
-  },
-  has: function(searchKey) {
-    return this.get(searchKey, NOT_SET) !== NOT_SET;
-  },
-  get: function(searchKey, notSetValue) {
-    return this.find((function(_, key) {
-      return is(key, searchKey);
-    }), null, notSetValue);
-  },
-  getIn: function(searchKeyPath, notSetValue) {
-    if (!searchKeyPath || searchKeyPath.length === 0) {
-      return this;
-    }
-    return getInDeepSequence(this, searchKeyPath, notSetValue, 0);
-  },
-  contains: function(searchValue) {
-    return this.find((function(value) {
-      return is(value, searchValue);
-    }), null, NOT_SET) !== NOT_SET;
-  },
-  find: function(predicate, thisArg, notSetValue) {
-    var foundValue = notSetValue;
-    this.forEach((function(v, k, c) {
-      if (predicate.call(thisArg, v, k, c)) {
-        foundValue = v;
-        return false;
-      }
-    }));
-    return foundValue;
-  },
-  findKey: function(predicate, thisArg) {
-    var foundKey;
-    this.forEach((function(v, k, c) {
-      if (predicate.call(thisArg, v, k, c)) {
-        foundKey = k;
-        return false;
-      }
-    }));
-    return foundKey;
-  },
-  findLast: function(predicate, thisArg, notSetValue) {
-    return this.toKeyedSeq().reverse().find(predicate, thisArg, notSetValue);
-  },
-  findLastKey: function(predicate, thisArg) {
-    return this.toKeyedSeq().reverse().findKey(predicate, thisArg);
-  },
-  flip: function() {
-    var sequence = this.toKeyedSeq();
-    var flipSequence = sequence.__makeSequence();
-    flipSequence.length = sequence.length;
-    flipSequence.flip = (function() {
-      return sequence;
-    });
-    flipSequence.__iterateUncached = function(fn, reverse) {
-      var $__0 = this;
-      return sequence.__iterate((function(v, k) {
-        return fn(k, v, $__0) !== false;
-      }), reverse);
-    };
-    return flipSequence;
-  },
-  map: function(mapper, thisArg) {
-    var sequence = this;
-    var mappedSequence = sequence.__makeSequence();
-    mappedSequence.length = sequence.length;
-    mappedSequence.__iterateUncached = function(fn, reverse) {
-      var $__0 = this;
-      return sequence.__iterate((function(v, k, c) {
-        return fn(mapper.call(thisArg, v, k, c), k, $__0) !== false;
-      }), reverse);
-    };
-    return mappedSequence;
-  },
-  mapKeys: function(mapper, thisArg) {
-    return this.flip().map(mapper, thisArg).flip();
-  },
-  mapEntries: function(mapper, thisArg) {
-    return this.entrySeq().map(mapper, thisArg).fromEntrySeq();
-  },
-  filter: function(predicate, thisArg) {
-    return filterFactory(this, predicate, thisArg, true);
-  },
-  slice: function(begin, end) {
-    if (wholeSlice(begin, end, this.length)) {
-      return this;
-    }
-    var resolvedBegin = resolveBegin(begin, this.length);
-    var resolvedEnd = resolveEnd(end, this.length);
-    if (resolvedBegin !== resolvedBegin || resolvedEnd !== resolvedEnd) {
-      return this.cacheResult().slice(begin, end);
-    }
-    var skipped = resolvedBegin === 0 ? this : this.skip(resolvedBegin);
-    return resolvedEnd == null || resolvedEnd === this.length ? skipped : skipped.take(resolvedEnd - resolvedBegin);
-  },
-  take: function(amount) {
-    var sequence = this;
-    if (amount > sequence.length) {
-      return sequence;
-    }
-    if (amount < 0) {
-      amount = 0;
-    }
-    var takeSequence = sequence.__makeSequence();
-    takeSequence.__iterateUncached = function(fn, reverse, reverseIndices) {
-      var $__0 = this;
-      if (reverse) {
-        return this.cacheResult().__iterate(fn, reverse, reverseIndices);
-      }
-      var iterations = 0;
-      sequence.__iterate((function(v, k) {
-        return iterations < amount && ++iterations && fn(v, k, $__0);
-      }));
-      return iterations;
-    };
-    takeSequence.length = this.length && Math.min(this.length, amount);
-    return takeSequence;
-  },
-  takeLast: function(amount) {
-    return this.reverse().take(amount).reverse();
-  },
-  takeWhile: function(predicate, thisArg) {
-    var sequence = this;
-    var takeSequence = sequence.__makeSequence();
-    takeSequence.__iterateUncached = function(fn, reverse, reverseIndices) {
-      var $__0 = this;
-      if (reverse) {
-        return this.cacheResult().__iterate(fn, reverse, reverseIndices);
-      }
-      var iterations = 0;
-      sequence.__iterate((function(v, k, c) {
-        return predicate.call(thisArg, v, k, c) && ++iterations && fn(v, k, $__0);
-      }));
-      return iterations;
-    };
-    return takeSequence;
-  },
-  takeUntil: function(predicate, thisArg) {
-    return this.takeWhile(not(predicate), thisArg);
-  },
-  skip: function(amount) {
-    return skipFactory(this, amount, true);
-  },
-  skipLast: function(amount) {
-    return this.reverse().skip(amount).reverse();
-  },
-  skipWhile: function(predicate, thisArg) {
-    return skipWhileFactory(this, predicate, thisArg, true);
-  },
-  skipUntil: function(predicate, thisArg) {
-    return this.skipWhile(not(predicate), thisArg);
-  },
-  groupBy: function(grouper, context) {
-    return groupByFactory(this, grouper, context, true);
-  },
-  sort: function(comparator) {
-    return this.sortBy(valueMapper, comparator);
-  },
-  sortBy: function(mapper, comparator) {
-    comparator = comparator || defaultComparator;
-    var seq = this;
-    return $Sequence(this.entrySeq().entrySeq().toArray().sort((function(a, b) {
-      return comparator(mapper(a[1][1], a[1][0], seq), mapper(b[1][1], b[1][0], seq)) || a[0] - b[0];
-    }))).fromEntrySeq().valueSeq().fromEntrySeq();
-  },
-  cacheResult: function() {
-    if (!this._cache && this.__iterateUncached) {
-      assertNotInfinite(this.length);
-      this._cache = this.entrySeq().toArray();
-      if (this.length == null) {
-        this.length = this._cache.length;
-      }
-    }
-    return this;
-  },
-  __iterate: function(fn, reverse) {
-    var cache = this._cache;
-    if (cache) {
-      var maxIndex = cache.length - 1;
-      for (var ii = 0; ii <= maxIndex; ii++) {
-        var entry = cache[reverse ? maxIndex - ii : ii];
-        if (fn(entry[1], entry[0], this) === false) {
-          break;
-        }
-      }
-      return ii;
-    }
-    return this.__iterateUncached(fn, reverse);
-  },
-  __makeSequence: function() {
-    return makeSequence();
-  }
-}, {from: function(value) {
-    if (value instanceof $Sequence) {
-      return value;
-    }
-    if (!Array.isArray(value)) {
-      if (value && value.constructor === Object) {
-        return new ObjectSequence(value);
-      }
-      value = [value];
-    }
-    return new ArraySequence(value);
-  }});
-var SequencePrototype = Sequence.prototype;
-SequencePrototype.toJSON = SequencePrototype.toJS;
-SequencePrototype.__toJS = SequencePrototype.toObject;
-SequencePrototype.inspect = SequencePrototype.toSource = function() {
-  return this.toString();
-};
-var IndexedSequence = function IndexedSequence() {
-  $traceurRuntime.defaultSuperCall(this, $IndexedSequence.prototype, arguments);
-};
-var $IndexedSequence = IndexedSequence;
-($traceurRuntime.createClass)(IndexedSequence, {
-  toString: function() {
-    return this.__toString('Seq [', ']');
-  },
-  toKeyedSeq: function() {
-    return new KeyedIndexedSequence(this);
-  },
-  valueSeq: function() {
-    return this;
-  },
-  fromEntrySeq: function() {
-    var sequence = this;
-    var fromEntriesSequence = makeSequence();
-    fromEntriesSequence.length = sequence.length;
-    fromEntriesSequence.entrySeq = (function() {
-      return sequence;
-    });
-    fromEntriesSequence.__iterateUncached = function(fn, reverse) {
-      var $__0 = this;
-      return sequence.__iterate((function(entry) {
-        return entry && fn(entry[1], entry[0], $__0);
-      }), reverse);
-    };
-    return fromEntriesSequence;
-  },
-  join: function(separator) {
-    separator = separator !== undefined ? '' + separator : ',';
-    var joined = '';
-    this.forEach((function(v, ii) {
-      joined += (ii ? separator : '') + (v != null ? v : '');
-    }));
-    return joined;
-  },
-  concat: function() {
-    for (var values = [],
-        $__3 = 0; $__3 < arguments.length; $__3++)
-      values[$__3] = arguments[$__3];
-    var sequences = [this].concat(values);
-    var concatSequence = Sequence(sequences).flatten();
-    concatSequence.length = sequences.reduce((function(sum, seq) {
-      if (sum !== undefined) {
-        var len = Sequence(seq).length;
-        if (len != null) {
-          return sum + len;
-        }
-      }
-    }), 0);
-    return concatSequence;
-  },
-  reverse: function() {
-    var sequence = this;
-    var reversedSequence = sequence.__makeSequence();
-    reversedSequence.reverse = (function() {
-      return sequence;
-    });
-    reversedSequence.length = sequence.length;
-    reversedSequence.__iterateUncached = function(fn, reverse, reverseIndices) {
-      var $__0 = this;
-      var i = reverseIndices ? this.length : 0;
-      return sequence.__iterate((function(v) {
-        return fn(v, reverseIndices ? --i : i++, $__0) !== false;
-      }), !reverse);
-    };
-    return reversedSequence;
-  },
-  filter: function(predicate, thisArg) {
-    return filterFactory(this, predicate, thisArg, false);
-  },
-  get: function(index, notSetValue) {
-    index = wrapIndex(this, index);
-    return this.find((function(_, key) {
-      return key === index;
-    }), null, notSetValue);
-  },
-  first: function() {
-    return this.get(0);
-  },
-  last: function() {
-    return this.get(this.length ? this.length - 1 : 0);
-  },
-  indexOf: function(searchValue) {
-    return this.findIndex((function(value) {
-      return is(value, searchValue);
-    }));
-  },
-  lastIndexOf: function(searchValue) {
-    return this.toKeyedSeq().reverse().indexOf(searchValue);
-  },
-  findIndex: function(predicate, thisArg) {
-    var key = this.findKey(predicate, thisArg);
-    return key == null ? -1 : key;
-  },
-  findLastIndex: function(predicate, thisArg) {
-    return this.toKeyedSeq().reverse().findIndex(predicate, thisArg);
-  },
-  splice: function(index, removeNum) {
-    var numArgs = arguments.length;
-    removeNum = Math.max(removeNum | 0, 0);
-    if (numArgs === 0 || (numArgs === 2 && !removeNum)) {
-      return this;
-    }
-    index = resolveBegin(index, this.length);
-    var spliced = this.slice(0, index);
-    return numArgs === 1 ? spliced : spliced.concat(arrCopy(arguments, 2), this.slice(index + removeNum));
-  },
-  flatten: function() {
-    var sequence = this;
-    var flatSequence = this.__makeSequence();
-    flatSequence.__iterateUncached = function(fn, reverse, reverseIndices) {
-      var $__0 = this;
-      var iterations = 0;
-      var maxIndex = this.length - 1;
-      sequence.__iterate((function(seq) {
-        var stopped = false;
-        Sequence(seq).__iterate((function(v) {
-          if (fn(v, reverseIndices ? maxIndex - iterations++ : iterations++, $__0) === false) {
-            stopped = true;
-            return false;
-          }
-        }), reverse);
-        return !stopped;
-      }), reverse);
-      return iterations;
-    };
-    return flatSequence;
-  },
-  flatMap: function(mapper, thisArg) {
-    return this.map(mapper, thisArg).flatten();
-  },
-  skip: function(amount) {
-    return skipFactory(this, amount, false);
-  },
-  skipWhile: function(predicate, thisArg) {
-    return skipWhileFactory(this, predicate, thisArg, false);
-  },
-  groupBy: function(grouper, context) {
-    return groupByFactory(this, grouper, context, false);
-  },
-  sortBy: function(mapper, comparator) {
-    comparator = comparator || defaultComparator;
-    var seq = this;
-    return Sequence(this.entrySeq().toArray().sort((function(a, b) {
-      return comparator(mapper(a[1], a[0], seq), mapper(b[1], b[0], seq)) || a[0] - b[0];
-    }))).fromEntrySeq().valueSeq();
-  },
-  __iterate: function(fn, reverse, reverseIndices) {
-    var cache = this._cache;
-    if (cache) {
-      reverseIndices ^= reverse;
-      var maxIndex = cache.length - 1;
-      for (var ii = 0; ii <= maxIndex; ii++) {
-        var entry = cache[reverse ? maxIndex - ii : ii];
-        var key = entry[0];
-        if (fn(entry[1], reverseIndices ? maxIndex - key : key, this) === false) {
-          break;
-        }
-      }
-      return ii;
-    }
-    if (reverseIndices && !this.length) {
-      return this.cacheResult().__iterate(fn, reverse, reverseIndices);
-    }
-    return this.__iterateUncached(fn, reverse, reverseIndices);
-  },
-  __makeSequence: function() {
-    return makeIndexedSequence(this);
-  }
-}, {}, Sequence);
-var IndexedSequencePrototype = IndexedSequence.prototype;
-IndexedSequencePrototype.__toJS = IndexedSequencePrototype.toArray;
-IndexedSequencePrototype.__toStringMapper = quoteString;
-IndexedSequencePrototype.chain = IndexedSequencePrototype.flatMap;
-var KeyedIndexedSequence = function KeyedIndexedSequence(indexedSeq) {
-  this._seq = indexedSeq;
-  this.length = indexedSeq.length;
-};
-($traceurRuntime.createClass)(KeyedIndexedSequence, {
-  get: function(key, notSetValue) {
-    return this._seq.get(key, notSetValue);
-  },
-  has: function(key) {
-    return this._seq.has(key);
-  },
-  __iterate: function(fn, reverse) {
-    return this._seq.__iterate(fn, reverse, reverse);
-  }
-}, {}, Sequence);
-var ObjectSequence = function ObjectSequence(object) {
-  var keys = Object.keys(object);
-  this._object = object;
-  this._keys = keys;
-  this.length = keys.length;
-};
-($traceurRuntime.createClass)(ObjectSequence, {
-  toObject: function() {
-    return this._object;
-  },
-  get: function(key, notSetValue) {
-    if (notSetValue !== undefined && !this.has(key)) {
-      return notSetValue;
-    }
-    return this._object[key];
-  },
-  has: function(key) {
-    return this._object.hasOwnProperty(key);
-  },
-  __iterate: function(fn, reverse) {
-    var object = this._object;
-    var keys = this._keys;
-    var maxIndex = keys.length - 1;
-    for (var ii = 0; ii <= maxIndex; ii++) {
-      var iteration = reverse ? maxIndex - ii : ii;
-      if (fn(object[keys[iteration]], keys[iteration], object) === false) {
-        break;
-      }
-    }
-    return ii;
-  }
-}, {}, Sequence);
-var ArraySequence = function ArraySequence(array) {
-  this._array = array;
-  this.length = array.length;
-};
-($traceurRuntime.createClass)(ArraySequence, {
-  toArray: function() {
-    return this._array;
-  },
-  get: function(index, notSetValue) {
-    return this.has(index) ? this._array[wrapIndex(this, index)] : notSetValue;
-  },
-  has: function(index) {
-    index = wrapIndex(this, index);
-    return index >= 0 && index < this.length;
-  },
-  __iterate: function(fn, reverse, reverseIndices) {
-    var array = this._array;
-    var maxIndex = array.length - 1;
-    var ii,
-        rr;
-    var reversedIndices = reverse ^ reverseIndices;
-    for (ii = 0; ii <= maxIndex; ii++) {
-      rr = maxIndex - ii;
-      if (fn(array[reverse ? rr : ii], reverseIndices ? rr : ii, array) === false) {
-        return reversedIndices ? reverse ? rr : ii : array.length;
-      }
-    }
-    return array.length;
-  }
-}, {}, IndexedSequence);
-var SequenceIterator = function SequenceIterator() {};
-($traceurRuntime.createClass)(SequenceIterator, {toString: function() {
-    return '[Iterator]';
-  }}, {});
-var SequenceIteratorPrototype = SequenceIterator.prototype;
-SequenceIteratorPrototype[ITERATOR] = returnThis;
-SequenceIteratorPrototype.inspect = SequenceIteratorPrototype.toSource = function() {
-  return this.toString();
-};
-function makeSequence() {
-  return Object.create(SequencePrototype);
-}
-function makeIndexedSequence(parent) {
-  return Object.create(IndexedSequencePrototype);
-}
-function getInDeepSequence(seq, keyPath, notSetValue, pathOffset) {
-  var nested = seq.get ? seq.get(keyPath[pathOffset], NOT_SET) : NOT_SET;
-  if (nested === NOT_SET) {
-    return notSetValue;
-  }
-  if (++pathOffset === keyPath.length) {
-    return nested;
-  }
-  return getInDeepSequence(nested, keyPath, notSetValue, pathOffset);
-}
-function wholeSlice(begin, end, length) {
-  return (begin === 0 || (length != null && begin <= -length)) && (end == null || (length != null && end >= length));
-}
-function resolveBegin(begin, length) {
-  return resolveIndex(begin, length, 0);
-}
-function resolveEnd(end, length) {
-  return resolveIndex(end, length, length);
-}
-function resolveIndex(index, length, defaultIndex) {
-  return index == null ? defaultIndex : index < 0 ? Math.max(0, length + index) : length ? Math.min(length, index) : index;
-}
-function valueMapper(v) {
-  return v;
-}
-function entryMapper(v, k) {
-  return [k, v];
-}
-function returnTrue() {
-  return true;
-}
-function returnThis() {
-  return this;
-}
-function filterFactory(sequence, predicate, context, useKeys) {
-  var filterSequence = sequence.__makeSequence();
-  filterSequence.__iterateUncached = function(fn, reverse, reverseIndices) {
-    var $__0 = this;
-    var iterations = 0;
-    sequence.__iterate((function(v, k, c) {
-      if (predicate.call(context, v, k, c)) {
-        iterations++;
-        return fn(v, useKeys ? k : iterations - 1, $__0);
-      }
-    }), reverse);
-    return iterations;
-  };
-  return filterSequence;
-}
-function groupByFactory(seq, grouper, context, useKeys) {
-  var groupMap = {};
-  var groups = [];
-  seq.forEach((function(v, k) {
-    var g = grouper.call(context, v, k, seq);
-    var h = hash(g);
-    var e = useKeys ? [k, v] : v;
-    if (!groupMap.hasOwnProperty(h)) {
-      groupMap[h] = groups.length;
-      groups.push([g, [e]]);
-    } else {
-      groups[groupMap[h]][1].push(e);
-    }
-  }));
-  return Sequence(groups).fromEntrySeq().map(useKeys ? (function(group) {
-    return Sequence(group).fromEntrySeq();
-  }) : (function(group) {
-    return Sequence(group);
-  }));
-}
-function skipFactory(sequence, amount, useKeys) {
-  if (amount <= 0) {
-    return sequence;
-  }
-  var skipSequence = sequence.__makeSequence();
-  skipSequence.__iterateUncached = function(fn, reverse, reverseIndices) {
-    var $__0 = this;
-    if (reverse) {
-      return this.cacheResult().__iterate(fn, reverse, reverseIndices);
-    }
-    var skipped = 0;
-    var isSkipping = true;
-    var iterations = 0;
-    sequence.__iterate((function(v, k) {
-      if (!(isSkipping && (isSkipping = skipped++ < amount))) {
-        iterations++;
-        return fn(v, useKeys ? k : iterations - 1, $__0);
-      }
-    }));
-    return iterations;
-  };
-  skipSequence.length = sequence.length && Math.max(0, sequence.length - amount);
-  return skipSequence;
-}
-function skipWhileFactory(sequence, predicate, thisArg, useKeys) {
-  var skipSequence = sequence.__makeSequence();
-  skipSequence.__iterateUncached = function(fn, reverse, reverseIndices) {
-    var $__0 = this;
-    if (reverse) {
-      return this.cacheResult().__iterate(fn, reverse, reverseIndices);
-    }
-    var isSkipping = true;
-    var iterations = 0;
-    sequence.__iterate((function(v, k, c) {
-      if (!(isSkipping && (isSkipping = predicate.call(thisArg, v, k, c)))) {
-        iterations++;
-        return fn(v, useKeys ? k : iterations - 1, $__0);
-      }
-    }));
-    return iterations;
-  };
-  return skipSequence;
-}
-function not(predicate) {
-  return function() {
-    return !predicate.apply(this, arguments);
-  };
-}
-function quoteString(value) {
-  return typeof value === 'string' ? JSON.stringify(value) : value;
-}
-function defaultComparator(a, b) {
-  return a > b ? 1 : a < b ? -1 : 0;
-}
-function wrapIndex(seq, index) {
-  if (index < 0) {
-    if (seq.length == null) {
-      seq.cacheResult();
-    }
-    return seq.length + index;
-  }
-  return index;
-}
-function assertNotInfinite(length) {
-  invariant(length !== Infinity, 'Cannot perform this action with an infinite sequence.');
-}
-function iteratorMapper(iter, fn) {
-  var newIter = new SequenceIterator();
-  newIter.next = (function() {
-    var step = iter.next();
-    if (step.done)
-      return step;
-    step.value = fn(step.value);
-    return step;
-  });
-  return newIter;
-}
-var Cursor = function Cursor(rootData, keyPath, onChange, value) {
-  value = value ? value : rootData.getIn(keyPath);
-  this.length = value instanceof Sequence ? value.length : null;
-  this._rootData = rootData;
-  this._keyPath = keyPath;
-  this._onChange = onChange;
-};
-($traceurRuntime.createClass)(Cursor, {
-  deref: function(notSetValue) {
-    return this._rootData.getIn(this._keyPath, notSetValue);
-  },
-  get: function(key, notSetValue) {
-    if (Array.isArray(key) && key.length === 0) {
-      return this;
-    }
-    var value = this._rootData.getIn(this._keyPath.concat(key), NOT_SET);
-    return value === NOT_SET ? notSetValue : wrappedValue(this, key, value);
-  },
-  set: function(key, value) {
-    return updateCursor(this, (function(m) {
-      return m.set(key, value);
-    }), key);
-  },
-  remove: function(key) {
-    return updateCursor(this, (function(m) {
-      return m.remove(key);
-    }), key);
-  },
-  clear: function() {
-    return updateCursor(this, (function(m) {
-      return m.clear();
-    }));
-  },
-  update: function(keyOrFn, notSetValue, updater) {
-    return arguments.length === 1 ? updateCursor(this, keyOrFn) : updateCursor(this, (function(map) {
-      return map.update(keyOrFn, notSetValue, updater);
-    }), keyOrFn);
-  },
-  withMutations: function(fn) {
-    return updateCursor(this, (function(m) {
-      return (m || Map.empty()).withMutations(fn);
-    }));
-  },
-  cursor: function(subKey) {
-    return Array.isArray(subKey) && subKey.length === 0 ? this : subCursor(this, subKey);
-  },
-  __iterate: function(fn, reverse, reverseIndices) {
-    var cursor = this;
-    var deref = cursor.deref();
-    return deref && deref.__iterate ? deref.__iterate((function(value, key, collection) {
-      return fn(wrappedValue(cursor, key, value), key, collection);
-    }), reverse, reverseIndices) : 0;
-  }
-}, {}, Sequence);
-Cursor.prototype[DELETE] = Cursor.prototype.remove;
-Cursor.prototype.getIn = Cursor.prototype.get;
-function wrappedValue(cursor, key, value) {
-  return value instanceof Sequence ? subCursor(cursor, key, value) : value;
-}
-function subCursor(cursor, key, value) {
-  return new Cursor(cursor._rootData, cursor._keyPath.concat(key), cursor._onChange, value);
-}
-function updateCursor(cursor, changeFn, changeKey) {
-  var newRootData = cursor._rootData.updateIn(cursor._keyPath, changeKey ? Map.empty() : undefined, changeFn);
-  var keyPath = cursor._keyPath || [];
-  cursor._onChange && cursor._onChange.call(undefined, newRootData, cursor._rootData, changeKey ? keyPath.concat(changeKey) : keyPath);
-  return new Cursor(newRootData, cursor._keyPath, cursor._onChange);
-}
-function is(first, second) {
-  if (first instanceof Cursor) {
-    first = first.deref();
-  }
-  if (second instanceof Cursor) {
-    second = second.deref();
-  }
-  if (first === second) {
-    return first !== 0 || second !== 0 || 1 / first === 1 / second;
-  }
-  if (first !== first) {
-    return second !== second;
-  }
-  if (first instanceof Sequence) {
-    return first.equals(second);
-  }
-  return false;
-}
-var Map = function Map(sequence) {
-  var map = $Map.empty();
-  return sequence ? sequence.constructor === $Map ? sequence : map.merge(sequence) : map;
-};
-var $Map = Map;
-($traceurRuntime.createClass)(Map, {
-  toString: function() {
-    return this.__toString('Map {', '}');
-  },
-  get: function(k, notSetValue) {
-    return this._root ? this._root.get(0, hash(k), k, notSetValue) : notSetValue;
-  },
-  set: function(k, v) {
-    return updateMap(this, k, v);
-  },
-  remove: function(k) {
-    return updateMap(this, k, NOT_SET);
-  },
-  update: function(k, notSetValue, updater) {
-    return arguments.length === 1 ? this.updateIn([], null, k) : this.updateIn([k], notSetValue, updater);
-  },
-  updateIn: function(keyPath, notSetValue, updater) {
-    var $__13;
-    if (!updater) {
-      ($__13 = [notSetValue, updater], updater = $__13[0], notSetValue = $__13[1], $__13);
-    }
-    return updateInDeepMap(this, keyPath, notSetValue, updater, 0);
-  },
-  clear: function() {
-    if (this.length === 0) {
-      return this;
-    }
-    if (this.__ownerID) {
-      this.length = 0;
-      this._root = null;
-      this.__hash = undefined;
-      this.__altered = true;
-      return this;
-    }
-    return $Map.empty();
-  },
-  merge: function() {
-    return mergeIntoMapWith(this, null, arguments);
-  },
-  mergeWith: function(merger) {
-    for (var seqs = [],
-        $__4 = 1; $__4 < arguments.length; $__4++)
-      seqs[$__4 - 1] = arguments[$__4];
-    return mergeIntoMapWith(this, merger, seqs);
-  },
-  mergeDeep: function() {
-    return mergeIntoMapWith(this, deepMerger(null), arguments);
-  },
-  mergeDeepWith: function(merger) {
-    for (var seqs = [],
-        $__5 = 1; $__5 < arguments.length; $__5++)
-      seqs[$__5 - 1] = arguments[$__5];
-    return mergeIntoMapWith(this, deepMerger(merger), seqs);
-  },
-  cursor: function(keyPath, onChange) {
-    if (!onChange && typeof keyPath === 'function') {
-      onChange = keyPath;
-      keyPath = [];
-    } else if (arguments.length === 0) {
-      keyPath = [];
-    } else if (!Array.isArray(keyPath)) {
-      keyPath = [keyPath];
-    }
-    return new Cursor(this, keyPath, onChange);
-  },
-  withMutations: function(fn) {
-    var mutable = this.asMutable();
-    fn(mutable);
-    return mutable.wasAltered() ? mutable.__ensureOwner(this.__ownerID) : this;
-  },
-  asMutable: function() {
-    return this.__ownerID ? this : this.__ensureOwner(new OwnerID());
-  },
-  asImmutable: function() {
-    return this.__ensureOwner();
-  },
-  wasAltered: function() {
-    return this.__altered;
-  },
-  keys: function() {
-    return new MapIterator(this, 0);
-  },
-  values: function() {
-    return new MapIterator(this, 1);
-  },
-  entries: function() {
-    return new MapIterator(this, 2);
-  },
-  __iterator: function(reverse) {
-    return new MapIterator(this, 2, reverse);
-  },
-  __iterate: function(fn, reverse) {
-    var map = this;
-    if (!map._root) {
-      return 0;
-    }
-    var iterations = 0;
-    this._root.iterate((function(entry) {
-      if (fn(entry[1], entry[0], map) === false) {
-        return false;
-      }
-      iterations++;
-    }), reverse);
-    return iterations;
-  },
-  __deepEquals: function(other) {
-    var self = this;
-    return other.every((function(v, k) {
-      return is(self.get(k, NOT_SET), v);
-    }));
-  },
-  __ensureOwner: function(ownerID) {
-    if (ownerID === this.__ownerID) {
-      return this;
-    }
-    if (!ownerID) {
-      this.__ownerID = ownerID;
-      this.__altered = false;
-      return this;
-    }
-    return makeMap(this.length, this._root, ownerID, this.__hash);
-  }
-}, {empty: function() {
-    return EMPTY_MAP || (EMPTY_MAP = makeMap(0));
-  }}, Sequence);
-var MapPrototype = Map.prototype;
-MapPrototype[DELETE] = MapPrototype.remove;
-MapPrototype[ITERATOR] = function() {
-  return this.entries();
-};
-Map.from = Map;
-var BitmapIndexedNode = function BitmapIndexedNode(ownerID, bitmap, nodes) {
-  this.ownerID = ownerID;
-  this.bitmap = bitmap;
-  this.nodes = nodes;
-};
-var $BitmapIndexedNode = BitmapIndexedNode;
-($traceurRuntime.createClass)(BitmapIndexedNode, {
-  get: function(shift, hash, key, notSetValue) {
-    var bit = (1 << ((shift === 0 ? hash : hash >>> shift) & MASK));
-    var bitmap = this.bitmap;
-    return (bitmap & bit) === 0 ? notSetValue : this.nodes[popCount(bitmap & (bit - 1))].get(shift + SHIFT, hash, key, notSetValue);
-  },
-  update: function(ownerID, shift, hash, key, value, didChangeLength, didAlter) {
-    var hashFrag = (shift === 0 ? hash : hash >>> shift) & MASK;
-    var bit = 1 << hashFrag;
-    var bitmap = this.bitmap;
-    var exists = (bitmap & bit) !== 0;
-    if (!exists && value === NOT_SET) {
-      return this;
-    }
-    var idx = popCount(bitmap & (bit - 1));
-    var nodes = this.nodes;
-    var node = exists ? nodes[idx] : null;
-    var newNode = updateNode(node, ownerID, shift + SHIFT, hash, key, value, didChangeLength, didAlter);
-    if (newNode === node) {
-      return this;
-    }
-    if (!exists && newNode && nodes.length >= MAX_BITMAP_SIZE) {
-      return expandNodes(ownerID, nodes, bitmap, hashFrag, newNode);
-    }
-    if (exists && !newNode && nodes.length === 2 && isLeafNode(nodes[idx ^ 1])) {
-      return nodes[idx ^ 1];
-    }
-    if (exists && newNode && nodes.length === 1 && isLeafNode(newNode)) {
-      return newNode;
-    }
-    var isEditable = ownerID && ownerID === this.ownerID;
-    var newBitmap = exists ? newNode ? bitmap : bitmap ^ bit : bitmap | bit;
-    var newNodes = exists ? newNode ? setIn(nodes, idx, newNode, isEditable) : spliceOut(nodes, idx, isEditable) : spliceIn(nodes, idx, newNode, isEditable);
-    if (isEditable) {
-      this.bitmap = newBitmap;
-      this.nodes = newNodes;
-      return this;
-    }
-    return new $BitmapIndexedNode(ownerID, newBitmap, newNodes);
-  },
-  iterate: function(fn, reverse) {
-    var nodes = this.nodes;
-    for (var ii = 0,
-        maxIndex = nodes.length - 1; ii <= maxIndex; ii++) {
-      if (nodes[reverse ? maxIndex - ii : ii].iterate(fn, reverse) === false) {
-        return false;
-      }
-    }
-  }
-}, {});
-var ArrayNode = function ArrayNode(ownerID, count, nodes) {
-  this.ownerID = ownerID;
-  this.count = count;
-  this.nodes = nodes;
-};
-var $ArrayNode = ArrayNode;
-($traceurRuntime.createClass)(ArrayNode, {
-  get: function(shift, hash, key, notSetValue) {
-    var idx = (shift === 0 ? hash : hash >>> shift) & MASK;
-    var node = this.nodes[idx];
-    return node ? node.get(shift + SHIFT, hash, key, notSetValue) : notSetValue;
-  },
-  update: function(ownerID, shift, hash, key, value, didChangeLength, didAlter) {
-    var idx = (shift === 0 ? hash : hash >>> shift) & MASK;
-    var removed = value === NOT_SET;
-    var nodes = this.nodes;
-    var node = nodes[idx];
-    if (removed && !node) {
-      return this;
-    }
-    var newNode = updateNode(node, ownerID, shift + SHIFT, hash, key, value, didChangeLength, didAlter);
-    if (newNode === node) {
-      return this;
-    }
-    var newCount = this.count;
-    if (!node) {
-      newCount++;
-    } else if (!newNode) {
-      newCount--;
-      if (newCount < MIN_ARRAY_SIZE) {
-        return packNodes(ownerID, nodes, newCount, idx);
-      }
-    }
-    var isEditable = ownerID && ownerID === this.ownerID;
-    var newNodes = setIn(nodes, idx, newNode, isEditable);
-    if (isEditable) {
-      this.count = newCount;
-      this.nodes = newNodes;
-      return this;
-    }
-    return new $ArrayNode(ownerID, newCount, newNodes);
-  },
-  iterate: function(fn, reverse) {
-    var nodes = this.nodes;
-    for (var ii = 0,
-        maxIndex = nodes.length - 1; ii <= maxIndex; ii++) {
-      var node = nodes[reverse ? maxIndex - ii : ii];
-      if (node && node.iterate(fn, reverse) === false) {
-        return false;
-      }
-    }
-  }
-}, {});
-var HashCollisionNode = function HashCollisionNode(ownerID, hash, entries) {
-  this.ownerID = ownerID;
-  this.hash = hash;
-  this.entries = entries;
-};
-var $HashCollisionNode = HashCollisionNode;
-($traceurRuntime.createClass)(HashCollisionNode, {
-  get: function(shift, hash, key, notSetValue) {
-    var entries = this.entries;
-    for (var ii = 0,
-        len = entries.length; ii < len; ii++) {
-      if (is(key, entries[ii][0])) {
-        return entries[ii][1];
-      }
-    }
-    return notSetValue;
-  },
-  update: function(ownerID, shift, hash, key, value, didChangeLength, didAlter) {
-    var removed = value === NOT_SET;
-    if (hash !== this.hash) {
-      if (removed) {
-        return this;
-      }
-      SetRef(didAlter);
-      SetRef(didChangeLength);
-      return mergeIntoNode(this, ownerID, shift, hash, [key, value]);
-    }
-    var entries = this.entries;
-    var idx = 0;
-    for (var len = entries.length; idx < len; idx++) {
-      if (is(key, entries[idx][0])) {
-        break;
-      }
-    }
-    var exists = idx < len;
-    if (removed && !exists) {
-      return this;
-    }
-    SetRef(didAlter);
-    (removed || !exists) && SetRef(didChangeLength);
-    if (removed && len === 2) {
-      return new ValueNode(ownerID, this.hash, entries[idx ^ 1]);
-    }
-    var isEditable = ownerID && ownerID === this.ownerID;
-    var newEntries = isEditable ? entries : arrCopy(entries);
-    if (exists) {
-      if (removed) {
-        idx === len - 1 ? newEntries.pop() : (newEntries[idx] = newEntries.pop());
-      } else {
-        newEntries[idx] = [key, value];
-      }
-    } else {
-      newEntries.push([key, value]);
-    }
-    if (isEditable) {
-      this.entries = newEntries;
-      return this;
-    }
-    return new $HashCollisionNode(ownerID, this.hash, newEntries);
-  },
-  iterate: function(fn, reverse) {
-    var entries = this.entries;
-    for (var ii = 0,
-        maxIndex = entries.length - 1; ii <= maxIndex; ii++) {
-      if (fn(entries[reverse ? maxIndex - ii : ii]) === false) {
-        return false;
-      }
-    }
-  }
-}, {});
-var ValueNode = function ValueNode(ownerID, hash, entry) {
-  this.ownerID = ownerID;
-  this.hash = hash;
-  this.entry = entry;
-};
-var $ValueNode = ValueNode;
-($traceurRuntime.createClass)(ValueNode, {
-  get: function(shift, hash, key, notSetValue) {
-    return is(key, this.entry[0]) ? this.entry[1] : notSetValue;
-  },
-  update: function(ownerID, shift, hash, key, value, didChangeLength, didAlter) {
-    var removed = value === NOT_SET;
-    var keyMatch = is(key, this.entry[0]);
-    if (keyMatch ? value === this.entry[1] : removed) {
-      return this;
-    }
-    SetRef(didAlter);
-    if (removed) {
-      SetRef(didChangeLength);
-      return null;
-    }
-    if (keyMatch) {
-      if (ownerID && ownerID === this.ownerID) {
-        this.entry[1] = value;
-        return this;
-      }
-      return new $ValueNode(ownerID, hash, [key, value]);
-    }
-    SetRef(didChangeLength);
-    return mergeIntoNode(this, ownerID, shift, hash, [key, value]);
-  },
-  iterate: function(fn) {
-    return fn(this.entry);
-  }
-}, {});
-var MapIterator = function MapIterator(map, type, reverse) {
-  this._type = type;
-  this._reverse = reverse;
-  this._stack = map._root && mapIteratorFrame(map._root);
-};
-($traceurRuntime.createClass)(MapIterator, {next: function() {
-    var type = this._type;
-    var stack = this._stack;
-    while (stack) {
-      var node = stack.node;
-      var index = stack.index++;
-      var maxIndex;
-      if (node.entry) {
-        if (index === 0) {
-          return mapIteratorValue(type, node.entry);
-        }
-      } else if (node.entries) {
-        maxIndex = node.entries.length - 1;
-        if (index <= maxIndex) {
-          return mapIteratorValue(type, node.entries[this._reverse ? maxIndex - index : index]);
-        }
-      } else {
-        maxIndex = node.nodes.length - 1;
-        if (index <= maxIndex) {
-          var subNode = node.nodes[this._reverse ? maxIndex - index : index];
-          if (subNode) {
-            if (subNode.entry) {
-              return mapIteratorValue(type, subNode.entry);
-            }
-            stack = this._stack = mapIteratorFrame(subNode, stack);
-          }
-          continue;
-        }
-      }
-      stack = this._stack = this._stack.__prev;
-    }
-    return iteratorDone();
-  }}, {}, SequenceIterator);
-function mapIteratorValue(type, entry) {
-  return iteratorValue(type === 0 || type === 1 ? entry[type] : [entry[0], entry[1]]);
-}
-function mapIteratorFrame(node, prev) {
-  return {
-    node: node,
-    index: 0,
-    __prev: prev
-  };
-}
-function makeMap(length, root, ownerID, hash) {
-  var map = Object.create(MapPrototype);
-  map.length = length;
-  map._root = root;
-  map.__ownerID = ownerID;
-  map.__hash = hash;
-  map.__altered = false;
-  return map;
-}
-function updateMap(map, k, v) {
-  var didChangeLength = MakeRef(CHANGE_LENGTH);
-  var didAlter = MakeRef(DID_ALTER);
-  var newRoot = updateNode(map._root, map.__ownerID, 0, hash(k), k, v, didChangeLength, didAlter);
-  if (!didAlter.value) {
-    return map;
-  }
-  var newLength = map.length + (didChangeLength.value ? v === NOT_SET ? -1 : 1 : 0);
-  if (map.__ownerID) {
-    map.length = newLength;
-    map._root = newRoot;
-    map.__hash = undefined;
-    map.__altered = true;
-    return map;
-  }
-  return newRoot ? makeMap(newLength, newRoot) : Map.empty();
-}
-function updateNode(node, ownerID, shift, hash, key, value, didChangeLength, didAlter) {
-  if (!node) {
-    if (value === NOT_SET) {
-      return node;
-    }
-    SetRef(didAlter);
-    SetRef(didChangeLength);
-    return new ValueNode(ownerID, hash, [key, value]);
-  }
-  return node.update(ownerID, shift, hash, key, value, didChangeLength, didAlter);
-}
-function isLeafNode(node) {
-  return node.constructor === ValueNode || node.constructor === HashCollisionNode;
-}
-function mergeIntoNode(node, ownerID, shift, hash, entry) {
-  if (node.hash === hash) {
-    return new HashCollisionNode(ownerID, hash, [node.entry, entry]);
-  }
-  var idx1 = (shift === 0 ? node.hash : node.hash >>> shift) & MASK;
-  var idx2 = (shift === 0 ? hash : hash >>> shift) & MASK;
-  var newNode;
-  var nodes = idx1 === idx2 ? [mergeIntoNode(node, ownerID, shift + SHIFT, hash, entry)] : ((newNode = new ValueNode(ownerID, hash, entry)), idx1 < idx2 ? [node, newNode] : [newNode, node]);
-  return new BitmapIndexedNode(ownerID, (1 << idx1) | (1 << idx2), nodes);
-}
-function packNodes(ownerID, nodes, count, excluding) {
-  var bitmap = 0;
-  var packedII = 0;
-  var packedNodes = new Array(count);
-  for (var ii = 0,
-      bit = 1,
-      len = nodes.length; ii < len; ii++, bit <<= 1) {
-    var node = nodes[ii];
-    if (node != null && ii !== excluding) {
-      bitmap |= bit;
-      packedNodes[packedII++] = node;
-    }
-  }
-  return new BitmapIndexedNode(ownerID, bitmap, packedNodes);
-}
-function expandNodes(ownerID, nodes, bitmap, including, node) {
-  var count = 0;
-  var expandedNodes = new Array(SIZE);
-  for (var ii = 0; bitmap !== 0; ii++, bitmap >>>= 1) {
-    expandedNodes[ii] = bitmap & 1 ? nodes[count++] : null;
-  }
-  expandedNodes[including] = node;
-  return new ArrayNode(ownerID, count + 1, expandedNodes);
-}
-function mergeIntoMapWith(map, merger, iterables) {
-  var seqs = [];
-  for (var ii = 0; ii < iterables.length; ii++) {
-    var seq = iterables[ii];
-    seq && seqs.push(Array.isArray(seq) ? Sequence(seq).fromEntrySeq() : Sequence(seq));
-  }
-  return mergeIntoCollectionWith(map, merger, seqs);
-}
-function deepMerger(merger) {
-  return (function(existing, value) {
-    return existing && existing.mergeDeepWith ? existing.mergeDeepWith(merger, value) : merger ? merger(existing, value) : value;
-  });
-}
-function mergeIntoCollectionWith(collection, merger, seqs) {
-  if (seqs.length === 0) {
-    return collection;
-  }
-  return collection.withMutations((function(collection) {
-    var mergeIntoMap = merger ? (function(value, key) {
-      var existing = collection.get(key, NOT_SET);
-      collection.set(key, existing === NOT_SET ? value : merger(existing, value));
-    }) : (function(value, key) {
-      collection.set(key, value);
-    });
-    for (var ii = 0; ii < seqs.length; ii++) {
-      seqs[ii].forEach(mergeIntoMap);
-    }
-  }));
-}
-function updateInDeepMap(collection, keyPath, notSetValue, updater, pathOffset) {
-  var pathLen = keyPath.length;
-  if (pathOffset === pathLen) {
-    return updater(collection);
-  }
-  invariant(collection.set, 'updateIn with invalid keyPath');
-  var notSet = pathOffset === pathLen - 1 ? notSetValue : Map.empty();
-  var key = keyPath[pathOffset];
-  var existing = collection.get(key, notSet);
-  var value = updateInDeepMap(existing, keyPath, notSetValue, updater, pathOffset + 1);
-  return value === existing ? collection : collection.set(key, value);
-}
-function popCount(x) {
-  x = x - ((x >> 1) & 0x55555555);
-  x = (x & 0x33333333) + ((x >> 2) & 0x33333333);
-  x = (x + (x >> 4)) & 0x0f0f0f0f;
-  x = x + (x >> 8);
-  x = x + (x >> 16);
-  return x & 0x7f;
-}
-function setIn(array, idx, val, canEdit) {
-  var newArray = canEdit ? array : arrCopy(array);
-  newArray[idx] = val;
-  return newArray;
-}
-function spliceIn(array, idx, val, canEdit) {
-  var newLen = array.length + 1;
-  if (canEdit && idx + 1 === newLen) {
-    array[idx] = val;
-    return array;
-  }
-  var newArray = new Array(newLen);
-  var after = 0;
-  for (var ii = 0; ii < newLen; ii++) {
-    if (ii === idx) {
-      newArray[ii] = val;
-      after = -1;
-    } else {
-      newArray[ii] = array[ii + after];
-    }
-  }
-  return newArray;
-}
-function spliceOut(array, idx, canEdit) {
-  var newLen = array.length - 1;
-  if (canEdit && idx === newLen) {
-    array.pop();
-    return array;
-  }
-  var newArray = new Array(newLen);
-  var after = 0;
-  for (var ii = 0; ii < newLen; ii++) {
-    if (ii === idx) {
-      after = 1;
-    }
-    newArray[ii] = array[ii + after];
-  }
-  return newArray;
-}
-var MAX_BITMAP_SIZE = SIZE / 2;
-var MIN_ARRAY_SIZE = SIZE / 4;
-var EMPTY_MAP;
-var Vector = function Vector() {
-  for (var values = [],
-      $__6 = 0; $__6 < arguments.length; $__6++)
-    values[$__6] = arguments[$__6];
-  return $Vector.from(values);
-};
-var $Vector = Vector;
-($traceurRuntime.createClass)(Vector, {
-  toString: function() {
-    return this.__toString('Vector [', ']');
-  },
-  has: function(index) {
-    index = wrapIndex(this, index);
-    return index >= 0 && index < this.length;
-  },
-  get: function(index, notSetValue) {
-    index = wrapIndex(this, index);
-    if (index < 0 || index >= this.length) {
-      return notSetValue;
-    }
-    index += this._origin;
-    var node = vectorNodeFor(this, index);
-    return node && node.array[index & MASK];
-  },
-  set: function(index, value) {
-    return updateVector(this, index, value);
-  },
-  remove: function(index) {
-    return updateVector(this, index, NOT_SET);
-  },
-  clear: function() {
-    if (this.length === 0) {
-      return this;
-    }
-    if (this.__ownerID) {
-      this.length = this._origin = this._size = 0;
-      this._level = SHIFT;
-      this._root = this._tail = null;
-      this.__hash = undefined;
-      this.__altered = true;
-      return this;
-    }
-    return $Vector.empty();
-  },
-  push: function() {
-    var values = arguments;
-    var oldLength = this.length;
-    return this.withMutations((function(vect) {
-      setVectorBounds(vect, 0, oldLength + values.length);
-      for (var ii = 0; ii < values.length; ii++) {
-        vect.set(oldLength + ii, values[ii]);
-      }
-    }));
-  },
-  pop: function() {
-    return setVectorBounds(this, 0, -1);
-  },
-  unshift: function() {
-    var values = arguments;
-    return this.withMutations((function(vect) {
-      setVectorBounds(vect, -values.length);
-      for (var ii = 0; ii < values.length; ii++) {
-        vect.set(ii, values[ii]);
-      }
-    }));
-  },
-  shift: function() {
-    return setVectorBounds(this, 1);
-  },
-  merge: function() {
-    return mergeIntoVectorWith(this, null, arguments);
-  },
-  mergeWith: function(merger) {
-    for (var seqs = [],
-        $__7 = 1; $__7 < arguments.length; $__7++)
-      seqs[$__7 - 1] = arguments[$__7];
-    return mergeIntoVectorWith(this, merger, seqs);
-  },
-  mergeDeep: function() {
-    return mergeIntoVectorWith(this, deepMerger(null), arguments);
-  },
-  mergeDeepWith: function(merger) {
-    for (var seqs = [],
-        $__8 = 1; $__8 < arguments.length; $__8++)
-      seqs[$__8 - 1] = arguments[$__8];
-    return mergeIntoVectorWith(this, deepMerger(merger), seqs);
-  },
-  setLength: function(length) {
-    return setVectorBounds(this, 0, length);
-  },
-  slice: function(begin, end) {
-    var sliceSequence = $traceurRuntime.superCall(this, $Vector.prototype, "slice", [begin, end]);
-    if (sliceSequence !== this) {
-      var vector = this;
-      var length = vector.length;
-      sliceSequence.toVector = (function() {
-        return setVectorBounds(vector, begin < 0 ? Math.max(0, length + begin) : length ? Math.min(length, begin) : begin, end == null ? length : end < 0 ? Math.max(0, length + end) : length ? Math.min(length, end) : end);
-      });
-    }
-    return sliceSequence;
-  },
-  keys: function() {
-    return new VectorIterator(this, 0);
-  },
-  values: function() {
-    return new VectorIterator(this, 1);
-  },
-  entries: function() {
-    return new VectorIterator(this, 2);
-  },
-  __iterator: function(reverse, reverseIndices) {
-    return new VectorIterator(this, 2, reverse, reverseIndices);
-  },
-  __iterate: function(fn, reverse, reverseIndices) {
-    var vector = this;
-    var lastIndex = 0;
-    var maxIndex = vector.length - 1;
-    var flipIndices = reverse && !reverseIndices;
-    var eachFn = (function(value, ii) {
-      if (fn(value, flipIndices ? maxIndex - ii : ii, vector) === false) {
-        return false;
-      } else {
-        lastIndex = ii;
-        return true;
-      }
-    });
-    var didComplete;
-    var tailOffset = getTailOffset(this._size);
-    if (reverse) {
-      didComplete = iterateVNode(this._tail, 0, tailOffset - this._origin, this._size - this._origin, eachFn, reverse) && iterateVNode(this._root, this._level, -this._origin, tailOffset - this._origin, eachFn, reverse);
-    } else {
-      didComplete = iterateVNode(this._root, this._level, -this._origin, tailOffset - this._origin, eachFn, reverse) && iterateVNode(this._tail, 0, tailOffset - this._origin, this._size - this._origin, eachFn, reverse);
-    }
-    return (didComplete ? maxIndex : reverse ? maxIndex - lastIndex : lastIndex) + 1;
-  },
-  __deepEquals: function(other) {
-    var iterator = this.entries(true);
-    return other.every((function(v, i) {
-      var entry = iterator.next().value;
-      return entry && entry[0] === i && is(entry[1], v);
-    }));
-  },
-  __ensureOwner: function(ownerID) {
-    if (ownerID === this.__ownerID) {
-      return this;
-    }
-    if (!ownerID) {
-      this.__ownerID = ownerID;
-      return this;
-    }
-    return makeVector(this._origin, this._size, this._level, this._root, this._tail, ownerID, this.__hash);
-  }
-}, {
-  empty: function() {
-    return EMPTY_VECT || (EMPTY_VECT = makeVector(0, 0, SHIFT));
-  },
-  from: function(sequence) {
-    if (!sequence || sequence.length === 0) {
-      return $Vector.empty();
-    }
-    if (sequence.constructor === $Vector) {
-      return sequence;
-    }
-    var isArray = Array.isArray(sequence);
-    if (sequence.length > 0 && sequence.length < SIZE) {
-      return makeVector(0, sequence.length, SHIFT, null, new VNode(isArray ? arrCopy(sequence) : Sequence(sequence).toArray()));
-    }
-    if (!isArray) {
-      sequence = Sequence(sequence).valueSeq();
-    }
-    return $Vector.empty().merge(sequence);
-  }
-}, IndexedSequence);
-var VectorPrototype = Vector.prototype;
-VectorPrototype[DELETE] = VectorPrototype.remove;
-VectorPrototype[ITERATOR] = VectorPrototype.values;
-VectorPrototype.update = MapPrototype.update;
-VectorPrototype.updateIn = MapPrototype.updateIn;
-VectorPrototype.cursor = MapPrototype.cursor;
-VectorPrototype.withMutations = MapPrototype.withMutations;
-VectorPrototype.asMutable = MapPrototype.asMutable;
-VectorPrototype.asImmutable = MapPrototype.asImmutable;
-VectorPrototype.wasAltered = MapPrototype.wasAltered;
-var VNode = function VNode(array, ownerID) {
-  this.array = array;
-  this.ownerID = ownerID;
-};
-var $VNode = VNode;
-($traceurRuntime.createClass)(VNode, {
-  removeBefore: function(ownerID, level, index) {
-    if (index === level ? 1 << level : 0 || this.array.length === 0) {
-      return this;
-    }
-    var originIndex = (index >>> level) & MASK;
-    if (originIndex >= this.array.length) {
-      return new $VNode([], ownerID);
-    }
-    var removingFirst = originIndex === 0;
-    var newChild;
-    if (level > 0) {
-      var oldChild = this.array[originIndex];
-      newChild = oldChild && oldChild.removeBefore(ownerID, level - SHIFT, index);
-      if (newChild === oldChild && removingFirst) {
-        return this;
-      }
-    }
-    if (removingFirst && !newChild) {
-      return this;
-    }
-    var editable = editableVNode(this, ownerID);
-    if (!removingFirst) {
-      for (var ii = 0; ii < originIndex; ii++) {
-        editable.array[ii] = undefined;
-      }
-    }
-    if (newChild) {
-      editable.array[originIndex] = newChild;
-    }
-    return editable;
-  },
-  removeAfter: function(ownerID, level, index) {
-    if (index === level ? 1 << level : 0 || this.array.length === 0) {
-      return this;
-    }
-    var sizeIndex = ((index - 1) >>> level) & MASK;
-    if (sizeIndex >= this.array.length) {
-      return this;
-    }
-    var removingLast = sizeIndex === this.array.length - 1;
-    var newChild;
-    if (level > 0) {
-      var oldChild = this.array[sizeIndex];
-      newChild = oldChild && oldChild.removeAfter(ownerID, level - SHIFT, index);
-      if (newChild === oldChild && removingLast) {
-        return this;
-      }
-    }
-    if (removingLast && !newChild) {
-      return this;
-    }
-    var editable = editableVNode(this, ownerID);
-    if (!removingLast) {
-      editable.array.pop();
-    }
-    if (newChild) {
-      editable.array[sizeIndex] = newChild;
-    }
-    return editable;
-  }
-}, {});
-function iterateVNode(node, level, offset, max, fn, reverse) {
-  var ii;
-  var array = node && node.array;
-  if (level === 0) {
-    var from = offset < 0 ? 0 : offset;
-    var to = offset + SIZE;
-    if (to > max) {
-      to = max;
-    }
-    for (ii = from; ii < to; ii++) {
-      var index = reverse ? from + to - 1 - ii : ii;
-      if (fn(array && array[index - offset], index) === false) {
-        return false;
-      }
-    }
-  } else {
-    var step = 1 << level;
-    var newLevel = level - SHIFT;
-    for (ii = 0; ii <= MASK; ii++) {
-      var levelIndex = reverse ? MASK - ii : ii;
-      var newOffset = offset + (levelIndex << level);
-      if (newOffset < max && newOffset + step > 0) {
-        var nextNode = array && array[levelIndex];
-        if (!iterateVNode(nextNode, newLevel, newOffset, max, fn, reverse)) {
-          return false;
-        }
-      }
-    }
-  }
-  return true;
-}
-var VectorIterator = function VectorIterator(vector, type, reverse, reverseIndices) {
-  this._type = type;
-  this._reverse = !!reverse;
-  this._reverseIndices = !!(reverseIndices ^ reverse);
-  this._maxIndex = vector.length - 1;
-  var tailOffset = getTailOffset(vector._size);
-  var rootStack = vectIteratorFrame(vector._root && vector._root.array, vector._level, -vector._origin, tailOffset - vector._origin - 1);
-  var tailStack = vectIteratorFrame(vector._tail && vector._tail.array, 0, tailOffset - vector._origin, vector._size - vector._origin - 1);
-  this._stack = reverse ? tailStack : rootStack;
-  this._stack.__prev = reverse ? rootStack : tailStack;
-};
-($traceurRuntime.createClass)(VectorIterator, {next: function() {
-    var stack = this._stack;
-    while (stack) {
-      var array = stack.array;
-      var rawIndex = stack.index++;
-      if (this._reverse) {
-        rawIndex = MASK - rawIndex;
-        if (rawIndex > stack.rawMax) {
-          rawIndex = stack.rawMax;
-          stack.index = SIZE - rawIndex;
-        }
-      }
-      if (rawIndex >= 0 && rawIndex < SIZE && rawIndex <= stack.rawMax) {
-        var value = array && array[rawIndex];
-        if (stack.level === 0) {
-          var type = this._type;
-          var index;
-          if (type !== 1) {
-            index = stack.offset + (rawIndex << stack.level);
-            if (this._reverseIndices) {
-              index = this._maxIndex - index;
-            }
-          }
-          return iteratorValue(type === 0 ? index : type === 1 ? value : [index, value]);
-        } else {
-          this._stack = stack = vectIteratorFrame(value && value.array, stack.level - SHIFT, stack.offset + (rawIndex << stack.level), stack.max, stack);
-        }
-        continue;
-      }
-      stack = this._stack = this._stack.__prev;
-    }
-    return iteratorDone();
-  }}, {}, SequenceIterator);
-function vectIteratorFrame(array, level, offset, max, prevFrame) {
-  return {
-    array: array,
-    level: level,
-    offset: offset,
-    max: max,
-    rawMax: ((max - offset) >> level),
-    index: 0,
-    __prev: prevFrame
-  };
-}
-function makeVector(origin, size, level, root, tail, ownerID, hash) {
-  var vect = Object.create(VectorPrototype);
-  vect.length = size - origin;
-  vect._origin = origin;
-  vect._size = size;
-  vect._level = level;
-  vect._root = root;
-  vect._tail = tail;
-  vect.__ownerID = ownerID;
-  vect.__hash = hash;
-  vect.__altered = false;
-  return vect;
-}
-function updateVector(vector, index, value) {
-  index = wrapIndex(vector, index);
-  if (index >= vector.length || index < 0) {
-    return value === NOT_SET ? vector : vector.withMutations((function(vect) {
-      index < 0 ? setVectorBounds(vect, index).set(0, value) : setVectorBounds(vect, 0, index + 1).set(index, value);
-    }));
-  }
-  index += vector._origin;
-  var newTail = vector._tail;
-  var newRoot = vector._root;
-  var didAlter = MakeRef(DID_ALTER);
-  if (index >= getTailOffset(vector._size)) {
-    newTail = updateVNode(newTail, vector.__ownerID, 0, index, value, didAlter);
-  } else {
-    newRoot = updateVNode(newRoot, vector.__ownerID, vector._level, index, value, didAlter);
-  }
-  if (!didAlter.value) {
-    return vector;
-  }
-  if (vector.__ownerID) {
-    vector._root = newRoot;
-    vector._tail = newTail;
-    vector.__hash = undefined;
-    vector.__altered = true;
-    return vector;
-  }
-  return makeVector(vector._origin, vector._size, vector._level, newRoot, newTail);
-}
-function updateVNode(node, ownerID, level, index, value, didAlter) {
-  var removed = value === NOT_SET;
-  var newNode;
-  var idx = (index >>> level) & MASK;
-  var nodeHas = node && idx < node.array.length;
-  if (removed && !nodeHas) {
-    return node;
-  }
-  if (level > 0) {
-    var lowerNode = node && node.array[idx];
-    var newLowerNode = updateVNode(lowerNode, ownerID, level - SHIFT, index, value, didAlter);
-    if (newLowerNode === lowerNode) {
-      return node;
-    }
-    newNode = editableVNode(node, ownerID);
-    newNode.array[idx] = newLowerNode;
-    return newNode;
-  }
-  if (!removed && nodeHas && node.array[idx] === value) {
-    return node;
-  }
-  SetRef(didAlter);
-  newNode = editableVNode(node, ownerID);
-  if (removed && idx === newNode.array.length - 1) {
-    newNode.array.pop();
-  } else {
-    newNode.array[idx] = removed ? undefined : value;
-  }
-  return newNode;
-}
-function editableVNode(node, ownerID) {
-  if (ownerID && node && ownerID === node.ownerID) {
-    return node;
-  }
-  return new VNode(node ? node.array.slice() : [], ownerID);
-}
-function vectorNodeFor(vector, rawIndex) {
-  if (rawIndex >= getTailOffset(vector._size)) {
-    return vector._tail;
-  }
-  if (rawIndex < 1 << (vector._level + SHIFT)) {
-    var node = vector._root;
-    var level = vector._level;
-    while (node && level > 0) {
-      node = node.array[(rawIndex >>> level) & MASK];
-      level -= SHIFT;
-    }
-    return node;
-  }
-}
-function setVectorBounds(vector, begin, end) {
-  var owner = vector.__ownerID || new OwnerID();
-  var oldOrigin = vector._origin;
-  var oldSize = vector._size;
-  var newOrigin = oldOrigin + begin;
-  var newSize = end == null ? oldSize : end < 0 ? oldSize + end : oldOrigin + end;
-  if (newOrigin === oldOrigin && newSize === oldSize) {
-    return vector;
-  }
-  if (newOrigin >= newSize) {
-    return vector.clear();
-  }
-  var newLevel = vector._level;
-  var newRoot = vector._root;
-  var offsetShift = 0;
-  while (newOrigin + offsetShift < 0) {
-    newRoot = new VNode(newRoot && newRoot.array.length ? [null, newRoot] : [], owner);
-    newLevel += SHIFT;
-    offsetShift += 1 << newLevel;
-  }
-  if (offsetShift) {
-    newOrigin += offsetShift;
-    oldOrigin += offsetShift;
-    newSize += offsetShift;
-    oldSize += offsetShift;
-  }
-  var oldTailOffset = getTailOffset(oldSize);
-  var newTailOffset = getTailOffset(newSize);
-  while (newTailOffset >= 1 << (newLevel + SHIFT)) {
-    newRoot = new VNode(newRoot && newRoot.array.length ? [newRoot] : [], owner);
-    newLevel += SHIFT;
-  }
-  var oldTail = vector._tail;
-  var newTail = newTailOffset < oldTailOffset ? vectorNodeFor(vector, newSize - 1) : newTailOffset > oldTailOffset ? new VNode([], owner) : oldTail;
-  if (oldTail && newTailOffset > oldTailOffset && newOrigin < oldSize && oldTail.array.length) {
-    newRoot = editableVNode(newRoot, owner);
-    var node = newRoot;
-    for (var level = newLevel; level > SHIFT; level -= SHIFT) {
-      var idx = (oldTailOffset >>> level) & MASK;
-      node = node.array[idx] = editableVNode(node.array[idx], owner);
-    }
-    node.array[(oldTailOffset >>> SHIFT) & MASK] = oldTail;
-  }
-  if (newSize < oldSize) {
-    newTail = newTail && newTail.removeAfter(owner, 0, newSize);
-  }
-  if (newOrigin >= newTailOffset) {
-    newOrigin -= newTailOffset;
-    newSize -= newTailOffset;
-    newLevel = SHIFT;
-    newRoot = null;
-    newTail = newTail && newTail.removeBefore(owner, 0, newOrigin);
-  } else if (newOrigin > oldOrigin || newTailOffset < oldTailOffset) {
-    var beginIndex,
-        endIndex;
-    offsetShift = 0;
-    do {
-      beginIndex = ((newOrigin) >>> newLevel) & MASK;
-      endIndex = ((newTailOffset - 1) >>> newLevel) & MASK;
-      if (beginIndex === endIndex) {
-        if (beginIndex) {
-          offsetShift += (1 << newLevel) * beginIndex;
-        }
-        newLevel -= SHIFT;
-        newRoot = newRoot && newRoot.array[beginIndex];
-      }
-    } while (newRoot && beginIndex === endIndex);
-    if (newRoot && newOrigin > oldOrigin) {
-      newRoot = newRoot && newRoot.removeBefore(owner, newLevel, newOrigin - offsetShift);
-    }
-    if (newRoot && newTailOffset < oldTailOffset) {
-      newRoot = newRoot && newRoot.removeAfter(owner, newLevel, newTailOffset - offsetShift);
-    }
-    if (offsetShift) {
-      newOrigin -= offsetShift;
-      newSize -= offsetShift;
-    }
-  }
-  if (vector.__ownerID) {
-    vector.length = newSize - newOrigin;
-    vector._origin = newOrigin;
-    vector._size = newSize;
-    vector._level = newLevel;
-    vector._root = newRoot;
-    vector._tail = newTail;
-    vector.__hash = undefined;
-    vector.__altered = true;
-    return vector;
-  }
-  return makeVector(newOrigin, newSize, newLevel, newRoot, newTail);
-}
-function mergeIntoVectorWith(vector, merger, iterables) {
-  var seqs = [];
-  for (var ii = 0; ii < iterables.length; ii++) {
-    var seq = iterables[ii];
-    seq && seqs.push(Sequence(seq));
-  }
-  var maxLength = Math.max.apply(null, seqs.map((function(s) {
-    return s.length || 0;
-  })));
-  if (maxLength > vector.length) {
-    vector = vector.setLength(maxLength);
-  }
-  return mergeIntoCollectionWith(vector, merger, seqs);
-}
-function getTailOffset(size) {
-  return size < SIZE ? 0 : (((size - 1) >>> SHIFT) << SHIFT);
-}
-var EMPTY_VECT;
-var Set = function Set() {
-  for (var values = [],
-      $__9 = 0; $__9 < arguments.length; $__9++)
-    values[$__9] = arguments[$__9];
-  return $Set.from(values);
-};
-var $Set = Set;
-($traceurRuntime.createClass)(Set, {
-  toString: function() {
-    return this.__toString('Set {', '}');
-  },
-  has: function(value) {
-    return this._map.has(value);
-  },
-  get: function(value, notSetValue) {
-    return this.has(value) ? value : notSetValue;
-  },
-  add: function(value) {
-    var newMap = this._map.set(value, null);
-    if (this.__ownerID) {
-      this.length = newMap.length;
-      this._map = newMap;
-      return this;
-    }
-    return newMap === this._map ? this : makeSet(newMap);
-  },
-  remove: function(value) {
-    var newMap = this._map.remove(value);
-    if (this.__ownerID) {
-      this.length = newMap.length;
-      this._map = newMap;
-      return this;
-    }
-    return newMap === this._map ? this : newMap.length === 0 ? $Set.empty() : makeSet(newMap);
-  },
-  clear: function() {
-    if (this.length === 0) {
-      return this;
-    }
-    if (this.__ownerID) {
-      this.length = 0;
-      this._map.clear();
-      return this;
-    }
-    return $Set.empty();
-  },
-  union: function() {
-    var seqs = arguments;
-    if (seqs.length === 0) {
-      return this;
-    }
-    return this.withMutations((function(set) {
-      for (var ii = 0; ii < seqs.length; ii++) {
-        Sequence(seqs[ii]).forEach((function(value) {
-          return set.add(value);
-        }));
-      }
-    }));
-  },
-  intersect: function() {
-    for (var seqs = [],
-        $__10 = 0; $__10 < arguments.length; $__10++)
-      seqs[$__10] = arguments[$__10];
-    if (seqs.length === 0) {
-      return this;
-    }
-    seqs = seqs.map((function(seq) {
-      return Sequence(seq);
-    }));
-    var originalSet = this;
-    return this.withMutations((function(set) {
-      originalSet.forEach((function(value) {
-        if (!seqs.every((function(seq) {
-          return seq.contains(value);
-        }))) {
-          set.remove(value);
-        }
-      }));
-    }));
-  },
-  subtract: function() {
-    for (var seqs = [],
-        $__11 = 0; $__11 < arguments.length; $__11++)
-      seqs[$__11] = arguments[$__11];
-    if (seqs.length === 0) {
-      return this;
-    }
-    seqs = seqs.map((function(seq) {
-      return Sequence(seq);
-    }));
-    var originalSet = this;
-    return this.withMutations((function(set) {
-      originalSet.forEach((function(value) {
-        if (seqs.some((function(seq) {
-          return seq.contains(value);
-        }))) {
-          set.remove(value);
-        }
-      }));
-    }));
-  },
-  isSubset: function(seq) {
-    seq = Sequence(seq);
-    return this.every((function(value) {
-      return seq.contains(value);
-    }));
-  },
-  isSuperset: function(seq) {
-    var set = this;
-    seq = Sequence(seq);
-    return seq.every((function(value) {
-      return set.contains(value);
-    }));
-  },
-  wasAltered: function() {
-    return this._map.wasAltered();
-  },
-  values: function() {
-    return this._map.keys();
-  },
-  entries: function() {
-    return iteratorMapper(this.values(), (function(key) {
-      return [key, key];
-    }));
-  },
-  hashCode: function() {
-    return this._map.hashCode();
-  },
-  __iterate: function(fn, reverse) {
-    var collection = this;
-    return this._map.__iterate((function(_, k) {
-      return fn(k, k, collection);
-    }), reverse);
-  },
-  __deepEquals: function(other) {
-    return this.isSuperset(other);
-  },
-  __ensureOwner: function(ownerID) {
-    if (ownerID === this.__ownerID) {
-      return this;
-    }
-    var newMap = this._map.__ensureOwner(ownerID);
-    if (!ownerID) {
-      this.__ownerID = ownerID;
-      this._map = newMap;
-      return this;
-    }
-    return makeSet(newMap, ownerID);
-  }
-}, {
-  empty: function() {
-    return EMPTY_SET || (EMPTY_SET = makeSet(Map.empty()));
-  },
-  from: function(sequence) {
-    var set = $Set.empty();
-    return sequence ? sequence.constructor === $Set ? sequence : set.union(sequence) : set;
-  },
-  fromKeys: function(sequence) {
-    return $Set.from(Sequence(sequence).flip());
-  }
-}, Sequence);
-var SetPrototype = Set.prototype;
-SetPrototype[DELETE] = SetPrototype.remove;
-SetPrototype[ITERATOR] = SetPrototype.keys = SetPrototype.values;
-SetPrototype.contains = SetPrototype.has;
-SetPrototype.mergeDeep = SetPrototype.merge = SetPrototype.union;
-SetPrototype.mergeDeepWith = SetPrototype.mergeWith = function(merger) {
-  for (var seqs = [],
-      $__12 = 1; $__12 < arguments.length; $__12++)
-    seqs[$__12 - 1] = arguments[$__12];
-  return this.merge.apply(this, seqs);
-};
-SetPrototype.withMutations = MapPrototype.withMutations;
-SetPrototype.asMutable = MapPrototype.asMutable;
-SetPrototype.asImmutable = MapPrototype.asImmutable;
-SetPrototype.__toJS = IndexedSequencePrototype.__toJS;
-SetPrototype.__toStringMapper = IndexedSequencePrototype.__toStringMapper;
-function makeSet(map, ownerID) {
-  var set = Object.create(SetPrototype);
-  set.length = map ? map.length : 0;
-  set._map = map;
-  set.__ownerID = ownerID;
-  return set;
-}
-var EMPTY_SET;
-var OrderedMap = function OrderedMap(sequence) {
-  var map = $OrderedMap.empty();
-  return sequence ? sequence.constructor === $OrderedMap ? sequence : map.merge(sequence) : map;
-};
-var $OrderedMap = OrderedMap;
-($traceurRuntime.createClass)(OrderedMap, {
-  toString: function() {
-    return this.__toString('OrderedMap {', '}');
-  },
-  get: function(k, notSetValue) {
-    var index = this._map.get(k);
-    return index != null ? this._vector.get(index)[1] : notSetValue;
-  },
-  clear: function() {
-    if (this.length === 0) {
-      return this;
-    }
-    if (this.__ownerID) {
-      this.length = 0;
-      this._map.clear();
-      this._vector.clear();
-      return this;
-    }
-    return $OrderedMap.empty();
-  },
-  set: function(k, v) {
-    return updateOrderedMap(this, k, v);
-  },
-  remove: function(k) {
-    return updateOrderedMap(this, k, NOT_SET);
-  },
-  wasAltered: function() {
-    return this._map.wasAltered() || this._vector.wasAltered();
-  },
-  keys: function() {
-    return iteratorMapper(this.entries(), (function(entry) {
-      return entry[0];
-    }));
-  },
-  values: function() {
-    return iteratorMapper(this.entries(), (function(entry) {
-      return entry[1];
-    }));
-  },
-  entries: function() {
-    return this._vector.values(true);
-  },
-  __iterate: function(fn, reverse) {
-    return this._vector.fromEntrySeq().__iterate(fn, reverse);
-  },
-  __deepEquals: function(other) {
-    var iterator = this.entries();
-    return other.every((function(v, k) {
-      var entry = iterator.next().value;
-      return entry && is(entry[0], k) && is(entry[1], v);
-    }));
-  },
-  __ensureOwner: function(ownerID) {
-    if (ownerID === this.__ownerID) {
-      return this;
-    }
-    var newMap = this._map.__ensureOwner(ownerID);
-    var newVector = this._vector.__ensureOwner(ownerID);
-    if (!ownerID) {
-      this.__ownerID = ownerID;
-      this._map = newMap;
-      this._vector = newVector;
-      return this;
-    }
-    return makeOrderedMap(newMap, newVector, ownerID, this.__hash);
-  }
-}, {empty: function() {
-    return EMPTY_ORDERED_MAP || (EMPTY_ORDERED_MAP = makeOrderedMap(Map.empty(), Vector.empty()));
-  }}, Map);
-OrderedMap.from = OrderedMap;
-OrderedMap.prototype[DELETE] = OrderedMap.prototype.remove;
-function makeOrderedMap(map, vector, ownerID, hash) {
-  var omap = Object.create(OrderedMap.prototype);
-  omap.length = map ? map.length : 0;
-  omap._map = map;
-  omap._vector = vector;
-  omap.__ownerID = ownerID;
-  omap.__hash = hash;
-  return omap;
-}
-function updateOrderedMap(omap, k, v) {
-  var map = omap._map;
-  var vector = omap._vector;
-  var i = map.get(k);
-  var has = i !== undefined;
-  var removed = v === NOT_SET;
-  if ((!has && removed) || (has && v === vector.get(i)[1])) {
-    return omap;
-  }
-  if (!has) {
-    i = vector.length;
-  }
-  var newMap = removed ? map.remove(k) : has ? map : map.set(k, i);
-  var newVector = removed ? vector.remove(i) : vector.set(i, [k, v]);
-  if (omap.__ownerID) {
-    omap.length = newMap.length;
-    omap._map = newMap;
-    omap._vector = newVector;
-    omap.__hash = undefined;
-    return omap;
-  }
-  return makeOrderedMap(newMap, newVector);
-}
-var EMPTY_ORDERED_MAP;
-var Record = function Record(defaultValues, name) {
-  var RecordType = function(values) {
-    if (!(this instanceof RecordType)) {
-      return new RecordType(values);
-    }
-    this._map = Map(values);
-  };
-  defaultValues = Sequence(defaultValues);
-  var RecordTypePrototype = RecordType.prototype = Object.create(RecordPrototype);
-  RecordTypePrototype.constructor = RecordType;
-  RecordTypePrototype._name = name;
-  RecordTypePrototype._defaultValues = defaultValues;
-  var keys = Object.keys(defaultValues);
-  RecordType.prototype.length = keys.length;
-  if (Object.defineProperty) {
-    defaultValues.forEach((function(_, key) {
-      Object.defineProperty(RecordType.prototype, key, {
-        get: function() {
-          return this.get(key);
-        },
-        set: function(value) {
-          invariant(this.__ownerID, 'Cannot set on an immutable record.');
-          this.set(key, value);
-        }
-      });
-    }));
-  }
-  return RecordType;
-};
-var $Record = Record;
-($traceurRuntime.createClass)(Record, {
-  toString: function() {
-    return this.__toString((this._name || 'Record') + ' {', '}');
-  },
-  has: function(k) {
-    return this._defaultValues.has(k);
-  },
-  get: function(k, notSetValue) {
-    if (notSetValue !== undefined && !this.has(k)) {
-      return notSetValue;
-    }
-    return this._map.get(k, this._defaultValues.get(k));
-  },
-  clear: function() {
-    if (this.__ownerID) {
-      this._map.clear();
-      return this;
-    }
-    var Record = Object.getPrototypeOf(this).constructor;
-    return $Record._empty || ($Record._empty = makeRecord(this, Map.empty()));
-  },
-  set: function(k, v) {
-    if (k == null || !this.has(k)) {
-      return this;
-    }
-    var newMap = this._map.set(k, v);
-    if (this.__ownerID || newMap === this._map) {
-      return this;
-    }
-    return makeRecord(this, newMap);
-  },
-  remove: function(k) {
-    if (k == null || !this.has(k)) {
-      return this;
-    }
-    var newMap = this._map.remove(k);
-    if (this.__ownerID || newMap === this._map) {
-      return this;
-    }
-    return makeRecord(this, newMap);
-  },
-  keys: function() {
-    return this._map.keys();
-  },
-  values: function() {
-    return this._map.values();
-  },
-  entries: function() {
-    return this._map.entries();
-  },
-  wasAltered: function() {
-    return this._map.wasAltered();
-  },
-  __iterate: function(fn, reverse) {
-    var record = this;
-    return this._defaultValues.map((function(_, k) {
-      return record.get(k);
-    })).__iterate(fn, reverse);
-  },
-  __ensureOwner: function(ownerID) {
-    if (ownerID === this.__ownerID) {
-      return this;
-    }
-    var newMap = this._map && this._map.__ensureOwner(ownerID);
-    if (!ownerID) {
-      this.__ownerID = ownerID;
-      this._map = newMap;
-      return this;
-    }
-    return makeRecord(this, newMap, ownerID);
-  }
-}, {}, Sequence);
-var RecordPrototype = Record.prototype;
-RecordPrototype[DELETE] = RecordPrototype.remove;
-RecordPrototype[ITERATOR] = MapPrototype[ITERATOR];
-RecordPrototype.merge = MapPrototype.merge;
-RecordPrototype.mergeWith = MapPrototype.mergeWith;
-RecordPrototype.mergeDeep = MapPrototype.mergeDeep;
-RecordPrototype.mergeDeepWith = MapPrototype.mergeDeepWith;
-RecordPrototype.update = MapPrototype.update;
-RecordPrototype.updateIn = MapPrototype.updateIn;
-RecordPrototype.cursor = MapPrototype.cursor;
-RecordPrototype.withMutations = MapPrototype.withMutations;
-RecordPrototype.asMutable = MapPrototype.asMutable;
-RecordPrototype.asImmutable = MapPrototype.asImmutable;
-RecordPrototype.__deepEquals = MapPrototype.__deepEquals;
-function makeRecord(likeRecord, map, ownerID) {
-  var record = Object.create(Object.getPrototypeOf(likeRecord));
-  record._map = map;
-  record.__ownerID = ownerID;
-  return record;
-}
-var Range = function Range(start, end, step) {
-  if (!(this instanceof $Range)) {
-    return new $Range(start, end, step);
-  }
-  invariant(step !== 0, 'Cannot step a Range by 0');
-  start = start || 0;
-  if (end == null) {
-    end = Infinity;
-  }
-  if (start === end && __EMPTY_RANGE) {
-    return __EMPTY_RANGE;
-  }
-  step = step == null ? 1 : Math.abs(step);
-  if (end < start) {
-    step = -step;
-  }
-  this._start = start;
-  this._end = end;
-  this._step = step;
-  this.length = Math.max(0, Math.ceil((end - start) / step - 1) + 1);
-};
-var $Range = Range;
-($traceurRuntime.createClass)(Range, {
-  toString: function() {
-    if (this.length === 0) {
-      return 'Range []';
-    }
-    return 'Range [ ' + this._start + '...' + this._end + (this._step > 1 ? ' by ' + this._step : '') + ' ]';
-  },
-  has: function(index) {
-    index = wrapIndex(this, index);
-    return index >= 0 && (this.length === Infinity || index < this.length);
-  },
-  get: function(index, notSetValue) {
-    index = wrapIndex(this, index);
-    return this.has(index) ? this._start + index * this._step : notSetValue;
-  },
-  contains: function(searchValue) {
-    var possibleIndex = (searchValue - this._start) / this._step;
-    return possibleIndex >= 0 && possibleIndex < this.length && possibleIndex === Math.floor(possibleIndex);
-  },
-  slice: function(begin, end) {
-    if (wholeSlice(begin, end, this.length)) {
-      return this;
-    }
-    begin = resolveBegin(begin, this.length);
-    end = resolveEnd(end, this.length);
-    if (end <= begin) {
-      return __EMPTY_RANGE;
-    }
-    return new $Range(this.get(begin, this._end), this.get(end, this._end), this._step);
-  },
-  indexOf: function(searchValue) {
-    var offsetValue = searchValue - this._start;
-    if (offsetValue % this._step === 0) {
-      var index = offsetValue / this._step;
-      if (index >= 0 && index < this.length) {
-        return index;
-      }
-    }
-    return -1;
-  },
-  lastIndexOf: function(searchValue) {
-    return this.indexOf(searchValue);
-  },
-  take: function(amount) {
-    return this.slice(0, Math.max(0, amount));
-  },
-  skip: function(amount) {
-    return this.slice(Math.max(0, amount));
-  },
-  __iterate: function(fn, reverse, reverseIndices) {
-    var maxIndex = this.length - 1;
-    var step = this._step;
-    var value = reverse ? this._start + maxIndex * step : this._start;
-    for (var ii = 0; ii <= maxIndex; ii++) {
-      if (fn(value, reverseIndices ? maxIndex - ii : ii, this) === false) {
-        break;
-      }
-      value += reverse ? -step : step;
-    }
-    return ii;
-  },
-  __deepEquals: function(other) {
-    return this._start === other._start && this._end === other._end && this._step === other._step;
-  }
-}, {}, IndexedSequence);
-var RangePrototype = Range.prototype;
-RangePrototype.__toJS = RangePrototype.toArray;
-RangePrototype.first = VectorPrototype.first;
-RangePrototype.last = VectorPrototype.last;
-var __EMPTY_RANGE = Range(0, 0);
-var Repeat = function Repeat(value, times) {
-  if (times === 0 && EMPTY_REPEAT) {
-    return EMPTY_REPEAT;
-  }
-  if (!(this instanceof $Repeat)) {
-    return new $Repeat(value, times);
-  }
-  this._value = value;
-  this.length = times == null ? Infinity : Math.max(0, times);
-};
-var $Repeat = Repeat;
-($traceurRuntime.createClass)(Repeat, {
-  toString: function() {
-    if (this.length === 0) {
-      return 'Repeat []';
-    }
-    return 'Repeat [ ' + this._value + ' ' + this.length + ' times ]';
-  },
-  get: function(index, notSetValue) {
-    return this.has(index) ? this._value : notSetValue;
-  },
-  contains: function(searchValue) {
-    return is(this._value, searchValue);
-  },
-  slice: function(begin, end) {
-    var length = this.length;
-    begin = begin < 0 ? Math.max(0, length + begin) : Math.min(length, begin);
-    end = end == null ? length : end > 0 ? Math.min(length, end) : Math.max(0, length + end);
-    return end > begin ? new $Repeat(this._value, end - begin) : EMPTY_REPEAT;
-  },
-  reverse: function() {
-    return this;
-  },
-  indexOf: function(searchValue) {
-    if (is(this._value, searchValue)) {
-      return 0;
-    }
-    return -1;
-  },
-  lastIndexOf: function(searchValue) {
-    if (is(this._value, searchValue)) {
-      return this.length;
-    }
-    return -1;
-  },
-  __iterate: function(fn, reverse, reverseIndices) {
-    invariant(!reverseIndices || this.length < Infinity, 'Cannot access end of infinite range.');
-    var maxIndex = this.length - 1;
-    for (var ii = 0; ii <= maxIndex; ii++) {
-      if (fn(this._value, reverseIndices ? maxIndex - ii : ii, this) === false) {
-        break;
-      }
-    }
-    return ii;
-  },
-  __deepEquals: function(other) {
-    return is(this._value, other._value);
-  }
-}, {}, IndexedSequence);
-var RepeatPrototype = Repeat.prototype;
-RepeatPrototype.last = RepeatPrototype.first;
-RepeatPrototype.has = RangePrototype.has;
-RepeatPrototype.take = RangePrototype.take;
-RepeatPrototype.skip = RangePrototype.skip;
-RepeatPrototype.__toJS = RangePrototype.__toJS;
-var EMPTY_REPEAT = new Repeat(undefined, 0);
-function fromJS(json, converter) {
-  if (converter) {
-    return _fromJSWith(converter, json, '', {'': json});
-  }
-  return _fromJSDefault(json);
-}
-function _fromJSWith(converter, json, key, parentJSON) {
-  if (json && (Array.isArray(json) || json.constructor === Object)) {
-    return converter.call(parentJSON, key, Sequence(json).map((function(v, k) {
-      return _fromJSWith(converter, v, k, json);
-    })));
-  }
-  return json;
-}
-function _fromJSDefault(json) {
-  if (json) {
-    if (Array.isArray(json)) {
-      return Sequence(json).map(_fromJSDefault).toVector();
-    }
-    if (json.constructor === Object) {
-      return Sequence(json).map(_fromJSDefault).toMap();
-    }
-  }
-  return json;
-}
-var Immutable = {
-  Sequence: Sequence,
-  Map: Map,
-  Vector: Vector,
-  Set: Set,
-  OrderedMap: OrderedMap,
-  Record: Record,
-  Range: Range,
-  Repeat: Repeat,
-  is: is,
-  fromJS: fromJS
-};
-
-  return Immutable;
-}
-typeof exports === 'object' ? module.exports = universalModule() :
-  typeof define === 'function' && define.amd ? define(universalModule) :
-    Immutable = universalModule();
-
-},{}],197:[function(require,module,exports){
+},{"./src/structure":197}],196:[function(require,module,exports){
 module.exports=require(67)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/browserify/node_modules/inherits/inherits_browser.js":67}],198:[function(require,module,exports){
+},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/browserify/node_modules/inherits/inherits_browser.js":67}],197:[function(require,module,exports){
 var Immutable = require('immutable');
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
@@ -24364,7 +21536,9 @@ Structure.prototype.cursor = function (path) {
   return self.current.cursor(path,
     handlePersisting(self,
       handleUpdate(self, function (newData, oldData, path) {
-        self.current = newData;
+        self.current = self.current.updateIn(path, function (data) {
+          return newData.getIn(path);
+        });
       })
     )
   );
@@ -24413,7 +21587,7 @@ function emit (emitter, verb, path, object) {
   emitter.emit(verb, url, object);
 }
 
-},{"./utils":199,"events":62,"immutable":196,"inherits":197}],199:[function(require,module,exports){
+},{"./utils":198,"events":62,"immutable":199,"inherits":196}],198:[function(require,module,exports){
 
 
 module.exports.randString = function (len) {
@@ -24421,7 +21595,7 @@ module.exports.randString = function (len) {
   return Math.random().toString(36).substring(2).substring(0, len);
 };
 
-},{}],200:[function(require,module,exports){
+},{}],199:[function(require,module,exports){
 /**
  *  Copyright (c) 2014, Facebook, Inc.
  *  All rights reserved.
@@ -24465,6 +21639,7 @@ $traceurRuntime.createClass = createClass;
 $traceurRuntime.superCall = superCall;
 $traceurRuntime.defaultSuperCall = defaultSuperCall;
 "use strict";
+var DELETE = 'delete';
 var SHIFT = 5;
 var SIZE = 1 << SHIFT;
 var MASK = SIZE - 1;
@@ -24488,41 +21663,9 @@ function arrCopy(arr, offset) {
   }
   return newArr;
 }
-var ITER_RESULT = {
-  value: undefined,
-  done: false
-};
-function iteratorValue(value) {
-  ITER_RESULT.value = value;
-  ITER_RESULT.done = false;
-  return ITER_RESULT;
-}
-function iteratorDone() {
-  ITER_RESULT.value = undefined;
-  ITER_RESULT.done = true;
-  return ITER_RESULT;
-}
 function invariant(condition, error) {
   if (!condition)
     throw new Error(error);
-}
-var DELETE = 'delete';
-var FAUX_ITERATOR = '@@iterator';
-var ITERATOR = typeof Symbol !== 'undefined' ? Symbol.iterator : FAUX_ITERATOR;
-function isIterable(maybeIterable) {
-  return !!_iteratorFn(maybeIterable);
-}
-function isIterator(maybeIterator) {
-  return maybeIterator && typeof maybeIterator.next === 'function';
-}
-function getIterator(iterable) {
-  var iteratorFn = _iteratorFn(iterable);
-  if (typeof iteratorFn === 'function') {
-    return iteratorFn.call(iterable);
-  }
-}
-function _iteratorFn(iterable) {
-  return iterable && (iterable[ITERATOR] || iterable[FAUX_ITERATOR]);
 }
 function hash(o) {
   if (!o) {
@@ -24632,11 +21775,95 @@ var STRING_HASH_CACHE_MIN_STRLEN = 16;
 var STRING_HASH_CACHE_MAX_SIZE = 255;
 var STRING_HASH_CACHE_SIZE = 0;
 var stringHashCache = {};
+var ITERATE_KEYS = 0;
+var ITERATE_VALUES = 1;
+var ITERATE_ENTRIES = 2;
+var FAUX_ITERATOR_SYMBOL = '@@iterator';
+var ITERATOR_SYMBOL = typeof Symbol !== 'undefined' ? Symbol.iterator : FAUX_ITERATOR_SYMBOL;
+var Iterator = function Iterator(next) {
+  this.next = next;
+};
+($traceurRuntime.createClass)(Iterator, {toString: function() {
+    return '[Iterator]';
+  }}, {});
+var IteratorPrototype = Iterator.prototype;
+IteratorPrototype.inspect = IteratorPrototype.toSource = function() {
+  return this.toString();
+};
+IteratorPrototype[ITERATOR_SYMBOL] = function() {
+  return this;
+};
+function iteratorValue(type, k, v, iteratorResult) {
+  var value = type === 0 ? k : type === 1 ? v : [k, v];
+  iteratorResult ? (iteratorResult.value = value) : (iteratorResult = {
+    value: value,
+    done: false
+  });
+  return iteratorResult;
+}
+function iteratorDone() {
+  return {
+    value: undefined,
+    done: true
+  };
+}
+function isIterable(maybeIterable) {
+  return !!_iteratorFn(maybeIterable);
+}
+function isIterator(maybeIterator) {
+  return maybeIterator && typeof maybeIterator.next === 'function';
+}
+function getIterator(iterable) {
+  var iteratorFn = _iteratorFn(iterable);
+  if (typeof iteratorFn === 'function') {
+    return iteratorFn.call(iterable);
+  }
+}
+function _iteratorFn(iterable) {
+  return iterable && (iterable[ITERATOR_SYMBOL] || iterable[FAUX_ITERATOR_SYMBOL]);
+}
 var Sequence = function Sequence(value) {
   return $Sequence.from(arguments.length === 1 ? value : Array.prototype.slice.call(arguments));
 };
 var $Sequence = Sequence;
 ($traceurRuntime.createClass)(Sequence, {
+  toArray: function() {
+    assertNotInfinite(this.length);
+    var array = new Array(this.length || 0);
+    this.valueSeq().__iterate((function(v, i) {
+      array[i] = v;
+    }));
+    return array;
+  },
+  toJS: function() {
+    return this.map((function(value) {
+      return value instanceof $Sequence ? value.toJS() : value;
+    })).__toJS();
+  },
+  toMap: function() {
+    assertNotInfinite(this.length);
+    return Map.from(this);
+  },
+  toObject: function() {
+    assertNotInfinite(this.length);
+    var object = {};
+    this.__iterate((function(v, k) {
+      object[k] = v;
+    }));
+    return object;
+  },
+  toOrderedMap: function() {
+    assertNotInfinite(this.length);
+    return OrderedMap.from(this);
+  },
+  toSet: function() {
+    assertNotInfinite(this.length);
+    return Set.from(this);
+  },
+  toVector: function() {
+    assertNotInfinite(this.length);
+    return Vector.from(this);
+  },
   toString: function() {
     return this.__toString('Seq {', '}');
   },
@@ -24649,50 +21876,135 @@ var $Sequence = Sequence;
   __toStringMapper: function(v, k) {
     return k + ': ' + quoteString(v);
   },
-  toJS: function() {
-    return this.map((function(value) {
-      return value instanceof $Sequence ? value.toJS() : value;
-    })).__toJS();
+  concat: function() {
+    for (var values = [],
+        $__2 = 0; $__2 < arguments.length; $__2++)
+      values[$__2] = arguments[$__2];
+    return concatFactory(this, values, true);
   },
-  toArray: function() {
-    assertNotInfinite(this.length);
-    var array = new Array(this.length || 0);
-    this.valueSeq().forEach((function(v, i) {
-      array[i] = v;
+  contains: function(searchValue) {
+    return this.find((function(value) {
+      return is(value, searchValue);
+    }), null, NOT_SET) !== NOT_SET;
+  },
+  entries: function() {
+    return this.__iterator(ITERATE_ENTRIES);
+  },
+  every: function(predicate, context) {
+    var returnValue = true;
+    this.__iterate((function(v, k, c) {
+      if (!predicate.call(context, v, k, c)) {
+        returnValue = false;
+        return false;
+      }
     }));
-    return array;
+    return returnValue;
   },
-  toObject: function() {
-    assertNotInfinite(this.length);
-    var object = {};
-    this.forEach((function(v, k) {
-      object[k] = v;
+  filter: function(predicate, context) {
+    return filterFactory(this, predicate, context, true);
+  },
+  find: function(predicate, context, notSetValue) {
+    var foundValue = notSetValue;
+    this.__iterate((function(v, k, c) {
+      if (predicate.call(context, v, k, c)) {
+        foundValue = v;
+        return false;
+      }
     }));
-    return object;
+    return foundValue;
   },
-  toVector: function() {
-    assertNotInfinite(this.length);
-    return Vector.from(this);
+  forEach: function(sideEffect, context) {
+    return this.__iterate(context ? sideEffect.bind(context) : sideEffect);
   },
-  toMap: function() {
-    assertNotInfinite(this.length);
-    return Map.from(this);
+  join: function(separator) {
+    separator = separator !== undefined ? '' + separator : ',';
+    var joined = '';
+    var isFirst = true;
+    this.__iterate((function(v) {
+      isFirst ? (isFirst = false) : (joined += separator);
+      joined += v != null ? v : '';
+    }));
+    return joined;
   },
-  toOrderedMap: function() {
-    assertNotInfinite(this.length);
-    return OrderedMap.from(this);
+  keys: function() {
+    return this.__iterator(ITERATE_KEYS);
   },
-  toSet: function() {
-    assertNotInfinite(this.length);
-    return Set.from(this);
+  map: function(mapper, context) {
+    return mapFactory(this, mapper, context);
   },
-  toKeyedSeq: function() {
-    return this;
+  reduce: function(reducer, initialReduction, context) {
+    var reduction;
+    var useFirst;
+    if (arguments.length < 2) {
+      useFirst = true;
+    } else {
+      reduction = initialReduction;
+    }
+    this.__iterate((function(v, k, c) {
+      if (useFirst) {
+        useFirst = false;
+        reduction = v;
+      } else {
+        reduction = reducer.call(context, reduction, v, k, c);
+      }
+    }));
+    return reduction;
   },
-  hashCode: function() {
-    return this.__hash || (this.__hash = this.length === Infinity ? 0 : this.reduce((function(h, v, k) {
-      return (h + (hash(v) ^ (v === k ? 0 : hash(k)))) & HASH_MAX_VAL;
-    }), 0));
+  reduceRight: function(reducer, initialReduction, context) {
+    var reversed = this.toKeyedSeq().reverse();
+    return reversed.reduce.apply(reversed, arguments);
+  },
+  reverse: function() {
+    return reverseFactory(this);
+  },
+  slice: function(begin, end) {
+    if (wholeSlice(begin, end, this.length)) {
+      return this;
+    }
+    var resolvedBegin = resolveBegin(begin, this.length);
+    var resolvedEnd = resolveEnd(end, this.length);
+    if (resolvedBegin !== resolvedBegin || resolvedEnd !== resolvedEnd) {
+      return this.cacheResult().slice(begin, end);
+    }
+    var skipped = resolvedBegin === 0 ? this : this.skip(resolvedBegin);
+    return resolvedEnd == null || resolvedEnd === this.length ? skipped : skipped.take(resolvedEnd - resolvedBegin);
+  },
+  some: function(predicate, context) {
+    return !this.every(not(predicate), context);
+  },
+  sort: function(comparator) {
+    return this.sortBy(valueMapper, comparator);
+  },
+  values: function() {
+    return this.__iterator(ITERATE_VALUES);
+  },
+  butLast: function() {
+    return this.slice(0, -1);
+  },
+  count: function(predicate, context) {
+    if (!predicate) {
+      if (this.length == null) {
+        this.length = this.__iterate(returnTrue);
+      }
+      return this.length;
+    }
+    return this.filter(predicate, context).count();
+  },
+  countBy: function(grouper, context) {
+    var $__0 = this;
+    var groupMap = {};
+    var groups = [];
+    this.__iterate((function(v, k) {
+      var g = grouper.call(context, v, k, $__0);
+      var h = hash(g);
+      if (!groupMap.hasOwnProperty(h)) {
+        groupMap[h] = groups.length;
+        groups.push([g, 1]);
+      } else {
+        groups[groupMap[h]][1]++;
+      }
+    }));
+    return $Sequence(groups).fromEntrySeq();
   },
   equals: function(other) {
     if (this === other) {
@@ -24715,88 +22027,11 @@ var $Sequence = Sequence;
     return this.__deepEquals(other);
   },
   __deepEquals: function(other) {
-    var entries = this.cacheResult().entrySeq().toArray();
-    var iterations = 0;
+    var entries = this.entries();
     return other.every((function(v, k) {
-      var entry = entries[iterations++];
-      return is(k, entry[0]) && is(v, entry[1]);
-    }));
-  },
-  join: function(separator) {
-    separator = separator !== undefined ? '' + separator : ',';
-    var joined = '';
-    var isFirst = true;
-    this.forEach((function(v) {
-      isFirst ? (isFirst = false) : (joined += separator);
-      joined += v != null ? v : '';
-    }));
-    return joined;
-  },
-  count: function(predicate, thisArg) {
-    if (!predicate) {
-      if (this.length == null) {
-        this.length = this.forEach(returnTrue);
-      }
-      return this.length;
-    }
-    return this.filter(predicate, thisArg).count();
-  },
-  countBy: function(grouper, context) {
-    var $__0 = this;
-    var groupMap = {};
-    var groups = [];
-    this.forEach((function(v, k) {
-      var g = grouper.call(context, v, k, $__0);
-      var h = hash(g);
-      if (!groupMap.hasOwnProperty(h)) {
-        groupMap[h] = groups.length;
-        groups.push([g, 1]);
-      } else {
-        groups[groupMap[h]][1]++;
-      }
-    }));
-    return $Sequence(groups).fromEntrySeq();
-  },
-  concat: function() {
-    for (var values = [],
-        $__2 = 0; $__2 < arguments.length; $__2++)
-      values[$__2] = arguments[$__2];
-    return concatFactory(this, values, true);
-  },
-  flatten: function() {
-    return flattenFactory(this, true);
-  },
-  flatMap: function(mapper, thisArg) {
-    return this.map(mapper, thisArg).flatten();
-  },
-  reverse: function() {
-    return reverseFactory(this, true);
-  },
-  keySeq: function() {
-    return this.flip().valueSeq();
-  },
-  valueSeq: function() {
-    var sequence = this;
-    var valuesSequence = makeIndexedSequence(sequence);
-    valuesSequence.length = sequence.length;
-    valuesSequence.__iterateUncached = function(fn, reverse, reverseIndices) {
-      var $__0 = this;
-      var iterations = 0;
-      var predicate;
-      if (reverseIndices) {
-        var maxIndex = this.length - 1;
-        predicate = (function(v, k, c) {
-          return fn(v, maxIndex - iterations++, $__0) !== false;
-        });
-      } else {
-        predicate = (function(v, k, c) {
-          return fn(v, iterations++, $__0) !== false;
-        });
-      }
-      sequence.__iterate(predicate, reverse);
-      return iterations;
-    };
-    return valuesSequence;
+      var entry = entries.next().value;
+      return entry && is(entry[0], k) && is(entry[1], v);
+    })) && entries.next().done;
   },
   entrySeq: function() {
     var sequence = this;
@@ -24809,58 +22044,33 @@ var $Sequence = Sequence;
     });
     return entriesSequence;
   },
-  forEach: function(sideEffect, thisArg) {
-    return this.__iterate(thisArg ? sideEffect.bind(thisArg) : sideEffect);
-  },
-  reduce: function(reducer, initialReduction, thisArg) {
-    var reduction;
-    var useFirst;
-    if (arguments.length < 2) {
-      useFirst = true;
-    } else {
-      reduction = initialReduction;
-    }
-    this.forEach((function(v, k, c) {
-      if (useFirst) {
-        useFirst = false;
-        reduction = v;
-      } else {
-        reduction = reducer.call(thisArg, reduction, v, k, c);
-      }
-    }));
-    return reduction;
-  },
-  reduceRight: function(reducer, initialReduction, thisArg) {
-    var reversed = this.toKeyedSeq().reverse();
-    return reversed.reduce.apply(reversed, arguments);
-  },
-  every: function(predicate, thisArg) {
-    var returnValue = true;
-    this.forEach((function(v, k, c) {
-      if (!predicate.call(thisArg, v, k, c)) {
-        returnValue = false;
+  findKey: function(predicate, context) {
+    var foundKey;
+    this.__iterate((function(v, k, c) {
+      if (predicate.call(context, v, k, c)) {
+        foundKey = k;
         return false;
       }
     }));
-    return returnValue;
+    return foundKey;
   },
-  some: function(predicate, thisArg) {
-    return !this.every(not(predicate), thisArg);
+  findLast: function(predicate, context, notSetValue) {
+    return this.toKeyedSeq().reverse().find(predicate, context, notSetValue);
+  },
+  findLastKey: function(predicate, context) {
+    return this.toKeyedSeq().reverse().findKey(predicate, context);
   },
   first: function() {
     return this.find(returnTrue);
   },
-  last: function() {
-    return this.findLast(returnTrue);
+  flatMap: function(mapper, context) {
+    return this.map(mapper, context).flatten();
   },
-  rest: function() {
-    return this.slice(1);
+  flatten: function() {
+    return flattenFactory(this, true);
   },
-  butLast: function() {
-    return this.slice(0, -1);
-  },
-  has: function(searchKey) {
-    return this.get(searchKey, NOT_SET) !== NOT_SET;
+  flip: function() {
+    return flipFactory(this);
   },
   get: function(searchKey, notSetValue) {
     return this.find((function(_, key) {
@@ -24879,138 +22089,32 @@ var $Sequence = Sequence;
     }
     return nested;
   },
-  contains: function(searchValue) {
-    return this.find((function(value) {
-      return is(value, searchValue);
-    }), null, NOT_SET) !== NOT_SET;
+  groupBy: function(grouper, context) {
+    return groupByFactory(this, grouper, context, true);
   },
-  find: function(predicate, thisArg, notSetValue) {
-    var foundValue = notSetValue;
-    this.forEach((function(v, k, c) {
-      if (predicate.call(thisArg, v, k, c)) {
-        foundValue = v;
-        return false;
-      }
-    }));
-    return foundValue;
+  has: function(searchKey) {
+    return this.get(searchKey, NOT_SET) !== NOT_SET;
   },
-  findKey: function(predicate, thisArg) {
-    var foundKey;
-    this.forEach((function(v, k, c) {
-      if (predicate.call(thisArg, v, k, c)) {
-        foundKey = k;
-        return false;
-      }
-    }));
-    return foundKey;
+  keySeq: function() {
+    return this.flip().valueSeq();
   },
-  findLast: function(predicate, thisArg, notSetValue) {
-    return this.toKeyedSeq().reverse().find(predicate, thisArg, notSetValue);
+  last: function() {
+    return this.findLast(returnTrue);
   },
-  findLastKey: function(predicate, thisArg) {
-    return this.toKeyedSeq().reverse().findKey(predicate, thisArg);
-  },
-  flip: function() {
-    var sequence = this.toKeyedSeq();
-    var flipSequence = sequence.__makeSequence();
-    flipSequence.length = sequence.length;
-    flipSequence.flip = (function() {
-      return sequence;
-    });
-    flipSequence.__iterateUncached = function(fn, reverse) {
-      var $__0 = this;
-      return sequence.__iterate((function(v, k) {
-        return fn(k, v, $__0) !== false;
-      }), reverse);
-    };
-    return flipSequence;
-  },
-  map: function(mapper, thisArg) {
-    var sequence = this;
-    var mappedSequence = sequence.__makeSequence();
-    mappedSequence.length = sequence.length;
-    mappedSequence.__iterateUncached = function(fn, reverse) {
-      var $__0 = this;
-      return sequence.__iterate((function(v, k, c) {
-        return fn(mapper.call(thisArg, v, k, c), k, $__0) !== false;
-      }), reverse);
-    };
-    return mappedSequence;
-  },
-  mapKeys: function(mapper, thisArg) {
-    var $__0 = this;
-    return this.flip().map((function(k, v) {
-      return mapper.call(thisArg, k, v, $__0);
-    })).flip();
-  },
-  mapEntries: function(mapper, thisArg) {
+  mapEntries: function(mapper, context) {
     var $__0 = this;
     return this.entrySeq().map((function(entry, index) {
-      return mapper.call(thisArg, entry, index, $__0);
+      return mapper.call(context, entry, index, $__0);
     })).fromEntrySeq();
   },
-  filter: function(predicate, thisArg) {
-    return filterFactory(this, predicate, thisArg, true);
+  mapKeys: function(mapper, context) {
+    var $__0 = this;
+    return this.flip().map((function(k, v) {
+      return mapper.call(context, k, v, $__0);
+    })).flip();
   },
-  slice: function(begin, end) {
-    if (wholeSlice(begin, end, this.length)) {
-      return this;
-    }
-    var resolvedBegin = resolveBegin(begin, this.length);
-    var resolvedEnd = resolveEnd(end, this.length);
-    if (resolvedBegin !== resolvedBegin || resolvedEnd !== resolvedEnd) {
-      return this.cacheResult().slice(begin, end);
-    }
-    var skipped = resolvedBegin === 0 ? this : this.skip(resolvedBegin);
-    return resolvedEnd == null || resolvedEnd === this.length ? skipped : skipped.take(resolvedEnd - resolvedBegin);
-  },
-  take: function(amount) {
-    var sequence = this;
-    if (amount > sequence.length) {
-      return sequence;
-    }
-    if (amount < 0) {
-      amount = 0;
-    }
-    var takeSequence = sequence.__makeSequence();
-    takeSequence.__iterateUncached = function(fn, reverse, reverseIndices) {
-      var $__0 = this;
-      if (amount === 0) {
-        return 0;
-      }
-      if (reverse) {
-        return this.cacheResult().__iterate(fn, reverse, reverseIndices);
-      }
-      var iterations = 0;
-      sequence.__iterate((function(v, k) {
-        return ++iterations && fn(v, k, $__0) !== false && iterations < amount;
-      }));
-      return iterations;
-    };
-    takeSequence.length = this.length && Math.min(this.length, amount);
-    return takeSequence;
-  },
-  takeLast: function(amount) {
-    return this.reverse().take(amount).reverse();
-  },
-  takeWhile: function(predicate, thisArg) {
-    var sequence = this;
-    var takeSequence = sequence.__makeSequence();
-    takeSequence.__iterateUncached = function(fn, reverse, reverseIndices) {
-      var $__0 = this;
-      if (reverse) {
-        return this.cacheResult().__iterate(fn, reverse, reverseIndices);
-      }
-      var iterations = 0;
-      sequence.__iterate((function(v, k, c) {
-        return predicate.call(thisArg, v, k, c) && ++iterations && fn(v, k, $__0);
-      }));
-      return iterations;
-    };
-    return takeSequence;
-  },
-  takeUntil: function(predicate, thisArg) {
-    return this.takeWhile(not(predicate), thisArg);
+  rest: function() {
+    return this.slice(1);
   },
   skip: function(amount) {
     return skipFactory(this, amount, true);
@@ -25018,17 +22122,11 @@ var $Sequence = Sequence;
   skipLast: function(amount) {
     return this.reverse().skip(amount).reverse();
   },
-  skipWhile: function(predicate, thisArg) {
-    return skipWhileFactory(this, predicate, thisArg, true);
+  skipWhile: function(predicate, context) {
+    return skipWhileFactory(this, predicate, context, true);
   },
-  skipUntil: function(predicate, thisArg) {
-    return this.skipWhile(not(predicate), thisArg);
-  },
-  groupBy: function(grouper, context) {
-    return groupByFactory(this, grouper, context, true);
-  },
-  sort: function(comparator) {
-    return this.sortBy(valueMapper, comparator);
+  skipUntil: function(predicate, context) {
+    return this.skipWhile(not(predicate), context);
   },
   sortBy: function(mapper, comparator) {
     comparator = comparator || defaultComparator;
@@ -25036,6 +22134,24 @@ var $Sequence = Sequence;
     return $Sequence(this.entrySeq().entrySeq().toArray().sort((function(a, b) {
       return comparator(mapper(a[1][1], a[1][0], seq), mapper(b[1][1], b[1][0], seq)) || a[0] - b[0];
     }))).fromEntrySeq().valueSeq().fromEntrySeq();
+  },
+  take: function(amount) {
+    return takeFactory(this, amount);
+  },
+  takeLast: function(amount) {
+    return this.reverse().take(amount).reverse();
+  },
+  takeWhile: function(predicate, context) {
+    return takeWhileFactory(this, predicate, context);
+  },
+  takeUntil: function(predicate, context) {
+    return this.takeWhile(not(predicate), context);
+  },
+  toKeyedSeq: function() {
+    return this;
+  },
+  valueSeq: function() {
+    return new ValuesSequence(this);
   },
   cacheResult: function() {
     if (!this._cache && this.__iterateUncached) {
@@ -25047,22 +22163,19 @@ var $Sequence = Sequence;
     }
     return this;
   },
-  __iterate: function(fn, reverse) {
-    var cache = this._cache;
-    if (cache) {
-      var maxIndex = cache.length - 1;
-      for (var ii = 0; ii <= maxIndex; ii++) {
-        var entry = cache[reverse ? maxIndex - ii : ii];
-        if (fn(entry[1], entry[0], this) === false) {
-          break;
-        }
-      }
-      return ii;
-    }
-    return this.__iterateUncached(fn, reverse);
+  hashCode: function() {
+    return this.__hash || (this.__hash = this.length === Infinity ? 0 : this.reduce((function(h, v, k) {
+      return (h + (hash(v) ^ (v === k ? 0 : hash(k)))) & HASH_MAX_VAL;
+    }), 0));
   },
   __makeSequence: function() {
-    return makeSequence();
+    return Object.create(SequencePrototype);
+  },
+  __iterate: function(fn, reverse) {
+    return iterate(this, fn, reverse, true);
+  },
+  __iterator: function(type, reverse) {
+    return iterator(this, type, reverse, true);
   }
 }, {from: function(value) {
     if (value instanceof $Sequence) {
@@ -25083,11 +22196,13 @@ var $Sequence = Sequence;
     return new ArraySequence(value);
   }});
 var SequencePrototype = Sequence.prototype;
+SequencePrototype[ITERATOR_SYMBOL] = SequencePrototype.entries;
 SequencePrototype.toJSON = SequencePrototype.toJS;
 SequencePrototype.__toJS = SequencePrototype.toObject;
 SequencePrototype.inspect = SequencePrototype.toSource = function() {
   return this.toString();
 };
+SequencePrototype.chain = SequencePrototype.flatMap;
 var IndexedSequence = function IndexedSequence() {
   $traceurRuntime.defaultSuperCall(this, $IndexedSequence.prototype, arguments);
 };
@@ -25096,50 +22211,18 @@ var $IndexedSequence = IndexedSequence;
   toString: function() {
     return this.__toString('Seq [', ']');
   },
-  toKeyedSeq: function() {
-    return new KeyedIndexedSequence(this);
-  },
-  valueSeq: function() {
-    return this;
-  },
-  fromEntrySeq: function() {
-    var sequence = this;
-    var fromEntriesSequence = makeSequence();
-    fromEntriesSequence.length = sequence.length;
-    fromEntriesSequence.entrySeq = (function() {
-      return sequence;
-    });
-    fromEntriesSequence.__iterateUncached = function(fn, reverse) {
-      var $__0 = this;
-      return sequence.__iterate((function(entry) {
-        return entry && fn(entry[1], entry[0], $__0);
-      }), reverse);
-    };
-    return fromEntriesSequence;
-  },
   concat: function() {
     for (var values = [],
         $__3 = 0; $__3 < arguments.length; $__3++)
       values[$__3] = arguments[$__3];
     return concatFactory(this, values, false);
   },
-  reverse: function() {
-    return reverseFactory(this, false);
+  filter: function(predicate, context) {
+    return filterFactory(this, predicate, context, false);
   },
-  filter: function(predicate, thisArg) {
-    return filterFactory(this, predicate, thisArg, false);
-  },
-  get: function(index, notSetValue) {
-    index = wrapIndex(this, index);
-    return this.find((function(_, key) {
-      return key === index;
-    }), null, notSetValue);
-  },
-  first: function() {
-    return this.get(0);
-  },
-  last: function() {
-    return this.get(this.length ? this.length - 1 : 0);
+  findIndex: function(predicate, context) {
+    var key = this.findKey(predicate, context);
+    return key == null ? -1 : key;
   },
   indexOf: function(searchValue) {
     return this.findIndex((function(value) {
@@ -25148,13 +22231,6 @@ var $IndexedSequence = IndexedSequence;
   },
   lastIndexOf: function(searchValue) {
     return this.toKeyedSeq().reverse().indexOf(searchValue);
-  },
-  findIndex: function(predicate, thisArg) {
-    var key = this.findKey(predicate, thisArg);
-    return key == null ? -1 : key;
-  },
-  findLastIndex: function(predicate, thisArg) {
-    return this.toKeyedSeq().reverse().findIndex(predicate, thisArg);
   },
   splice: function(index, removeNum) {
     var numArgs = arguments.length;
@@ -25166,17 +22242,52 @@ var $IndexedSequence = IndexedSequence;
     var spliced = this.slice(0, index);
     return numArgs === 1 ? spliced : spliced.concat(arrCopy(arguments, 2), this.slice(index + removeNum));
   },
+  findLastIndex: function(predicate, context) {
+    return this.toKeyedSeq().reverse().findIndex(predicate, context);
+  },
+  first: function() {
+    return this.get(0);
+  },
   flatten: function() {
     return flattenFactory(this, false);
   },
-  skip: function(amount) {
-    return skipFactory(this, amount, false);
+  flip: function() {
+    return flipFactory(this.toKeyedSeq());
   },
-  skipWhile: function(predicate, thisArg) {
-    return skipWhileFactory(this, predicate, thisArg, false);
+  fromEntrySeq: function() {
+    return new FromEntriesSequence(this);
+  },
+  get: function(index, notSetValue) {
+    index = wrapIndex(this, index);
+    return (index < 0 || (this.length === Infinity || (this.length != null && index > this.length))) ? notSetValue : this.find((function(_, key) {
+      return key === index;
+    }), null, notSetValue);
   },
   groupBy: function(grouper, context) {
     return groupByFactory(this, grouper, context, false);
+  },
+  has: function(index) {
+    index = wrapIndex(this, index);
+    return index >= 0 && (this.length != null ? this.length === Infinity || index < this.length : this.indexOf(index) !== -1);
+  },
+  interpose: function(separator) {
+    return interposeFactory(this, separator);
+  },
+  last: function() {
+    return this.get(this.length ? this.length - 1 : 0);
+  },
+  skip: function(amount) {
+    var $__0 = this;
+    var skipSeq = skipFactory(this, amount, false);
+    if (skipSeq !== this) {
+      skipSeq.get = (function(index, notSetValue) {
+        return $__0.get(index - amount, notSetValue);
+      });
+    }
+    return skipSeq;
+  },
+  skipWhile: function(predicate, context) {
+    return skipWhileFactory(this, predicate, context, false);
   },
   sortBy: function(mapper, comparator) {
     comparator = comparator || defaultComparator;
@@ -25185,58 +22296,44 @@ var $IndexedSequence = IndexedSequence;
       return comparator(mapper(a[1], a[0], seq), mapper(b[1], b[0], seq)) || a[0] - b[0];
     }))).fromEntrySeq().valueSeq();
   },
-  __iterate: function(fn, reverse, reverseIndices) {
-    var cache = this._cache;
-    if (cache) {
-      reverseIndices ^= reverse;
-      var maxIndex = cache.length - 1;
-      for (var ii = 0; ii <= maxIndex; ii++) {
-        var entry = cache[reverse ? maxIndex - ii : ii];
-        var key = entry[0];
-        if (fn(entry[1], reverseIndices ? maxIndex - key : key, this) === false) {
-          break;
-        }
-      }
-      return ii;
+  take: function(amount) {
+    var $__0 = this;
+    var takeSeq = takeFactory(this, amount);
+    if (takeSeq !== this) {
+      takeSeq.get = (function(index, notSetValue) {
+        return index < amount ? $__0.get(index, notSetValue) : notSetValue;
+      });
     }
-    if (reverseIndices && !this.length) {
-      return this.cacheResult().__iterate(fn, reverse, reverseIndices);
-    }
-    return this.__iterateUncached(fn, reverse, reverseIndices);
+    return takeSeq;
+  },
+  toKeyedSeq: function() {
+    return new KeyedIndexedSequence(this);
+  },
+  valueSeq: function() {
+    return this;
   },
   __makeSequence: function() {
-    return makeIndexedSequence(this);
+    return Object.create(IndexedSequencePrototype);
+  },
+  __iterate: function(fn, reverse) {
+    return iterate(this, fn, reverse, false);
+  },
+  __iterator: function(type, reverse) {
+    return iterator(this, type, reverse, false);
   }
 }, {}, Sequence);
 var IndexedSequencePrototype = IndexedSequence.prototype;
+IndexedSequencePrototype[ITERATOR_SYMBOL] = IndexedSequencePrototype.values;
 IndexedSequencePrototype.__toJS = IndexedSequencePrototype.toArray;
 IndexedSequencePrototype.__toStringMapper = quoteString;
-IndexedSequencePrototype.chain = IndexedSequencePrototype.flatMap;
-var KeyedIndexedSequence = function KeyedIndexedSequence(indexedSeq) {
-  this._seq = indexedSeq;
-  this.length = indexedSeq.length;
-};
-($traceurRuntime.createClass)(KeyedIndexedSequence, {
-  get: function(key, notSetValue) {
-    return this._seq.get(key, notSetValue);
-  },
-  has: function(key) {
-    return this._seq.has(key);
-  },
-  __iterate: function(fn, reverse) {
-    var $__0 = this;
-    return this._seq.__iterate((function(v, k) {
-      return fn(v, k, $__0);
-    }), reverse, reverse);
-  }
-}, {}, Sequence);
 var IteratorSequence = function IteratorSequence(iterator) {
   this._iterator = iterator;
   this._iteratorCache = [];
 };
-($traceurRuntime.createClass)(IteratorSequence, {__iterateUncached: function(fn, reverse, reverseIndices) {
+($traceurRuntime.createClass)(IteratorSequence, {
+  __iterateUncached: function(fn, reverse) {
     if (reverse) {
-      return this.cacheResult().__iterate(fn, reverse, reverseIndices);
+      return this.cacheResult().__iterate(fn, reverse);
     }
     var iterator = this._iterator;
     var cache = this._iteratorCache;
@@ -25255,14 +22352,34 @@ var IteratorSequence = function IteratorSequence(iterator) {
       }
     }
     return iterations;
-  }}, {}, IndexedSequence);
+  },
+  __iteratorUncached: function(type, reverse) {
+    if (reverse) {
+      return this.cacheResult().__iterator(type, reverse);
+    }
+    var iterator = this._iterator;
+    var cache = this._iteratorCache;
+    var iterations = 0;
+    return new Iterator((function() {
+      if (iterations >= cache.length) {
+        var step = iterator.next();
+        if (step.done) {
+          return step;
+        }
+        cache[iterations] = step.value;
+      }
+      return iteratorValue(type, iterations, cache[iterations++]);
+    }));
+  }
+}, {}, IndexedSequence);
 var IterableSequence = function IterableSequence(iterable) {
   this._iterable = iterable;
   this.length = iterable.length || iterable.size;
 };
-($traceurRuntime.createClass)(IterableSequence, {__iterateUncached: function(fn, reverse, reverseIndices) {
+($traceurRuntime.createClass)(IterableSequence, {
+  __iterateUncached: function(fn, reverse) {
     if (reverse) {
-      return this.cacheResult().__iterate(fn, reverse, reverseIndices);
+      return this.cacheResult().__iterate(fn, reverse);
     }
     var iterable = this._iterable;
     var iterator = getIterator(iterable);
@@ -25276,7 +22393,25 @@ var IterableSequence = function IterableSequence(iterable) {
       }
     }
     return iterations;
-  }}, {}, IndexedSequence);
+  },
+  __iteratorUncached: function(type, reverse) {
+    if (reverse) {
+      return this.cacheResult().__iterator(type, reverse);
+    }
+    var iterable = this._iterable;
+    var iterator = getIterator(iterable);
+    if (!isIterator(iterator)) {
+      return new Iterator((function() {
+        return iteratorDone();
+      }));
+    }
+    var iterations = 0;
+    return new Iterator((function() {
+      var step = iterator.next();
+      return step.done ? step : iteratorValue(type, iterations++, step.value);
+    }));
+  }
+}, {}, IndexedSequence);
 var ObjectSequence = function ObjectSequence(object) {
   var keys = Object.keys(object);
   this._object = object;
@@ -25301,12 +22436,22 @@ var ObjectSequence = function ObjectSequence(object) {
     var keys = this._keys;
     var maxIndex = keys.length - 1;
     for (var ii = 0; ii <= maxIndex; ii++) {
-      var iteration = reverse ? maxIndex - ii : ii;
-      if (fn(object[keys[iteration]], keys[iteration], this) === false) {
+      var key = keys[reverse ? maxIndex - ii : ii];
+      if (fn(object[key], key, this) === false) {
         return ii + 1;
       }
     }
     return ii;
+  },
+  __iterator: function(type, reverse) {
+    var object = this._object;
+    var keys = this._keys;
+    var maxIndex = keys.length - 1;
+    var ii = 0;
+    return new Iterator((function() {
+      var key = keys[reverse ? maxIndex - ii : ii];
+      return ii++ > maxIndex ? iteratorDone() : iteratorValue(type, key, object[key]);
+    }));
   }
 }, {}, Sequence);
 var ArraySequence = function ArraySequence(array) {
@@ -25320,36 +22465,31 @@ var ArraySequence = function ArraySequence(array) {
   get: function(index, notSetValue) {
     return this.has(index) ? this._array[wrapIndex(this, index)] : notSetValue;
   },
-  has: function(index) {
-    index = wrapIndex(this, index);
-    return index >= 0 && index < this.length;
-  },
-  __iterate: function(fn, reverse, reverseIndices) {
+  __iterate: function(fn, reverse) {
     var array = this._array;
     var maxIndex = array.length - 1;
     for (var ii = 0; ii <= maxIndex; ii++) {
-      var rr = maxIndex - ii;
-      if (fn(array[reverse ? rr : ii], reverseIndices ? rr : ii, this) === false) {
+      if (fn(array[reverse ? maxIndex - ii : ii], ii, this) === false) {
         return ii + 1;
       }
     }
     return ii;
+  },
+  __iterator: function(type, reverse) {
+    var array = this._array;
+    var maxIndex = array.length - 1;
+    var ii = 0;
+    return new Iterator((function() {
+      return ii > maxIndex ? iteratorDone() : iteratorValue(type, ii, array[reverse ? maxIndex - ii++ : ii++]);
+    }));
   }
 }, {}, IndexedSequence);
-var SequenceIterator = function SequenceIterator() {};
-($traceurRuntime.createClass)(SequenceIterator, {toString: function() {
-    return '[Iterator]';
-  }}, {});
-var SequenceIteratorPrototype = SequenceIterator.prototype;
-SequenceIteratorPrototype[ITERATOR] = returnThis;
-SequenceIteratorPrototype.inspect = SequenceIteratorPrototype.toSource = function() {
-  return this.toString();
-};
-function makeSequence() {
-  return Object.create(SequencePrototype);
-}
-function makeIndexedSequence(parent) {
-  return Object.create(IndexedSequencePrototype);
+function ensureLength(indexedSeq) {
+  if (indexedSeq.length == null) {
+    indexedSeq.cacheResult();
+  }
+  invariant(indexedSeq.length < Infinity, 'Cannot reverse infinite range.');
+  return indexedSeq.length;
 }
 function wholeSlice(begin, end, length) {
   return (begin === 0 || (length != null && begin <= -length)) && (end == null || (length != null && end >= length));
@@ -25371,140 +22511,6 @@ function entryMapper(v, k) {
 }
 function returnTrue() {
   return true;
-}
-function returnThis() {
-  return this;
-}
-function reverseFactory(sequence, useKeys) {
-  var reversedSequence = sequence.__makeSequence();
-  reversedSequence.reverse = (function() {
-    return sequence;
-  });
-  reversedSequence.length = sequence.length;
-  reversedSequence.__iterateUncached = function(fn, reverse, reverseIndices) {
-    var $__0 = this;
-    var i = reverseIndices ? this.length : 0;
-    return sequence.__iterate((function(v, k) {
-      return fn(v, useKeys ? k : reverseIndices ? --i : i++, $__0);
-    }), !reverse);
-  };
-  return reversedSequence;
-}
-function filterFactory(sequence, predicate, context, useKeys) {
-  var filterSequence = sequence.__makeSequence();
-  filterSequence.__iterateUncached = function(fn, reverse, reverseIndices) {
-    var $__0 = this;
-    var iterations = 0;
-    sequence.__iterate((function(v, k, c) {
-      if (predicate.call(context, v, k, c)) {
-        iterations++;
-        return fn(v, useKeys ? k : iterations - 1, $__0);
-      }
-    }), reverse);
-    return iterations;
-  };
-  return filterSequence;
-}
-function groupByFactory(seq, grouper, context, useKeys) {
-  var groupMap = {};
-  var groups = [];
-  seq.forEach((function(v, k) {
-    var g = grouper.call(context, v, k, seq);
-    var h = hash(g);
-    var e = useKeys ? [k, v] : v;
-    if (!groupMap.hasOwnProperty(h)) {
-      groupMap[h] = groups.length;
-      groups.push([g, [e]]);
-    } else {
-      groups[groupMap[h]][1].push(e);
-    }
-  }));
-  return Sequence(groups).fromEntrySeq().map(useKeys ? (function(group) {
-    return Sequence(group).fromEntrySeq();
-  }) : (function(group) {
-    return Sequence(group);
-  }));
-}
-function skipFactory(sequence, amount, useKeys) {
-  if (amount <= 0) {
-    return sequence;
-  }
-  var skipSequence = sequence.__makeSequence();
-  skipSequence.__iterateUncached = function(fn, reverse, reverseIndices) {
-    var $__0 = this;
-    if (reverse) {
-      return this.cacheResult().__iterate(fn, reverse, reverseIndices);
-    }
-    var skipped = 0;
-    var isSkipping = true;
-    var iterations = 0;
-    sequence.__iterate((function(v, k) {
-      if (!(isSkipping && (isSkipping = skipped++ < amount))) {
-        iterations++;
-        return fn(v, useKeys ? k : iterations - 1, $__0);
-      }
-    }));
-    return iterations;
-  };
-  skipSequence.length = sequence.length && Math.max(0, sequence.length - amount);
-  return skipSequence;
-}
-function skipWhileFactory(sequence, predicate, thisArg, useKeys) {
-  var skipSequence = sequence.__makeSequence();
-  skipSequence.__iterateUncached = function(fn, reverse, reverseIndices) {
-    var $__0 = this;
-    if (reverse) {
-      return this.cacheResult().__iterate(fn, reverse, reverseIndices);
-    }
-    var isSkipping = true;
-    var iterations = 0;
-    sequence.__iterate((function(v, k, c) {
-      if (!(isSkipping && (isSkipping = predicate.call(thisArg, v, k, c)))) {
-        iterations++;
-        return fn(v, useKeys ? k : iterations - 1, $__0);
-      }
-    }));
-    return iterations;
-  };
-  return skipSequence;
-}
-function concatFactory(sequence, values, useKeys) {
-  var sequences = [sequence].concat(values);
-  var concatSequence = Sequence(sequences);
-  if (useKeys) {
-    concatSequence = concatSequence.toKeyedSeq();
-  }
-  concatSequence = concatSequence.flatten();
-  concatSequence.length = sequences.reduce((function(sum, seq) {
-    if (sum !== undefined) {
-      var len = Sequence(seq).length;
-      if (len != null) {
-        return sum + len;
-      }
-    }
-  }), 0);
-  return concatSequence;
-}
-function flattenFactory(sequence, useKeys) {
-  var flatSequence = sequence.__makeSequence();
-  flatSequence.__iterateUncached = function(fn, reverse, reverseIndices) {
-    var $__0 = this;
-    var iterations = 0;
-    var len = this.length;
-    sequence.__iterate((function(seq) {
-      var stopped = false;
-      Sequence(seq).__iterate((function(v, k) {
-        iterations++;
-        if (fn(v, useKeys ? k : reverseIndices ? len - iterations : iterations - 1, $__0) === false) {
-          stopped = true;
-          return false;
-        }
-      }), reverse);
-      return !stopped;
-    }), reverse);
-    return iterations;
-  };
-  return flatSequence;
 }
 function not(predicate) {
   return function() {
@@ -25529,16 +22535,583 @@ function wrapIndex(seq, index) {
 function assertNotInfinite(length) {
   invariant(length !== Infinity, 'Cannot perform this action with an infinite sequence.');
 }
-function iteratorMapper(iter, fn) {
-  var newIter = new SequenceIterator();
-  newIter.next = (function() {
-    var step = iter.next();
-    if (step.done)
-      return step;
-    step.value = fn(step.value);
-    return step;
+function iterate(sequence, fn, reverse, useKeys) {
+  var cache = sequence._cache;
+  if (cache) {
+    var maxIndex = cache.length - 1;
+    for (var ii = 0; ii <= maxIndex; ii++) {
+      var entry = cache[reverse ? maxIndex - ii : ii];
+      if (fn(entry[1], useKeys ? entry[0] : ii, sequence) === false) {
+        return ii + 1;
+      }
+    }
+    return ii;
+  }
+  return sequence.__iterateUncached(fn, reverse);
+}
+function iterator(sequence, type, reverse, useKeys) {
+  var cache = sequence._cache;
+  if (cache) {
+    var maxIndex = cache.length - 1;
+    var ii = 0;
+    return new Iterator((function() {
+      var entry = cache[reverse ? maxIndex - ii : ii];
+      return ii++ > maxIndex ? iteratorDone() : iteratorValue(type, useKeys ? entry[0] : ii - 1, entry[1]);
+    }));
+  }
+  return sequence.__iteratorUncached(type, reverse);
+}
+var ValuesSequence = function ValuesSequence(seq) {
+  this._seq = seq;
+  this.length = seq.length;
+};
+($traceurRuntime.createClass)(ValuesSequence, {
+  get: function(key, notSetValue) {
+    return this._seq.get(key, notSetValue);
+  },
+  has: function(key) {
+    return this._seq.has(key);
+  },
+  cacheResult: function() {
+    this._seq.cacheResult();
+    this.length = this._seq.length;
+    return this;
+  },
+  __iterate: function(fn, reverse) {
+    var $__0 = this;
+    var iterations = 0;
+    return this._seq.__iterate((function(v) {
+      return fn(v, iterations++, $__0);
+    }), reverse);
+  },
+  __iterator: function(type, reverse) {
+    var iterator = this._seq.__iterator(ITERATE_VALUES, reverse);
+    var iterations = 0;
+    return new Iterator((function() {
+      var step = iterator.next();
+      return step.done ? step : iteratorValue(type, iterations++, step.value, step);
+    }));
+  }
+}, {}, IndexedSequence);
+var KeyedIndexedSequence = function KeyedIndexedSequence(indexedSeq) {
+  this._seq = indexedSeq;
+  this.length = indexedSeq.length;
+};
+($traceurRuntime.createClass)(KeyedIndexedSequence, {
+  get: function(key, notSetValue) {
+    return this._seq.get(key, notSetValue);
+  },
+  has: function(key) {
+    return this._seq.has(key);
+  },
+  valueSeq: function() {
+    return this._seq;
+  },
+  reverse: function() {
+    var $__0 = this;
+    var reversedSequence = reverseFactory(this);
+    reversedSequence.valueSeq = (function() {
+      return $__0._seq.reverse();
+    });
+    return reversedSequence;
+  },
+  map: function(mapper, context) {
+    var $__0 = this;
+    var mappedSequence = mapFactory(this, mapper, context);
+    mappedSequence.valueSeq = (function() {
+      return $__0._seq.map(mapper, context);
+    });
+    return mappedSequence;
+  },
+  cacheResult: function() {
+    this._seq.cacheResult();
+    this.length = this._seq.length;
+    return this;
+  },
+  __iterate: function(fn, reverse) {
+    var $__0 = this;
+    var ii = reverse ? ensureLength(this) : 0;
+    return this._seq.__iterate((function(v) {
+      return fn(v, reverse ? --ii : ii++, $__0);
+    }), reverse);
+  },
+  __iterator: function(type, reverse) {
+    var iterator = this._seq.__iterator(ITERATE_VALUES, reverse);
+    var ii = reverse ? ensureLength(this) : 0;
+    return new Iterator((function() {
+      var step = iterator.next();
+      return step.done ? step : iteratorValue(type, reverse ? --ii : ii++, step.value, step);
+    }));
+  }
+}, {}, Sequence);
+var FromEntriesSequence = function FromEntriesSequence(entriesSeq) {
+  this._seq = entriesSeq;
+  this.length = entriesSeq.length;
+};
+($traceurRuntime.createClass)(FromEntriesSequence, {
+  entrySeq: function() {
+    return this._seq;
+  },
+  cacheResult: function() {
+    this._seq.cacheResult();
+    this.length = this._seq.length;
+    return this;
+  },
+  __iterate: function(fn, reverse) {
+    var $__0 = this;
+    return this._seq.__iterate((function(entry) {
+      return entry && fn(entry[1], entry[0], $__0);
+    }), reverse);
+  },
+  __iterator: function(type, reverse) {
+    var iterator = this._seq.__iterator(ITERATE_VALUES, reverse);
+    return new Iterator((function() {
+      while (true) {
+        var step = iterator.next();
+        if (step.done) {
+          return step;
+        }
+        var entry = step.value;
+        if (entry) {
+          return type === ITERATE_ENTRIES ? step : iteratorValue(type, entry[0], entry[1], step);
+        }
+      }
+    }));
+  }
+}, {}, Sequence);
+function flipFactory(sequence) {
+  var flipSequence = sequence.__makeSequence();
+  flipSequence.length = sequence.length;
+  flipSequence.flip = (function() {
+    return sequence;
   });
-  return newIter;
+  flipSequence.reverse = function() {
+    var reversedSequence = sequence.reverse.apply(this);
+    reversedSequence.flip = (function() {
+      return sequence.reverse();
+    });
+    return reversedSequence;
+  };
+  flipSequence.has = (function(key) {
+    return sequence.contains(key);
+  });
+  flipSequence.contains = (function(key) {
+    return sequence.has(key);
+  });
+  flipSequence.__iterateUncached = function(fn, reverse) {
+    var $__0 = this;
+    return sequence.__iterate((function(v, k) {
+      return fn(k, v, $__0) !== false;
+    }), reverse);
+  };
+  flipSequence.__iteratorUncached = function(type, reverse) {
+    if (type === ITERATE_ENTRIES) {
+      var iterator = sequence.__iterator(type, reverse);
+      return new Iterator((function() {
+        var step = iterator.next();
+        if (!step.done) {
+          var k = step.value[0];
+          step.value[0] = step.value[1];
+          step.value[1] = k;
+        }
+        return step;
+      }));
+    }
+    return sequence.__iterator(type === ITERATE_VALUES ? ITERATE_KEYS : ITERATE_VALUES, reverse);
+  };
+  return flipSequence;
+}
+function mapFactory(sequence, mapper, context) {
+  var mappedSequence = sequence.__makeSequence();
+  mappedSequence.length = sequence.length;
+  mappedSequence.has = (function(key) {
+    return sequence.has(key);
+  });
+  mappedSequence.get = (function(key, notSetValue) {
+    var v = sequence.get(key, NOT_SET);
+    return v === NOT_SET ? notSetValue : mapper.call(context, v, key, sequence);
+  });
+  mappedSequence.__iterateUncached = function(fn, reverse) {
+    var $__0 = this;
+    return sequence.__iterate((function(v, k, c) {
+      return fn(mapper.call(context, v, k, c), k, $__0) !== false;
+    }), reverse);
+  };
+  mappedSequence.__iteratorUncached = function(type, reverse) {
+    var iterator = sequence.__iterator(ITERATE_ENTRIES, reverse);
+    return new Iterator((function() {
+      var step = iterator.next();
+      if (step.done) {
+        return step;
+      }
+      var entry = step.value;
+      var key = entry[0];
+      return iteratorValue(type, key, mapper.call(context, entry[1], key, sequence), step);
+    }));
+  };
+  return mappedSequence;
+}
+function reverseFactory(sequence) {
+  var reversedSequence = sequence.__makeSequence();
+  reversedSequence.length = sequence.length;
+  reversedSequence.reverse = (function() {
+    return sequence;
+  });
+  reversedSequence.flip = function() {
+    var flipSequence = sequence.flip.apply(this);
+    flipSequence.reverse = (function() {
+      return sequence.flip();
+    });
+    return flipSequence;
+  };
+  reversedSequence.get = (function(key, notSetValue) {
+    return sequence.get(key, notSetValue);
+  });
+  reversedSequence.has = (function(key) {
+    return sequence.has(key);
+  });
+  reversedSequence.contains = (function(value) {
+    return sequence.contains(value);
+  });
+  reversedSequence.cacheResult = function() {
+    sequence.cacheResult();
+    this.length = sequence.length;
+    return this;
+  };
+  reversedSequence.__iterate = function(fn, reverse) {
+    var $__0 = this;
+    return sequence.__iterate((function(v, k) {
+      return fn(v, k, $__0);
+    }), !reverse);
+  };
+  reversedSequence.__iterator = (function(type, reverse) {
+    return sequence.__iterator(type, !reverse);
+  });
+  return reversedSequence;
+}
+function filterFactory(sequence, predicate, context, useKeys) {
+  var filterSequence = sequence.__makeSequence();
+  filterSequence.has = (function(key) {
+    var v = sequence.get(key, NOT_SET);
+    return v !== NOT_SET && !!predicate.call(context, v, key, sequence);
+  });
+  filterSequence.get = (function(key, notSetValue) {
+    var v = sequence.get(key, NOT_SET);
+    return v !== NOT_SET && predicate.call(context, v, key, sequence) ? v : notSetValue;
+  });
+  filterSequence.__iterateUncached = function(fn, reverse) {
+    var $__0 = this;
+    var iterations = 0;
+    sequence.__iterate((function(v, k, c) {
+      if (predicate.call(context, v, k, c)) {
+        iterations++;
+        return fn(v, useKeys ? k : iterations - 1, $__0);
+      }
+    }), reverse);
+    return iterations;
+  };
+  filterSequence.__iteratorUncached = function(type, reverse) {
+    var iterator = sequence.__iterator(ITERATE_ENTRIES, reverse);
+    var iterations = 0;
+    return new Iterator((function() {
+      while (true) {
+        var step = iterator.next();
+        if (step.done) {
+          return step;
+        }
+        var entry = step.value;
+        var key = entry[0];
+        var value = entry[1];
+        if (predicate.call(context, value, key, sequence)) {
+          return iteratorValue(type, useKeys ? key : iterations++, value, step);
+        }
+      }
+    }));
+  };
+  return filterSequence;
+}
+function groupByFactory(seq, grouper, context, useKeys) {
+  var groupMap = {};
+  var groups = [];
+  seq.__iterate((function(v, k) {
+    var g = grouper.call(context, v, k, seq);
+    var h = hash(g);
+    var e = useKeys ? [k, v] : v;
+    if (!groupMap.hasOwnProperty(h)) {
+      groupMap[h] = groups.length;
+      groups.push([g, [e]]);
+    } else {
+      groups[groupMap[h]][1].push(e);
+    }
+  }));
+  return Sequence(groups).fromEntrySeq().map(useKeys ? (function(group) {
+    return Sequence(group).fromEntrySeq();
+  }) : (function(group) {
+    return Sequence(group);
+  }));
+}
+function takeFactory(sequence, amount) {
+  if (amount > sequence.length) {
+    return sequence;
+  }
+  if (amount < 0) {
+    amount = 0;
+  }
+  var takeSequence = sequence.__makeSequence();
+  takeSequence.length = sequence.length && Math.min(sequence.length, amount);
+  takeSequence.__iterateUncached = function(fn, reverse) {
+    var $__0 = this;
+    if (amount === 0) {
+      return 0;
+    }
+    if (reverse) {
+      return this.cacheResult().__iterate(fn, reverse);
+    }
+    var iterations = 0;
+    sequence.__iterate((function(v, k) {
+      return ++iterations && fn(v, k, $__0) !== false && iterations < amount;
+    }));
+    return iterations;
+  };
+  takeSequence.__iteratorUncached = function(type, reverse) {
+    if (reverse) {
+      return this.cacheResult().__iterator(type, reverse);
+    }
+    var iterator = amount && sequence.__iterator(type, reverse);
+    var iterations = 0;
+    return new Iterator((function() {
+      if (iterations++ > amount) {
+        return iteratorDone();
+      }
+      return iterator.next();
+    }));
+  };
+  return takeSequence;
+}
+function takeWhileFactory(sequence, predicate, context) {
+  var takeSequence = sequence.__makeSequence();
+  takeSequence.__iterateUncached = function(fn, reverse) {
+    var $__0 = this;
+    if (reverse) {
+      return this.cacheResult().__iterate(fn, reverse);
+    }
+    var iterations = 0;
+    sequence.__iterate((function(v, k, c) {
+      return predicate.call(context, v, k, c) && ++iterations && fn(v, k, $__0);
+    }));
+    return iterations;
+  };
+  takeSequence.__iteratorUncached = function(type, reverse) {
+    var $__0 = this;
+    if (reverse) {
+      return this.cacheResult().__iterator(type, reverse);
+    }
+    var iterator = sequence.__iterator(ITERATE_ENTRIES, reverse);
+    var iterating = true;
+    return new Iterator((function() {
+      if (!iterating) {
+        return iteratorDone();
+      }
+      var step = iterator.next();
+      if (step.done) {
+        return step;
+      }
+      var entry = step.value;
+      var k = entry[0];
+      var v = entry[1];
+      if (!predicate.call(context, v, k, $__0)) {
+        iterating = false;
+        return iteratorDone();
+      }
+      return type === ITERATE_ENTRIES ? step : iteratorValue(type, k, v, step);
+    }));
+  };
+  return takeSequence;
+}
+function skipFactory(sequence, amount, useKeys) {
+  if (amount <= 0) {
+    return sequence;
+  }
+  var skipSequence = sequence.__makeSequence();
+  skipSequence.length = sequence.length && Math.max(0, sequence.length - amount);
+  skipSequence.__iterateUncached = function(fn, reverse) {
+    var $__0 = this;
+    if (reverse) {
+      return this.cacheResult().__iterate(fn, reverse);
+    }
+    var skipped = 0;
+    var isSkipping = true;
+    var iterations = 0;
+    sequence.__iterate((function(v, k) {
+      if (!(isSkipping && (isSkipping = skipped++ < amount))) {
+        iterations++;
+        return fn(v, useKeys ? k : iterations - 1, $__0);
+      }
+    }));
+    return iterations;
+  };
+  skipSequence.__iteratorUncached = function(type, reverse) {
+    if (reverse) {
+      return this.cacheResult().__iterator(type, reverse);
+    }
+    var iterator = amount && sequence.__iterator(type, reverse);
+    var skipped = 0;
+    var iterations = 0;
+    return new Iterator((function() {
+      while (skipped < amount) {
+        skipped++;
+        iterator.next();
+      }
+      var step = iterator.next();
+      if (useKeys || type === ITERATE_VALUES) {
+        return step;
+      } else if (type === ITERATE_KEYS) {
+        return iteratorValue(type, iterations++, null, step);
+      } else {
+        return iteratorValue(type, iterations++, step.value[1], step);
+      }
+    }));
+  };
+  return skipSequence;
+}
+function skipWhileFactory(sequence, predicate, context, useKeys) {
+  var skipSequence = sequence.__makeSequence();
+  skipSequence.__iterateUncached = function(fn, reverse) {
+    var $__0 = this;
+    if (reverse) {
+      return this.cacheResult().__iterate(fn, reverse);
+    }
+    var isSkipping = true;
+    var iterations = 0;
+    sequence.__iterate((function(v, k, c) {
+      if (!(isSkipping && (isSkipping = predicate.call(context, v, k, c)))) {
+        iterations++;
+        return fn(v, useKeys ? k : iterations - 1, $__0);
+      }
+    }));
+    return iterations;
+  };
+  skipSequence.__iteratorUncached = function(type, reverse) {
+    var $__0 = this;
+    if (reverse) {
+      return this.cacheResult().__iterator(type, reverse);
+    }
+    var iterator = sequence.__iterator(ITERATE_ENTRIES, reverse);
+    var skipping = true;
+    var iterations = 0;
+    return new Iterator((function() {
+      var step,
+          k,
+          v;
+      do {
+        step = iterator.next();
+        if (step.done) {
+          if (useKeys || type === ITERATE_VALUES) {
+            return step;
+          } else if (type === ITERATE_KEYS) {
+            return iteratorValue(type, iterations++, null, step);
+          } else {
+            return iteratorValue(type, iterations++, step.value[1], step);
+          }
+        }
+        var entry = step.value;
+        k = entry[0];
+        v = entry[1];
+        skipping && (skipping = predicate.call(context, v, k, $__0));
+      } while (skipping);
+      return type === ITERATE_ENTRIES ? step : iteratorValue(type, k, v, step);
+    }));
+  };
+  return skipSequence;
+}
+function concatFactory(sequence, values, useKeys) {
+  var sequences = [sequence].concat(values);
+  var concatSequence = Sequence(sequences);
+  if (useKeys) {
+    concatSequence = concatSequence.toKeyedSeq();
+  }
+  concatSequence = concatSequence.flatten();
+  concatSequence.length = sequences.reduce((function(sum, seq) {
+    if (sum !== undefined) {
+      var len = Sequence(seq).length;
+      if (len != null) {
+        return sum + len;
+      }
+    }
+  }), 0);
+  return concatSequence;
+}
+function flattenFactory(sequence, useKeys) {
+  var flatSequence = sequence.__makeSequence();
+  flatSequence.__iterateUncached = function(fn, reverse) {
+    var $__0 = this;
+    var iterations = 0;
+    sequence.__iterate((function(seq) {
+      var stopped = false;
+      Sequence(seq).__iterate((function(v, k) {
+        if (fn(v, useKeys ? k : iterations++, $__0) === false) {
+          stopped = true;
+          return false;
+        }
+      }), reverse);
+      return !stopped;
+    }), reverse);
+    return iterations;
+  };
+  flatSequence.__iteratorUncached = function(type, reverse) {
+    var sequenceIterator = sequence.__iterator(ITERATE_VALUES, reverse);
+    var iterator;
+    var iterations = 0;
+    return new Iterator((function() {
+      while (true) {
+        if (iterator) {
+          var step = iterator.next();
+          if (!step.done) {
+            if (useKeys || type === ITERATE_VALUES) {
+              return step;
+            } else if (type === ITERATE_KEYS) {
+              return iteratorValue(type, iterations++, null, step);
+            } else {
+              return iteratorValue(type, iterations++, step.value[1], step);
+            }
+          }
+        }
+        var sequenceStep = sequenceIterator.next();
+        if (sequenceStep.done) {
+          return sequenceStep;
+        }
+        iterator = Sequence(sequenceStep.value).__iterator(type, reverse);
+      }
+    }));
+  };
+  return flatSequence;
+}
+function interposeFactory(sequence, separator) {
+  var interposedSequence = sequence.__makeSequence();
+  interposedSequence.length = sequence.length && sequence.length * 2 - 1;
+  interposedSequence.__iterateUncached = function(fn, reverse) {
+    var $__0 = this;
+    var iterations = 0;
+    sequence.__iterate((function(v, k) {
+      return (!iterations || fn(separator, iterations++, $__0) !== false) && fn(v, iterations++, $__0) !== false;
+    }), reverse);
+    return iterations;
+  };
+  interposedSequence.__iteratorUncached = function(type, reverse) {
+    var iterator = sequence.__iterator(ITERATE_VALUES, reverse);
+    var iterations = 0;
+    var step;
+    return new Iterator((function() {
+      if (!step || iterations % 2) {
+        step = iterator.next();
+        if (step.done) {
+          return step;
+        }
+      }
+      return iterations % 2 ? iteratorValue(type, iterations++, separator) : iteratorValue(type, iterations++, step.value, step);
+    }));
+  };
+  return interposedSequence;
 }
 var Cursor = function Cursor(rootData, keyPath, onChange, value) {
   value = value ? value : rootData.getIn(keyPath);
@@ -25586,12 +23159,30 @@ var Cursor = function Cursor(rootData, keyPath, onChange, value) {
   cursor: function(subKey) {
     return Array.isArray(subKey) && subKey.length === 0 ? this : subCursor(this, subKey);
   },
-  __iterate: function(fn, reverse, reverseIndices) {
-    var cursor = this;
-    var deref = cursor.deref();
-    return deref && deref.__iterate ? deref.__iterate((function(value, key, collection) {
-      return fn(wrappedValue(cursor, key, value), key, collection);
-    }), reverse, reverseIndices) : 0;
+  __iterate: function(fn, reverse) {
+    var $__0 = this;
+    var deref = this.deref();
+    return deref && deref.__iterate ? deref.__iterate((function(v, k) {
+      return fn(wrappedValue($__0, k, v), k, $__0);
+    }), reverse) : 0;
+  },
+  __iterator: function(type, reverse) {
+    var $__0 = this;
+    var deref = this.deref();
+    var iterator = deref && deref.__iterator && deref.__iterator(ITERATE_ENTRIES, reverse);
+    return new Iterator((function() {
+      if (!iterator) {
+        return iteratorDone();
+      }
+      var step = iterator.next();
+      if (step.done) {
+        return step;
+      }
+      var entry = step.value;
+      var k = entry[0];
+      var v = entry[1];
+      return iteratorValue(type, k, wrappedValue($__0, k, v), step);
+    }));
   }
 }, {}, Sequence);
 Cursor.prototype[DELETE] = Cursor.prototype.remove;
@@ -25710,17 +23301,8 @@ var $Map = Map;
   wasAltered: function() {
     return this.__altered;
   },
-  keys: function() {
-    return new MapIterator(this, 0);
-  },
-  values: function() {
-    return new MapIterator(this, 1);
-  },
-  entries: function() {
-    return new MapIterator(this, 2);
-  },
-  __iterator: function(reverse) {
-    return new MapIterator(this, 2, reverse);
+  __iterator: function(type, reverse) {
+    return new MapIterator(this, type, reverse);
   },
   __iterate: function(fn, reverse) {
     var $__0 = this;
@@ -25730,12 +23312,6 @@ var $Map = Map;
       return fn(entry[1], entry[0], $__0);
     }), reverse);
     return iterations;
-  },
-  __deepEquals: function(other) {
-    var self = this;
-    return other.every((function(v, k) {
-      return is(self.get(k, NOT_SET), v);
-    }));
   },
   __ensureOwner: function(ownerID) {
     if (ownerID === this.__ownerID) {
@@ -25753,9 +23329,6 @@ var $Map = Map;
   }}, Sequence);
 var MapPrototype = Map.prototype;
 MapPrototype[DELETE] = MapPrototype.remove;
-MapPrototype[ITERATOR] = function() {
-  return this.entries();
-};
 Map.from = Map;
 var BitmapIndexedNode = function BitmapIndexedNode(ownerID, bitmap, nodes) {
   this.ownerID = ownerID;
@@ -26008,9 +23581,9 @@ var MapIterator = function MapIterator(map, type, reverse) {
       stack = this._stack = this._stack.__prev;
     }
     return iteratorDone();
-  }}, {}, SequenceIterator);
+  }}, {}, Iterator);
 function mapIteratorValue(type, entry) {
-  return iteratorValue(type === 0 || type === 1 ? entry[type] : [entry[0], entry[1]]);
+  return iteratorValue(type, entry[0], entry[1]);
 }
 function mapIteratorFrame(node, prev) {
   return {
@@ -26201,10 +23774,6 @@ var $Vector = Vector;
   toString: function() {
     return this.__toString('Vector [', ']');
   },
-  has: function(index) {
-    index = wrapIndex(this, index);
-    return index >= 0 && index < this.length;
-  },
   get: function(index, notSetValue) {
     index = wrapIndex(this, index);
     if (index < 0 || index >= this.length) {
@@ -26291,24 +23860,14 @@ var $Vector = Vector;
     }
     return sliceSequence;
   },
-  keys: function() {
-    return new VectorIterator(this, 0);
+  __iterator: function(type, reverse) {
+    return new VectorIterator(this, type, reverse);
   },
-  values: function() {
-    return new VectorIterator(this, 1);
-  },
-  entries: function() {
-    return new VectorIterator(this, 2);
-  },
-  __iterator: function(reverse, reverseIndices) {
-    return new VectorIterator(this, 2, reverse, reverseIndices);
-  },
-  __iterate: function(fn, reverse, reverseIndices) {
+  __iterate: function(fn, reverse) {
     var $__0 = this;
     var iterations = 0;
-    var len = this.length;
     var eachFn = (function(v) {
-      return fn(v, reverseIndices ? len - ++iterations : iterations++, $__0);
+      return fn(v, iterations++, $__0);
     });
     var tailOffset = getTailOffset(this._size);
     if (reverse) {
@@ -26317,13 +23876,6 @@ var $Vector = Vector;
       iterateVNode(this._root, this._level, -this._origin, tailOffset - this._origin, eachFn, reverse) && iterateVNode(this._tail, 0, tailOffset - this._origin, this._size - this._origin, eachFn, reverse);
     }
     return iterations;
-  },
-  __deepEquals: function(other) {
-    var iterator = this.entries(true);
-    return other.every((function(v, i) {
-      var entry = iterator.next().value;
-      return entry && entry[0] === i && is(entry[1], v);
-    }));
   },
   __ensureOwner: function(ownerID) {
     if (ownerID === this.__ownerID) {
@@ -26358,7 +23910,6 @@ var $Vector = Vector;
 }, IndexedSequence);
 var VectorPrototype = Vector.prototype;
 VectorPrototype[DELETE] = VectorPrototype.remove;
-VectorPrototype[ITERATOR] = VectorPrototype.values;
 VectorPrototype.update = MapPrototype.update;
 VectorPrototype.updateIn = MapPrototype.updateIn;
 VectorPrototype.cursor = MapPrototype.cursor;
@@ -26463,10 +24014,9 @@ function iterateVNode(node, level, offset, max, fn, reverse) {
   }
   return true;
 }
-var VectorIterator = function VectorIterator(vector, type, reverse, reverseIndices) {
+var VectorIterator = function VectorIterator(vector, type, reverse) {
   this._type = type;
   this._reverse = !!reverse;
-  this._reverseIndices = !!(reverseIndices ^ reverse);
   this._maxIndex = vector.length - 1;
   var tailOffset = getTailOffset(vector._size);
   var rootStack = vectIteratorFrame(vector._root && vector._root.array, vector._level, -vector._origin, tailOffset - vector._origin - 1);
@@ -26493,11 +24043,11 @@ var VectorIterator = function VectorIterator(vector, type, reverse, reverseIndic
           var index;
           if (type !== 1) {
             index = stack.offset + (rawIndex << stack.level);
-            if (this._reverseIndices) {
+            if (this._reverse) {
               index = this._maxIndex - index;
             }
           }
-          return iteratorValue(type === 0 ? index : type === 1 ? value : [index, value]);
+          return iteratorValue(type, index, value);
         } else {
           this._stack = stack = vectIteratorFrame(value && value.array, stack.level - SHIFT, stack.offset + (rawIndex << stack.level), stack.max, stack);
         }
@@ -26506,7 +24056,7 @@ var VectorIterator = function VectorIterator(vector, type, reverse, reverseIndic
       stack = this._stack = this._stack.__prev;
     }
     return iteratorDone();
-  }}, {}, SequenceIterator);
+  }}, {}, Iterator);
 function vectIteratorFrame(array, level, offset, max, prevFrame) {
   return {
     array: array,
@@ -26835,25 +24385,19 @@ var $Set = Set;
   wasAltered: function() {
     return this._map.wasAltered();
   },
-  values: function() {
-    return this._map.keys();
-  },
-  entries: function() {
-    return iteratorMapper(this.values(), (function(key) {
-      return [key, key];
-    }));
-  },
   hashCode: function() {
     return this._map.hashCode();
   },
   __iterate: function(fn, reverse) {
-    var collection = this;
+    var $__0 = this;
     return this._map.__iterate((function(_, k) {
-      return fn(k, k, collection);
+      return fn(k, k, $__0);
     }), reverse);
   },
-  __deepEquals: function(other) {
-    return this.isSuperset(other);
+  __iterator: function(type, reverse) {
+    return this._map.map((function(_, k) {
+      return k;
+    })).__iterator(type, reverse);
   },
   __ensureOwner: function(ownerID) {
     if (ownerID === this.__ownerID) {
@@ -26881,7 +24425,7 @@ var $Set = Set;
 }, Sequence);
 var SetPrototype = Set.prototype;
 SetPrototype[DELETE] = SetPrototype.remove;
-SetPrototype[ITERATOR] = SetPrototype.keys = SetPrototype.values;
+SetPrototype[ITERATOR_SYMBOL] = SetPrototype.values;
 SetPrototype.contains = SetPrototype.has;
 SetPrototype.mergeDeep = SetPrototype.merge = SetPrototype.union;
 SetPrototype.mergeDeepWith = SetPrototype.mergeWith = function(merger) {
@@ -26937,28 +24481,14 @@ var $OrderedMap = OrderedMap;
   wasAltered: function() {
     return this._map.wasAltered() || this._vector.wasAltered();
   },
-  keys: function() {
-    return iteratorMapper(this.entries(), (function(entry) {
-      return entry[0];
-    }));
-  },
-  values: function() {
-    return iteratorMapper(this.entries(), (function(entry) {
-      return entry[1];
-    }));
-  },
-  entries: function() {
-    return this._vector.values(true);
-  },
   __iterate: function(fn, reverse) {
-    return this._vector.fromEntrySeq().__iterate(fn, reverse);
+    var $__0 = this;
+    return this._vector.__iterate((function(entry) {
+      return entry && fn(entry[1], entry[0], $__0);
+    }), reverse);
   },
-  __deepEquals: function(other) {
-    var iterator = this.entries();
-    return other.every((function(v, k) {
-      var entry = iterator.next().value;
-      return entry && is(entry[0], k) && is(entry[1], v);
-    }));
+  __iterator: function(type, reverse) {
+    return this._vector.fromEntrySeq().__iterator(type, reverse);
   },
   __ensureOwner: function(ownerID) {
     if (ownerID === this.__ownerID) {
@@ -27095,6 +24625,9 @@ var $Record = Record;
   wasAltered: function() {
     return this._map.wasAltered();
   },
+  __iterator: function(type, reverse) {
+    return this._map.__iterator(type, reverse);
+  },
   __iterate: function(fn, reverse) {
     var record = this;
     return this._defaultValues.map((function(_, k) {
@@ -27116,7 +24649,6 @@ var $Record = Record;
 }, {}, Sequence);
 var RecordPrototype = Record.prototype;
 RecordPrototype[DELETE] = RecordPrototype.remove;
-RecordPrototype[ITERATOR] = MapPrototype[ITERATOR];
 RecordPrototype.merge = MapPrototype.merge;
 RecordPrototype.mergeWith = MapPrototype.mergeWith;
 RecordPrototype.mergeDeep = MapPrototype.mergeDeep;
@@ -27127,7 +24659,6 @@ RecordPrototype.cursor = MapPrototype.cursor;
 RecordPrototype.withMutations = MapPrototype.withMutations;
 RecordPrototype.asMutable = MapPrototype.asMutable;
 RecordPrototype.asImmutable = MapPrototype.asImmutable;
-RecordPrototype.__deepEquals = MapPrototype.__deepEquals;
 function makeRecord(likeRecord, map, ownerID) {
   var record = Object.create(Object.getPrototypeOf(likeRecord));
   record._map = map;
@@ -27162,10 +24693,6 @@ var $Range = Range;
       return 'Range []';
     }
     return 'Range [ ' + this._start + '...' + this._end + (this._step > 1 ? ' by ' + this._step : '') + ' ]';
-  },
-  has: function(index) {
-    index = wrapIndex(this, index);
-    return index >= 0 && (this.length === Infinity || index < this.length);
   },
   get: function(index, notSetValue) {
     index = wrapIndex(this, index);
@@ -27205,20 +24732,31 @@ var $Range = Range;
   skip: function(amount) {
     return this.slice(Math.max(0, amount));
   },
-  __iterate: function(fn, reverse, reverseIndices) {
+  __iterate: function(fn, reverse) {
     var maxIndex = this.length - 1;
     var step = this._step;
     var value = reverse ? this._start + maxIndex * step : this._start;
     for (var ii = 0; ii <= maxIndex; ii++) {
-      if (fn(value, reverseIndices ? maxIndex - ii : ii, this) === false) {
+      if (fn(value, ii, this) === false) {
         return ii + 1;
       }
       value += reverse ? -step : step;
     }
     return ii;
   },
+  __iterator: function(type, reverse) {
+    var maxIndex = this.length - 1;
+    var step = this._step;
+    var value = reverse ? this._start + maxIndex * step : this._start;
+    var ii = 0;
+    return new Iterator((function() {
+      var v = value;
+      value += reverse ? -step : step;
+      return ii > maxIndex ? iteratorDone() : iteratorValue(type, ii++, v);
+    }));
+  },
   __deepEquals: function(other) {
-    return this._start === other._start && this._end === other._end && this._step === other._step;
+    return other instanceof $Range ? this._start === other._start && this._end === other._end && this._step === other._step : $traceurRuntime.superCall(this, $Range.prototype, "__deepEquals", [other]);
   }
 }, {}, IndexedSequence);
 var RangePrototype = Range.prototype;
@@ -27271,18 +24809,23 @@ var $Repeat = Repeat;
     }
     return -1;
   },
-  __iterate: function(fn, reverse, reverseIndices) {
-    invariant(!reverseIndices || this.length < Infinity, 'Cannot access end of infinite range.');
-    var maxIndex = this.length - 1;
-    for (var ii = 0; ii <= maxIndex; ii++) {
-      if (fn(this._value, reverseIndices ? maxIndex - ii : ii, this) === false) {
+  __iterate: function(fn, reverse) {
+    for (var ii = 0; ii < this.length; ii++) {
+      if (fn(this._value, ii, this) === false) {
         return ii + 1;
       }
     }
     return ii;
   },
+  __iterator: function(type, reverse) {
+    var $__0 = this;
+    var ii = 0;
+    return new Iterator((function() {
+      return ii < $__0.length ? iteratorValue(type, ii++, $__0._value) : iteratorDone();
+    }));
+  },
   __deepEquals: function(other) {
-    return is(this._value, other._value);
+    return other instanceof $Repeat ? is(this._value, other._value) : $traceurRuntime.superCall(this, $Repeat.prototype, "__deepEquals", [other]);
   }
 }, {}, IndexedSequence);
 var RepeatPrototype = Repeat.prototype;
@@ -27336,7 +24879,7 @@ typeof exports === 'object' ? module.exports = universalModule() :
   typeof define === 'function' && define.amd ? define(universalModule) :
     Immutable = universalModule();
 
-},{}],201:[function(require,module,exports){
+},{}],200:[function(require,module,exports){
 (function (global){
 /**
  * marked - a markdown parser
@@ -28606,22 +26149,19 @@ if (typeof exports === 'object') {
 }());
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],202:[function(require,module,exports){
+},{}],201:[function(require,module,exports){
 var React = require('react');
 var deepEqual = require('deep-equal');
+var Immutable = require('immutable');
 
 module.exports = component;
 module.exports.shouldComponentUpdate = shouldComponentUpdate;
-module.exports.isEqualCursor = function (a, b) { return a === b; };
+module.exports.isEqualCursor = function (a, b) { return Immutable.is(a, b); };
 module.exports.isEqualState = deepEqual;
 
 var debug = function () {};
 module.exports.debug = function () {
   debug = console.log.bind(console);
-};
-
-var ShouldComponentUpdate = {
-  shouldComponentUpdate: module.exports.shouldComponentUpdate
 };
 
 function component (displayName, mixins, render) {
@@ -28685,6 +26225,9 @@ function createDefaultArguments (displayName, mixins, render) {
   }
 
   if (!hasShouldComponentUpdate(mixins)) {
+    var ShouldComponentUpdate = {
+      shouldComponentUpdate: module.exports.shouldComponentUpdate
+    };
     mixins = [ShouldComponentUpdate].concat(mixins);
   }
 
@@ -28697,7 +26240,6 @@ function createDefaultArguments (displayName, mixins, render) {
 
 function shouldComponentUpdate (nextProps, nextState) {
   debug('shouldComponentUpdate():', this.constructor.displayName, this.props.key ? "key:"+this.props.key : "");
-
   var isEqualState  = module.exports.isEqualState;
 
   var nextCursors    = guaranteeObject(nextProps.cursor),
@@ -28707,6 +26249,7 @@ function shouldComponentUpdate (nextProps, nextState) {
       currentCursorsKeys = Object.keys(currentCursors);
 
   if (currentCursorsKeys.length !== nextCursorsKeys.length) {
+    debug('shouldComponentUpdate(): Unequal props length.');
     return true;
   }
 
@@ -28716,21 +26259,26 @@ function shouldComponentUpdate (nextProps, nextState) {
 
   var hasDifferentKeys = !currentCursorsKeys.every(existsInBoth);
   if (hasDifferentKeys) {
+    debug('shouldComponentUpdate(): Different keys.', this.constructor.displayName, this.props.key ? "key:"+this.props.key : "");
     return true;
   }
 
   if (hasChangedCursors(currentCursors, nextCursors)) {
+    debug('shouldComponentUpdate(): Cursors has changed.', this.constructor.displayName, this.props.key ? "key:"+this.props.key : "");
     return true;
   }
 
   if (!isEqualState(this.state, nextState)) {
+    debug('shouldComponentUpdate(): State has changed.', this.constructor.displayName, this.props.key ? "key:"+this.props.key : "");
     return true;
   }
 
   if (hasChangedProperties(currentCursors, nextCursors)) {
+    debug('shouldComponentUpdate(): Properties are changed.', this.constructor.displayName, this.props.key ? "key:"+this.props.key : "");
     return true;
   }
 
+  debug('shouldComponentUpdate(): Don\'t update.', this.constructor.displayName, this.props.key ? "key:"+this.props.key : "");
   return false;
 }
 
@@ -28792,7 +26340,7 @@ function filterKeyValue (object, predicate) {
   return filtered;
 }
 
-},{"deep-equal":203,"react":349}],203:[function(require,module,exports){
+},{"deep-equal":202,"immutable":199,"react":348}],202:[function(require,module,exports){
 var pSlice = Array.prototype.slice;
 var objectKeys = require('./lib/keys.js');
 var isArguments = require('./lib/is_arguments.js');
@@ -28888,7 +26436,7 @@ function objEquiv(a, b, opts) {
   return true;
 }
 
-},{"./lib/is_arguments.js":204,"./lib/keys.js":205}],204:[function(require,module,exports){
+},{"./lib/is_arguments.js":203,"./lib/keys.js":204}],203:[function(require,module,exports){
 var supportsArgumentsClass = (function(){
   return Object.prototype.toString.call(arguments)
 })() == '[object Arguments]';
@@ -28910,7 +26458,7 @@ function unsupported(object){
     false;
 };
 
-},{}],205:[function(require,module,exports){
+},{}],204:[function(require,module,exports){
 exports = module.exports = typeof Object.keys === 'function'
   ? Object.keys : shim;
 
@@ -28921,7 +26469,7 @@ function shim (obj) {
   return keys;
 }
 
-},{}],206:[function(require,module,exports){
+},{}],205:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -28955,7 +26503,7 @@ var AutoFocusMixin = {
 
 module.exports = AutoFocusMixin;
 
-},{"./focusNode":311}],207:[function(require,module,exports){
+},{"./focusNode":310}],206:[function(require,module,exports){
 /**
  * Copyright 2013 Facebook, Inc.
  *
@@ -29179,7 +26727,7 @@ var BeforeInputEventPlugin = {
 
 module.exports = BeforeInputEventPlugin;
 
-},{"./EventConstants":220,"./EventPropagators":225,"./ExecutionEnvironment":226,"./SyntheticInputEvent":291,"./keyOf":332}],208:[function(require,module,exports){
+},{"./EventConstants":219,"./EventPropagators":224,"./ExecutionEnvironment":225,"./SyntheticInputEvent":290,"./keyOf":331}],207:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -29302,7 +26850,7 @@ var CSSProperty = {
 
 module.exports = CSSProperty;
 
-},{}],209:[function(require,module,exports){
+},{}],208:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -29401,7 +26949,7 @@ var CSSPropertyOperations = {
 
 module.exports = CSSPropertyOperations;
 
-},{"./CSSProperty":208,"./dangerousStyleValue":306,"./hyphenateStyleName":323,"./memoizeStringOnly":334}],210:[function(require,module,exports){
+},{"./CSSProperty":207,"./dangerousStyleValue":305,"./hyphenateStyleName":322,"./memoizeStringOnly":333}],209:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -29506,7 +27054,7 @@ PooledClass.addPoolingTo(CallbackQueue);
 
 module.exports = CallbackQueue;
 
-},{"./PooledClass":231,"./invariant":325,"./mixInto":338}],211:[function(require,module,exports){
+},{"./PooledClass":230,"./invariant":324,"./mixInto":337}],210:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -29895,7 +27443,7 @@ var ChangeEventPlugin = {
 
 module.exports = ChangeEventPlugin;
 
-},{"./EventConstants":220,"./EventPluginHub":222,"./EventPropagators":225,"./ExecutionEnvironment":226,"./ReactUpdates":281,"./SyntheticEvent":289,"./isEventSupported":326,"./isTextInputElement":328,"./keyOf":332}],212:[function(require,module,exports){
+},{"./EventConstants":219,"./EventPluginHub":221,"./EventPropagators":224,"./ExecutionEnvironment":225,"./ReactUpdates":280,"./SyntheticEvent":288,"./isEventSupported":325,"./isTextInputElement":327,"./keyOf":331}],211:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -29927,7 +27475,7 @@ var ClientReactRootIndex = {
 
 module.exports = ClientReactRootIndex;
 
-},{}],213:[function(require,module,exports){
+},{}],212:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -30193,7 +27741,7 @@ var CompositionEventPlugin = {
 
 module.exports = CompositionEventPlugin;
 
-},{"./EventConstants":220,"./EventPropagators":225,"./ExecutionEnvironment":226,"./ReactInputSelection":263,"./SyntheticCompositionEvent":287,"./getTextContentAccessor":320,"./keyOf":332}],214:[function(require,module,exports){
+},{"./EventConstants":219,"./EventPropagators":224,"./ExecutionEnvironment":225,"./ReactInputSelection":262,"./SyntheticCompositionEvent":286,"./getTextContentAccessor":319,"./keyOf":331}],213:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -30373,7 +27921,7 @@ var DOMChildrenOperations = {
 
 module.exports = DOMChildrenOperations;
 
-},{"./Danger":217,"./ReactMultiChildUpdateTypes":268,"./getTextContentAccessor":320,"./invariant":325}],215:[function(require,module,exports){
+},{"./Danger":216,"./ReactMultiChildUpdateTypes":267,"./getTextContentAccessor":319,"./invariant":324}],214:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -30673,7 +28221,7 @@ var DOMProperty = {
 
 module.exports = DOMProperty;
 
-},{"./invariant":325}],216:[function(require,module,exports){
+},{"./invariant":324}],215:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -30868,7 +28416,7 @@ var DOMPropertyOperations = {
 
 module.exports = DOMPropertyOperations;
 
-},{"./DOMProperty":215,"./escapeTextForBrowser":309,"./memoizeStringOnly":334,"./warning":348}],217:[function(require,module,exports){
+},{"./DOMProperty":214,"./escapeTextForBrowser":308,"./memoizeStringOnly":333,"./warning":347}],216:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -31057,7 +28605,7 @@ var Danger = {
 
 module.exports = Danger;
 
-},{"./ExecutionEnvironment":226,"./createNodesFromMarkup":305,"./emptyFunction":307,"./getMarkupWrap":317,"./invariant":325}],218:[function(require,module,exports){
+},{"./ExecutionEnvironment":225,"./createNodesFromMarkup":304,"./emptyFunction":306,"./getMarkupWrap":316,"./invariant":324}],217:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -31104,7 +28652,7 @@ var DefaultEventPluginOrder = [
 
 module.exports = DefaultEventPluginOrder;
 
-},{"./keyOf":332}],219:[function(require,module,exports){
+},{"./keyOf":331}],218:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -31251,7 +28799,7 @@ var EnterLeaveEventPlugin = {
 
 module.exports = EnterLeaveEventPlugin;
 
-},{"./EventConstants":220,"./EventPropagators":225,"./ReactMount":266,"./SyntheticMouseEvent":293,"./keyOf":332}],220:[function(require,module,exports){
+},{"./EventConstants":219,"./EventPropagators":224,"./ReactMount":265,"./SyntheticMouseEvent":292,"./keyOf":331}],219:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -31330,7 +28878,7 @@ var EventConstants = {
 
 module.exports = EventConstants;
 
-},{"./keyMirror":331}],221:[function(require,module,exports){
+},{"./keyMirror":330}],220:[function(require,module,exports){
 /**
  * @providesModule EventListener
  * @typechecks
@@ -31404,7 +28952,7 @@ var EventListener = {
 
 module.exports = EventListener;
 
-},{"./emptyFunction":307}],222:[function(require,module,exports){
+},{"./emptyFunction":306}],221:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -31696,7 +29244,7 @@ var EventPluginHub = {
 
 module.exports = EventPluginHub;
 
-},{"./EventPluginRegistry":223,"./EventPluginUtils":224,"./accumulate":299,"./forEachAccumulated":312,"./invariant":325,"./isEventSupported":326,"./monitorCodeUse":339}],223:[function(require,module,exports){
+},{"./EventPluginRegistry":222,"./EventPluginUtils":223,"./accumulate":298,"./forEachAccumulated":311,"./invariant":324,"./isEventSupported":325,"./monitorCodeUse":338}],222:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -31981,7 +29529,7 @@ var EventPluginRegistry = {
 
 module.exports = EventPluginRegistry;
 
-},{"./invariant":325}],224:[function(require,module,exports){
+},{"./invariant":324}],223:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -32207,7 +29755,7 @@ var EventPluginUtils = {
 
 module.exports = EventPluginUtils;
 
-},{"./EventConstants":220,"./invariant":325}],225:[function(require,module,exports){
+},{"./EventConstants":219,"./invariant":324}],224:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -32352,7 +29900,7 @@ var EventPropagators = {
 
 module.exports = EventPropagators;
 
-},{"./EventConstants":220,"./EventPluginHub":222,"./accumulate":299,"./forEachAccumulated":312}],226:[function(require,module,exports){
+},{"./EventConstants":219,"./EventPluginHub":221,"./accumulate":298,"./forEachAccumulated":311}],225:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -32404,7 +29952,7 @@ var ExecutionEnvironment = {
 
 module.exports = ExecutionEnvironment;
 
-},{}],227:[function(require,module,exports){
+},{}],226:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -32595,7 +30143,7 @@ var HTMLDOMPropertyConfig = {
 
 module.exports = HTMLDOMPropertyConfig;
 
-},{"./DOMProperty":215,"./ExecutionEnvironment":226}],228:[function(require,module,exports){
+},{"./DOMProperty":214,"./ExecutionEnvironment":225}],227:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -32756,7 +30304,7 @@ var LinkedValueUtils = {
 
 module.exports = LinkedValueUtils;
 
-},{"./ReactPropTypes":274,"./invariant":325}],229:[function(require,module,exports){
+},{"./ReactPropTypes":273,"./invariant":324}],228:[function(require,module,exports){
 /**
  * Copyright 2014 Facebook, Inc.
  *
@@ -32810,7 +30358,7 @@ var LocalEventTrapMixin = {
 
 module.exports = LocalEventTrapMixin;
 
-},{"./ReactBrowserEventEmitter":234,"./accumulate":299,"./forEachAccumulated":312,"./invariant":325}],230:[function(require,module,exports){
+},{"./ReactBrowserEventEmitter":233,"./accumulate":298,"./forEachAccumulated":311,"./invariant":324}],229:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -32875,7 +30423,7 @@ var MobileSafariClickEventPlugin = {
 
 module.exports = MobileSafariClickEventPlugin;
 
-},{"./EventConstants":220,"./emptyFunction":307}],231:[function(require,module,exports){
+},{"./EventConstants":219,"./emptyFunction":306}],230:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -32996,7 +30544,7 @@ var PooledClass = {
 
 module.exports = PooledClass;
 
-},{"./invariant":325}],232:[function(require,module,exports){
+},{"./invariant":324}],231:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -33149,7 +30697,7 @@ React.version = '0.11.2';
 
 module.exports = React;
 
-},{"./DOMPropertyOperations":216,"./EventPluginUtils":224,"./ExecutionEnvironment":226,"./ReactChildren":235,"./ReactComponent":236,"./ReactCompositeComponent":238,"./ReactContext":239,"./ReactCurrentOwner":240,"./ReactDOM":241,"./ReactDOMComponent":243,"./ReactDefaultInjection":253,"./ReactDescriptor":256,"./ReactInstanceHandles":264,"./ReactMount":266,"./ReactMultiChild":267,"./ReactPerf":270,"./ReactPropTypes":274,"./ReactServerRendering":278,"./ReactTextComponent":280,"./onlyChild":340,"./warning":348}],233:[function(require,module,exports){
+},{"./DOMPropertyOperations":215,"./EventPluginUtils":223,"./ExecutionEnvironment":225,"./ReactChildren":234,"./ReactComponent":235,"./ReactCompositeComponent":237,"./ReactContext":238,"./ReactCurrentOwner":239,"./ReactDOM":240,"./ReactDOMComponent":242,"./ReactDefaultInjection":252,"./ReactDescriptor":255,"./ReactInstanceHandles":263,"./ReactMount":265,"./ReactMultiChild":266,"./ReactPerf":269,"./ReactPropTypes":273,"./ReactServerRendering":277,"./ReactTextComponent":279,"./onlyChild":339,"./warning":347}],232:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -33197,7 +30745,7 @@ var ReactBrowserComponentMixin = {
 
 module.exports = ReactBrowserComponentMixin;
 
-},{"./ReactEmptyComponent":258,"./ReactMount":266,"./invariant":325}],234:[function(require,module,exports){
+},{"./ReactEmptyComponent":257,"./ReactMount":265,"./invariant":324}],233:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -33559,7 +31107,7 @@ var ReactBrowserEventEmitter = merge(ReactEventEmitterMixin, {
 
 module.exports = ReactBrowserEventEmitter;
 
-},{"./EventConstants":220,"./EventPluginHub":222,"./EventPluginRegistry":223,"./ReactEventEmitterMixin":260,"./ViewportMetrics":298,"./isEventSupported":326,"./merge":335}],235:[function(require,module,exports){
+},{"./EventConstants":219,"./EventPluginHub":221,"./EventPluginRegistry":222,"./ReactEventEmitterMixin":259,"./ViewportMetrics":297,"./isEventSupported":325,"./merge":334}],234:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -33714,7 +31262,7 @@ var ReactChildren = {
 
 module.exports = ReactChildren;
 
-},{"./PooledClass":231,"./traverseAllChildren":347,"./warning":348}],236:[function(require,module,exports){
+},{"./PooledClass":230,"./traverseAllChildren":346,"./warning":347}],235:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -34162,7 +31710,7 @@ var ReactComponent = {
 
 module.exports = ReactComponent;
 
-},{"./ReactDescriptor":256,"./ReactOwner":269,"./ReactUpdates":281,"./invariant":325,"./keyMirror":331,"./merge":335}],237:[function(require,module,exports){
+},{"./ReactDescriptor":255,"./ReactOwner":268,"./ReactUpdates":280,"./invariant":324,"./keyMirror":330,"./merge":334}],236:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -34289,7 +31837,7 @@ var ReactComponentBrowserEnvironment = {
 
 module.exports = ReactComponentBrowserEnvironment;
 
-},{"./ReactDOMIDOperations":245,"./ReactMarkupChecksum":265,"./ReactMount":266,"./ReactPerf":270,"./ReactReconcileTransaction":276,"./getReactRootElementInContainer":319,"./invariant":325,"./setInnerHTML":343}],238:[function(require,module,exports){
+},{"./ReactDOMIDOperations":244,"./ReactMarkupChecksum":264,"./ReactMount":265,"./ReactPerf":269,"./ReactReconcileTransaction":275,"./getReactRootElementInContainer":318,"./invariant":324,"./setInnerHTML":342}],237:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -35716,7 +33264,7 @@ var ReactCompositeComponent = {
 
 module.exports = ReactCompositeComponent;
 
-},{"./ReactComponent":236,"./ReactContext":239,"./ReactCurrentOwner":240,"./ReactDescriptor":256,"./ReactDescriptorValidator":257,"./ReactEmptyComponent":258,"./ReactErrorUtils":259,"./ReactOwner":269,"./ReactPerf":270,"./ReactPropTransferer":271,"./ReactPropTypeLocationNames":272,"./ReactPropTypeLocations":273,"./ReactUpdates":281,"./instantiateReactComponent":324,"./invariant":325,"./keyMirror":331,"./mapObject":333,"./merge":335,"./mixInto":338,"./monitorCodeUse":339,"./shouldUpdateReactComponent":345,"./warning":348}],239:[function(require,module,exports){
+},{"./ReactComponent":235,"./ReactContext":238,"./ReactCurrentOwner":239,"./ReactDescriptor":255,"./ReactDescriptorValidator":256,"./ReactEmptyComponent":257,"./ReactErrorUtils":258,"./ReactOwner":268,"./ReactPerf":269,"./ReactPropTransferer":270,"./ReactPropTypeLocationNames":271,"./ReactPropTypeLocations":272,"./ReactUpdates":280,"./instantiateReactComponent":323,"./invariant":324,"./keyMirror":330,"./mapObject":332,"./merge":334,"./mixInto":337,"./monitorCodeUse":338,"./shouldUpdateReactComponent":344,"./warning":347}],238:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -35785,7 +33333,7 @@ var ReactContext = {
 
 module.exports = ReactContext;
 
-},{"./merge":335}],240:[function(require,module,exports){
+},{"./merge":334}],239:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -35826,7 +33374,7 @@ var ReactCurrentOwner = {
 
 module.exports = ReactCurrentOwner;
 
-},{}],241:[function(require,module,exports){
+},{}],240:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -36039,7 +33587,7 @@ ReactDOM.injection = injection;
 
 module.exports = ReactDOM;
 
-},{"./ReactDOMComponent":243,"./ReactDescriptor":256,"./ReactDescriptorValidator":257,"./mapObject":333,"./mergeInto":337}],242:[function(require,module,exports){
+},{"./ReactDOMComponent":242,"./ReactDescriptor":255,"./ReactDescriptorValidator":256,"./mapObject":332,"./mergeInto":336}],241:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -36110,7 +33658,7 @@ var ReactDOMButton = ReactCompositeComponent.createClass({
 
 module.exports = ReactDOMButton;
 
-},{"./AutoFocusMixin":206,"./ReactBrowserComponentMixin":233,"./ReactCompositeComponent":238,"./ReactDOM":241,"./keyMirror":331}],243:[function(require,module,exports){
+},{"./AutoFocusMixin":205,"./ReactBrowserComponentMixin":232,"./ReactCompositeComponent":237,"./ReactDOM":240,"./keyMirror":330}],242:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -36530,7 +34078,7 @@ mixInto(ReactDOMComponent, ReactBrowserComponentMixin);
 
 module.exports = ReactDOMComponent;
 
-},{"./CSSPropertyOperations":209,"./DOMProperty":215,"./DOMPropertyOperations":216,"./ReactBrowserComponentMixin":233,"./ReactBrowserEventEmitter":234,"./ReactComponent":236,"./ReactMount":266,"./ReactMultiChild":267,"./ReactPerf":270,"./escapeTextForBrowser":309,"./invariant":325,"./keyOf":332,"./merge":335,"./mixInto":338}],244:[function(require,module,exports){
+},{"./CSSPropertyOperations":208,"./DOMProperty":214,"./DOMPropertyOperations":215,"./ReactBrowserComponentMixin":232,"./ReactBrowserEventEmitter":233,"./ReactComponent":235,"./ReactMount":265,"./ReactMultiChild":266,"./ReactPerf":269,"./escapeTextForBrowser":308,"./invariant":324,"./keyOf":331,"./merge":334,"./mixInto":337}],243:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -36586,7 +34134,7 @@ var ReactDOMForm = ReactCompositeComponent.createClass({
 
 module.exports = ReactDOMForm;
 
-},{"./EventConstants":220,"./LocalEventTrapMixin":229,"./ReactBrowserComponentMixin":233,"./ReactCompositeComponent":238,"./ReactDOM":241}],245:[function(require,module,exports){
+},{"./EventConstants":219,"./LocalEventTrapMixin":228,"./ReactBrowserComponentMixin":232,"./ReactCompositeComponent":237,"./ReactDOM":240}],244:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -36777,7 +34325,7 @@ var ReactDOMIDOperations = {
 
 module.exports = ReactDOMIDOperations;
 
-},{"./CSSPropertyOperations":209,"./DOMChildrenOperations":214,"./DOMPropertyOperations":216,"./ReactMount":266,"./ReactPerf":270,"./invariant":325,"./setInnerHTML":343}],246:[function(require,module,exports){
+},{"./CSSPropertyOperations":208,"./DOMChildrenOperations":213,"./DOMPropertyOperations":215,"./ReactMount":265,"./ReactPerf":269,"./invariant":324,"./setInnerHTML":342}],245:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -36831,7 +34379,7 @@ var ReactDOMImg = ReactCompositeComponent.createClass({
 
 module.exports = ReactDOMImg;
 
-},{"./EventConstants":220,"./LocalEventTrapMixin":229,"./ReactBrowserComponentMixin":233,"./ReactCompositeComponent":238,"./ReactDOM":241}],247:[function(require,module,exports){
+},{"./EventConstants":219,"./LocalEventTrapMixin":228,"./ReactBrowserComponentMixin":232,"./ReactCompositeComponent":237,"./ReactDOM":240}],246:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -37015,7 +34563,7 @@ var ReactDOMInput = ReactCompositeComponent.createClass({
 
 module.exports = ReactDOMInput;
 
-},{"./AutoFocusMixin":206,"./DOMPropertyOperations":216,"./LinkedValueUtils":228,"./ReactBrowserComponentMixin":233,"./ReactCompositeComponent":238,"./ReactDOM":241,"./ReactMount":266,"./invariant":325,"./merge":335}],248:[function(require,module,exports){
+},{"./AutoFocusMixin":205,"./DOMPropertyOperations":215,"./LinkedValueUtils":227,"./ReactBrowserComponentMixin":232,"./ReactCompositeComponent":237,"./ReactDOM":240,"./ReactMount":265,"./invariant":324,"./merge":334}],247:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -37072,7 +34620,7 @@ var ReactDOMOption = ReactCompositeComponent.createClass({
 
 module.exports = ReactDOMOption;
 
-},{"./ReactBrowserComponentMixin":233,"./ReactCompositeComponent":238,"./ReactDOM":241,"./warning":348}],249:[function(require,module,exports){
+},{"./ReactBrowserComponentMixin":232,"./ReactCompositeComponent":237,"./ReactDOM":240,"./warning":347}],248:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -37255,7 +34803,7 @@ var ReactDOMSelect = ReactCompositeComponent.createClass({
 
 module.exports = ReactDOMSelect;
 
-},{"./AutoFocusMixin":206,"./LinkedValueUtils":228,"./ReactBrowserComponentMixin":233,"./ReactCompositeComponent":238,"./ReactDOM":241,"./merge":335}],250:[function(require,module,exports){
+},{"./AutoFocusMixin":205,"./LinkedValueUtils":227,"./ReactBrowserComponentMixin":232,"./ReactCompositeComponent":237,"./ReactDOM":240,"./merge":334}],249:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -37471,7 +35019,7 @@ var ReactDOMSelection = {
 
 module.exports = ReactDOMSelection;
 
-},{"./ExecutionEnvironment":226,"./getNodeForCharacterOffset":318,"./getTextContentAccessor":320}],251:[function(require,module,exports){
+},{"./ExecutionEnvironment":225,"./getNodeForCharacterOffset":317,"./getTextContentAccessor":319}],250:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -37615,7 +35163,7 @@ var ReactDOMTextarea = ReactCompositeComponent.createClass({
 
 module.exports = ReactDOMTextarea;
 
-},{"./AutoFocusMixin":206,"./DOMPropertyOperations":216,"./LinkedValueUtils":228,"./ReactBrowserComponentMixin":233,"./ReactCompositeComponent":238,"./ReactDOM":241,"./invariant":325,"./merge":335,"./warning":348}],252:[function(require,module,exports){
+},{"./AutoFocusMixin":205,"./DOMPropertyOperations":215,"./LinkedValueUtils":227,"./ReactBrowserComponentMixin":232,"./ReactCompositeComponent":237,"./ReactDOM":240,"./invariant":324,"./merge":334,"./warning":347}],251:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -37692,7 +35240,7 @@ var ReactDefaultBatchingStrategy = {
 
 module.exports = ReactDefaultBatchingStrategy;
 
-},{"./ReactUpdates":281,"./Transaction":297,"./emptyFunction":307,"./mixInto":338}],253:[function(require,module,exports){
+},{"./ReactUpdates":280,"./Transaction":296,"./emptyFunction":306,"./mixInto":337}],252:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -37822,7 +35370,7 @@ module.exports = {
   inject: inject
 };
 
-},{"./BeforeInputEventPlugin":207,"./ChangeEventPlugin":211,"./ClientReactRootIndex":212,"./CompositionEventPlugin":213,"./DefaultEventPluginOrder":218,"./EnterLeaveEventPlugin":219,"./ExecutionEnvironment":226,"./HTMLDOMPropertyConfig":227,"./MobileSafariClickEventPlugin":230,"./ReactBrowserComponentMixin":233,"./ReactComponentBrowserEnvironment":237,"./ReactDOM":241,"./ReactDOMButton":242,"./ReactDOMForm":244,"./ReactDOMImg":246,"./ReactDOMInput":247,"./ReactDOMOption":248,"./ReactDOMSelect":249,"./ReactDOMTextarea":251,"./ReactDefaultBatchingStrategy":252,"./ReactDefaultPerf":254,"./ReactEventListener":261,"./ReactInjection":262,"./ReactInstanceHandles":264,"./ReactMount":266,"./SVGDOMPropertyConfig":282,"./SelectEventPlugin":283,"./ServerReactRootIndex":284,"./SimpleEventPlugin":285,"./createFullPageComponent":304}],254:[function(require,module,exports){
+},{"./BeforeInputEventPlugin":206,"./ChangeEventPlugin":210,"./ClientReactRootIndex":211,"./CompositionEventPlugin":212,"./DefaultEventPluginOrder":217,"./EnterLeaveEventPlugin":218,"./ExecutionEnvironment":225,"./HTMLDOMPropertyConfig":226,"./MobileSafariClickEventPlugin":229,"./ReactBrowserComponentMixin":232,"./ReactComponentBrowserEnvironment":236,"./ReactDOM":240,"./ReactDOMButton":241,"./ReactDOMForm":243,"./ReactDOMImg":245,"./ReactDOMInput":246,"./ReactDOMOption":247,"./ReactDOMSelect":248,"./ReactDOMTextarea":250,"./ReactDefaultBatchingStrategy":251,"./ReactDefaultPerf":253,"./ReactEventListener":260,"./ReactInjection":261,"./ReactInstanceHandles":263,"./ReactMount":265,"./SVGDOMPropertyConfig":281,"./SelectEventPlugin":282,"./ServerReactRootIndex":283,"./SimpleEventPlugin":284,"./createFullPageComponent":303}],253:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -38085,7 +35633,7 @@ var ReactDefaultPerf = {
 
 module.exports = ReactDefaultPerf;
 
-},{"./DOMProperty":215,"./ReactDefaultPerfAnalysis":255,"./ReactMount":266,"./ReactPerf":270,"./performanceNow":342}],255:[function(require,module,exports){
+},{"./DOMProperty":214,"./ReactDefaultPerfAnalysis":254,"./ReactMount":265,"./ReactPerf":269,"./performanceNow":341}],254:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -38290,7 +35838,7 @@ var ReactDefaultPerfAnalysis = {
 
 module.exports = ReactDefaultPerfAnalysis;
 
-},{"./merge":335}],256:[function(require,module,exports){
+},{"./merge":334}],255:[function(require,module,exports){
 /**
  * Copyright 2014 Facebook, Inc.
  *
@@ -38543,7 +36091,7 @@ ReactDescriptor.isValidDescriptor = function(object) {
 
 module.exports = ReactDescriptor;
 
-},{"./ReactContext":239,"./ReactCurrentOwner":240,"./merge":335,"./warning":348}],257:[function(require,module,exports){
+},{"./ReactContext":238,"./ReactCurrentOwner":239,"./merge":334,"./warning":347}],256:[function(require,module,exports){
 /**
  * Copyright 2014 Facebook, Inc.
  *
@@ -38828,7 +36376,7 @@ var ReactDescriptorValidator = {
 
 module.exports = ReactDescriptorValidator;
 
-},{"./ReactCurrentOwner":240,"./ReactDescriptor":256,"./ReactPropTypeLocations":273,"./monitorCodeUse":339}],258:[function(require,module,exports){
+},{"./ReactCurrentOwner":239,"./ReactDescriptor":255,"./ReactPropTypeLocations":272,"./monitorCodeUse":338}],257:[function(require,module,exports){
 /**
  * Copyright 2014 Facebook, Inc.
  *
@@ -38908,7 +36456,7 @@ var ReactEmptyComponent = {
 
 module.exports = ReactEmptyComponent;
 
-},{"./invariant":325}],259:[function(require,module,exports){
+},{"./invariant":324}],258:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -38947,7 +36495,7 @@ var ReactErrorUtils = {
 
 module.exports = ReactErrorUtils;
 
-},{}],260:[function(require,module,exports){
+},{}],259:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -39004,7 +36552,7 @@ var ReactEventEmitterMixin = {
 
 module.exports = ReactEventEmitterMixin;
 
-},{"./EventPluginHub":222}],261:[function(require,module,exports){
+},{"./EventPluginHub":221}],260:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -39195,7 +36743,7 @@ var ReactEventListener = {
 
 module.exports = ReactEventListener;
 
-},{"./EventListener":221,"./ExecutionEnvironment":226,"./PooledClass":231,"./ReactInstanceHandles":264,"./ReactMount":266,"./ReactUpdates":281,"./getEventTarget":316,"./getUnboundedScrollPosition":321,"./mixInto":338}],262:[function(require,module,exports){
+},{"./EventListener":220,"./ExecutionEnvironment":225,"./PooledClass":230,"./ReactInstanceHandles":263,"./ReactMount":265,"./ReactUpdates":280,"./getEventTarget":315,"./getUnboundedScrollPosition":320,"./mixInto":337}],261:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -39242,7 +36790,7 @@ var ReactInjection = {
 
 module.exports = ReactInjection;
 
-},{"./DOMProperty":215,"./EventPluginHub":222,"./ReactBrowserEventEmitter":234,"./ReactComponent":236,"./ReactCompositeComponent":238,"./ReactDOM":241,"./ReactEmptyComponent":258,"./ReactPerf":270,"./ReactRootIndex":277,"./ReactUpdates":281}],263:[function(require,module,exports){
+},{"./DOMProperty":214,"./EventPluginHub":221,"./ReactBrowserEventEmitter":233,"./ReactComponent":235,"./ReactCompositeComponent":237,"./ReactDOM":240,"./ReactEmptyComponent":257,"./ReactPerf":269,"./ReactRootIndex":276,"./ReactUpdates":280}],262:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -39385,7 +36933,7 @@ var ReactInputSelection = {
 
 module.exports = ReactInputSelection;
 
-},{"./ReactDOMSelection":250,"./containsNode":301,"./focusNode":311,"./getActiveElement":313}],264:[function(require,module,exports){
+},{"./ReactDOMSelection":249,"./containsNode":300,"./focusNode":310,"./getActiveElement":312}],263:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -39725,7 +37273,7 @@ var ReactInstanceHandles = {
 
 module.exports = ReactInstanceHandles;
 
-},{"./ReactRootIndex":277,"./invariant":325}],265:[function(require,module,exports){
+},{"./ReactRootIndex":276,"./invariant":324}],264:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -39780,7 +37328,7 @@ var ReactMarkupChecksum = {
 
 module.exports = ReactMarkupChecksum;
 
-},{"./adler32":300}],266:[function(require,module,exports){
+},{"./adler32":299}],265:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -40463,7 +38011,7 @@ var ReactMount = {
 
 module.exports = ReactMount;
 
-},{"./DOMProperty":215,"./ReactBrowserEventEmitter":234,"./ReactCurrentOwner":240,"./ReactDescriptor":256,"./ReactInstanceHandles":264,"./ReactPerf":270,"./containsNode":301,"./getReactRootElementInContainer":319,"./instantiateReactComponent":324,"./invariant":325,"./shouldUpdateReactComponent":345,"./warning":348}],267:[function(require,module,exports){
+},{"./DOMProperty":214,"./ReactBrowserEventEmitter":233,"./ReactCurrentOwner":239,"./ReactDescriptor":255,"./ReactInstanceHandles":263,"./ReactPerf":269,"./containsNode":300,"./getReactRootElementInContainer":318,"./instantiateReactComponent":323,"./invariant":324,"./shouldUpdateReactComponent":344,"./warning":347}],266:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -40895,7 +38443,7 @@ var ReactMultiChild = {
 
 module.exports = ReactMultiChild;
 
-},{"./ReactComponent":236,"./ReactMultiChildUpdateTypes":268,"./flattenChildren":310,"./instantiateReactComponent":324,"./shouldUpdateReactComponent":345}],268:[function(require,module,exports){
+},{"./ReactComponent":235,"./ReactMultiChildUpdateTypes":267,"./flattenChildren":309,"./instantiateReactComponent":323,"./shouldUpdateReactComponent":344}],267:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -40935,7 +38483,7 @@ var ReactMultiChildUpdateTypes = keyMirror({
 
 module.exports = ReactMultiChildUpdateTypes;
 
-},{"./keyMirror":331}],269:[function(require,module,exports){
+},{"./keyMirror":330}],268:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -41096,7 +38644,7 @@ var ReactOwner = {
 
 module.exports = ReactOwner;
 
-},{"./emptyObject":308,"./invariant":325}],270:[function(require,module,exports){
+},{"./emptyObject":307,"./invariant":324}],269:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -41183,7 +38731,7 @@ function _noMeasure(objName, fnName, func) {
 
 module.exports = ReactPerf;
 
-},{}],271:[function(require,module,exports){
+},{}],270:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -41347,7 +38895,7 @@ var ReactPropTransferer = {
 
 module.exports = ReactPropTransferer;
 
-},{"./emptyFunction":307,"./invariant":325,"./joinClasses":330,"./merge":335}],272:[function(require,module,exports){
+},{"./emptyFunction":306,"./invariant":324,"./joinClasses":329,"./merge":334}],271:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -41380,7 +38928,7 @@ if ("production" !== "development") {
 
 module.exports = ReactPropTypeLocationNames;
 
-},{}],273:[function(require,module,exports){
+},{}],272:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -41411,7 +38959,7 @@ var ReactPropTypeLocations = keyMirror({
 
 module.exports = ReactPropTypeLocations;
 
-},{"./keyMirror":331}],274:[function(require,module,exports){
+},{"./keyMirror":330}],273:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -41756,7 +39304,7 @@ function getPreciseType(propValue) {
 
 module.exports = ReactPropTypes;
 
-},{"./ReactDescriptor":256,"./ReactPropTypeLocationNames":272,"./emptyFunction":307}],275:[function(require,module,exports){
+},{"./ReactDescriptor":255,"./ReactPropTypeLocationNames":271,"./emptyFunction":306}],274:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -41819,7 +39367,7 @@ PooledClass.addPoolingTo(ReactPutListenerQueue);
 
 module.exports = ReactPutListenerQueue;
 
-},{"./PooledClass":231,"./ReactBrowserEventEmitter":234,"./mixInto":338}],276:[function(require,module,exports){
+},{"./PooledClass":230,"./ReactBrowserEventEmitter":233,"./mixInto":337}],275:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -42003,7 +39551,7 @@ PooledClass.addPoolingTo(ReactReconcileTransaction);
 
 module.exports = ReactReconcileTransaction;
 
-},{"./CallbackQueue":210,"./PooledClass":231,"./ReactBrowserEventEmitter":234,"./ReactInputSelection":263,"./ReactPutListenerQueue":275,"./Transaction":297,"./mixInto":338}],277:[function(require,module,exports){
+},{"./CallbackQueue":209,"./PooledClass":230,"./ReactBrowserEventEmitter":233,"./ReactInputSelection":262,"./ReactPutListenerQueue":274,"./Transaction":296,"./mixInto":337}],276:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -42041,7 +39589,7 @@ var ReactRootIndex = {
 
 module.exports = ReactRootIndex;
 
-},{}],278:[function(require,module,exports){
+},{}],277:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -42132,7 +39680,7 @@ module.exports = {
   renderComponentToStaticMarkup: renderComponentToStaticMarkup
 };
 
-},{"./ReactDescriptor":256,"./ReactInstanceHandles":264,"./ReactMarkupChecksum":265,"./ReactServerRenderingTransaction":279,"./instantiateReactComponent":324,"./invariant":325}],279:[function(require,module,exports){
+},{"./ReactDescriptor":255,"./ReactInstanceHandles":263,"./ReactMarkupChecksum":264,"./ReactServerRenderingTransaction":278,"./instantiateReactComponent":323,"./invariant":324}],278:[function(require,module,exports){
 /**
  * Copyright 2014 Facebook, Inc.
  *
@@ -42249,7 +39797,7 @@ PooledClass.addPoolingTo(ReactServerRenderingTransaction);
 
 module.exports = ReactServerRenderingTransaction;
 
-},{"./CallbackQueue":210,"./PooledClass":231,"./ReactPutListenerQueue":275,"./Transaction":297,"./emptyFunction":307,"./mixInto":338}],280:[function(require,module,exports){
+},{"./CallbackQueue":209,"./PooledClass":230,"./ReactPutListenerQueue":274,"./Transaction":296,"./emptyFunction":306,"./mixInto":337}],279:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -42358,7 +39906,7 @@ mixInto(ReactTextComponent, {
 
 module.exports = ReactDescriptor.createFactory(ReactTextComponent);
 
-},{"./DOMPropertyOperations":216,"./ReactBrowserComponentMixin":233,"./ReactComponent":236,"./ReactDescriptor":256,"./escapeTextForBrowser":309,"./mixInto":338}],281:[function(require,module,exports){
+},{"./DOMPropertyOperations":215,"./ReactBrowserComponentMixin":232,"./ReactComponent":235,"./ReactDescriptor":255,"./escapeTextForBrowser":308,"./mixInto":337}],280:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -42625,7 +40173,7 @@ var ReactUpdates = {
 
 module.exports = ReactUpdates;
 
-},{"./CallbackQueue":210,"./PooledClass":231,"./ReactCurrentOwner":240,"./ReactPerf":270,"./Transaction":297,"./invariant":325,"./mixInto":338,"./warning":348}],282:[function(require,module,exports){
+},{"./CallbackQueue":209,"./PooledClass":230,"./ReactCurrentOwner":239,"./ReactPerf":269,"./Transaction":296,"./invariant":324,"./mixInto":337,"./warning":347}],281:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -42724,7 +40272,7 @@ var SVGDOMPropertyConfig = {
 
 module.exports = SVGDOMPropertyConfig;
 
-},{"./DOMProperty":215}],283:[function(require,module,exports){
+},{"./DOMProperty":214}],282:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -42926,7 +40474,7 @@ var SelectEventPlugin = {
 
 module.exports = SelectEventPlugin;
 
-},{"./EventConstants":220,"./EventPropagators":225,"./ReactInputSelection":263,"./SyntheticEvent":289,"./getActiveElement":313,"./isTextInputElement":328,"./keyOf":332,"./shallowEqual":344}],284:[function(require,module,exports){
+},{"./EventConstants":219,"./EventPropagators":224,"./ReactInputSelection":262,"./SyntheticEvent":288,"./getActiveElement":312,"./isTextInputElement":327,"./keyOf":331,"./shallowEqual":343}],283:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -42964,7 +40512,7 @@ var ServerReactRootIndex = {
 
 module.exports = ServerReactRootIndex;
 
-},{}],285:[function(require,module,exports){
+},{}],284:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -43385,7 +40933,7 @@ var SimpleEventPlugin = {
 
 module.exports = SimpleEventPlugin;
 
-},{"./EventConstants":220,"./EventPluginUtils":224,"./EventPropagators":225,"./SyntheticClipboardEvent":286,"./SyntheticDragEvent":288,"./SyntheticEvent":289,"./SyntheticFocusEvent":290,"./SyntheticKeyboardEvent":292,"./SyntheticMouseEvent":293,"./SyntheticTouchEvent":294,"./SyntheticUIEvent":295,"./SyntheticWheelEvent":296,"./invariant":325,"./keyOf":332}],286:[function(require,module,exports){
+},{"./EventConstants":219,"./EventPluginUtils":223,"./EventPropagators":224,"./SyntheticClipboardEvent":285,"./SyntheticDragEvent":287,"./SyntheticEvent":288,"./SyntheticFocusEvent":289,"./SyntheticKeyboardEvent":291,"./SyntheticMouseEvent":292,"./SyntheticTouchEvent":293,"./SyntheticUIEvent":294,"./SyntheticWheelEvent":295,"./invariant":324,"./keyOf":331}],285:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -43438,7 +40986,7 @@ SyntheticEvent.augmentClass(SyntheticClipboardEvent, ClipboardEventInterface);
 module.exports = SyntheticClipboardEvent;
 
 
-},{"./SyntheticEvent":289}],287:[function(require,module,exports){
+},{"./SyntheticEvent":288}],286:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -43491,7 +41039,7 @@ SyntheticEvent.augmentClass(
 module.exports = SyntheticCompositionEvent;
 
 
-},{"./SyntheticEvent":289}],288:[function(require,module,exports){
+},{"./SyntheticEvent":288}],287:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -43537,7 +41085,7 @@ SyntheticMouseEvent.augmentClass(SyntheticDragEvent, DragEventInterface);
 
 module.exports = SyntheticDragEvent;
 
-},{"./SyntheticMouseEvent":293}],289:[function(require,module,exports){
+},{"./SyntheticMouseEvent":292}],288:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -43703,7 +41251,7 @@ PooledClass.addPoolingTo(SyntheticEvent, PooledClass.threeArgumentPooler);
 
 module.exports = SyntheticEvent;
 
-},{"./PooledClass":231,"./emptyFunction":307,"./getEventTarget":316,"./merge":335,"./mergeInto":337}],290:[function(require,module,exports){
+},{"./PooledClass":230,"./emptyFunction":306,"./getEventTarget":315,"./merge":334,"./mergeInto":336}],289:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -43749,7 +41297,7 @@ SyntheticUIEvent.augmentClass(SyntheticFocusEvent, FocusEventInterface);
 
 module.exports = SyntheticFocusEvent;
 
-},{"./SyntheticUIEvent":295}],291:[function(require,module,exports){
+},{"./SyntheticUIEvent":294}],290:[function(require,module,exports){
 /**
  * Copyright 2013 Facebook, Inc.
  *
@@ -43803,7 +41351,7 @@ SyntheticEvent.augmentClass(
 module.exports = SyntheticInputEvent;
 
 
-},{"./SyntheticEvent":289}],292:[function(require,module,exports){
+},{"./SyntheticEvent":288}],291:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -43892,7 +41440,7 @@ SyntheticUIEvent.augmentClass(SyntheticKeyboardEvent, KeyboardEventInterface);
 
 module.exports = SyntheticKeyboardEvent;
 
-},{"./SyntheticUIEvent":295,"./getEventKey":314,"./getEventModifierState":315}],293:[function(require,module,exports){
+},{"./SyntheticUIEvent":294,"./getEventKey":313,"./getEventModifierState":314}],292:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -43982,7 +41530,7 @@ SyntheticUIEvent.augmentClass(SyntheticMouseEvent, MouseEventInterface);
 
 module.exports = SyntheticMouseEvent;
 
-},{"./SyntheticUIEvent":295,"./ViewportMetrics":298,"./getEventModifierState":315}],294:[function(require,module,exports){
+},{"./SyntheticUIEvent":294,"./ViewportMetrics":297,"./getEventModifierState":314}],293:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -44037,7 +41585,7 @@ SyntheticUIEvent.augmentClass(SyntheticTouchEvent, TouchEventInterface);
 
 module.exports = SyntheticTouchEvent;
 
-},{"./SyntheticUIEvent":295,"./getEventModifierState":315}],295:[function(require,module,exports){
+},{"./SyntheticUIEvent":294,"./getEventModifierState":314}],294:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -44106,7 +41654,7 @@ SyntheticEvent.augmentClass(SyntheticUIEvent, UIEventInterface);
 
 module.exports = SyntheticUIEvent;
 
-},{"./SyntheticEvent":289,"./getEventTarget":316}],296:[function(require,module,exports){
+},{"./SyntheticEvent":288,"./getEventTarget":315}],295:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -44174,7 +41722,7 @@ SyntheticMouseEvent.augmentClass(SyntheticWheelEvent, WheelEventInterface);
 
 module.exports = SyntheticWheelEvent;
 
-},{"./SyntheticMouseEvent":293}],297:[function(require,module,exports){
+},{"./SyntheticMouseEvent":292}],296:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -44420,7 +41968,7 @@ var Transaction = {
 
 module.exports = Transaction;
 
-},{"./invariant":325}],298:[function(require,module,exports){
+},{"./invariant":324}],297:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -44459,7 +42007,7 @@ var ViewportMetrics = {
 
 module.exports = ViewportMetrics;
 
-},{"./getUnboundedScrollPosition":321}],299:[function(require,module,exports){
+},{"./getUnboundedScrollPosition":320}],298:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -44515,7 +42063,7 @@ function accumulate(current, next) {
 
 module.exports = accumulate;
 
-},{"./invariant":325}],300:[function(require,module,exports){
+},{"./invariant":324}],299:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -44556,7 +42104,7 @@ function adler32(data) {
 
 module.exports = adler32;
 
-},{}],301:[function(require,module,exports){
+},{}],300:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -44607,7 +42155,7 @@ function containsNode(outerNode, innerNode) {
 
 module.exports = containsNode;
 
-},{"./isTextNode":329}],302:[function(require,module,exports){
+},{"./isTextNode":328}],301:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -44663,7 +42211,7 @@ function copyProperties(obj, a, b, c, d, e, f) {
 
 module.exports = copyProperties;
 
-},{}],303:[function(require,module,exports){
+},{}],302:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -44756,7 +42304,7 @@ function createArrayFrom(obj) {
 
 module.exports = createArrayFrom;
 
-},{"./toArray":346}],304:[function(require,module,exports){
+},{"./toArray":345}],303:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -44821,7 +42369,7 @@ function createFullPageComponent(componentClass) {
 
 module.exports = createFullPageComponent;
 
-},{"./ReactCompositeComponent":238,"./invariant":325}],305:[function(require,module,exports){
+},{"./ReactCompositeComponent":237,"./invariant":324}],304:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -44916,7 +42464,7 @@ function createNodesFromMarkup(markup, handleScript) {
 
 module.exports = createNodesFromMarkup;
 
-},{"./ExecutionEnvironment":226,"./createArrayFrom":303,"./getMarkupWrap":317,"./invariant":325}],306:[function(require,module,exports){
+},{"./ExecutionEnvironment":225,"./createArrayFrom":302,"./getMarkupWrap":316,"./invariant":324}],305:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -44981,7 +42529,7 @@ function dangerousStyleValue(name, value) {
 
 module.exports = dangerousStyleValue;
 
-},{"./CSSProperty":208}],307:[function(require,module,exports){
+},{"./CSSProperty":207}],306:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -45026,7 +42574,7 @@ copyProperties(emptyFunction, {
 
 module.exports = emptyFunction;
 
-},{"./copyProperties":302}],308:[function(require,module,exports){
+},{"./copyProperties":301}],307:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -45055,7 +42603,7 @@ if ("production" !== "development") {
 
 module.exports = emptyObject;
 
-},{}],309:[function(require,module,exports){
+},{}],308:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -45103,7 +42651,7 @@ function escapeTextForBrowser(text) {
 
 module.exports = escapeTextForBrowser;
 
-},{}],310:[function(require,module,exports){
+},{}],309:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -45164,7 +42712,7 @@ function flattenChildren(children) {
 
 module.exports = flattenChildren;
 
-},{"./traverseAllChildren":347,"./warning":348}],311:[function(require,module,exports){
+},{"./traverseAllChildren":346,"./warning":347}],310:[function(require,module,exports){
 /**
  * Copyright 2014 Facebook, Inc.
  *
@@ -45199,7 +42747,7 @@ function focusNode(node) {
 
 module.exports = focusNode;
 
-},{}],312:[function(require,module,exports){
+},{}],311:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -45237,7 +42785,7 @@ var forEachAccumulated = function(arr, cb, scope) {
 
 module.exports = forEachAccumulated;
 
-},{}],313:[function(require,module,exports){
+},{}],312:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -45273,7 +42821,7 @@ function getActiveElement() /*?DOMElement*/ {
 
 module.exports = getActiveElement;
 
-},{}],314:[function(require,module,exports){
+},{}],313:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -45390,7 +42938,7 @@ function getEventKey(nativeEvent) {
 
 module.exports = getEventKey;
 
-},{"./invariant":325}],315:[function(require,module,exports){
+},{"./invariant":324}],314:[function(require,module,exports){
 /**
  * Copyright 2013 Facebook, Inc.
  *
@@ -45444,7 +42992,7 @@ function getEventModifierState(nativeEvent) {
 
 module.exports = getEventModifierState;
 
-},{}],316:[function(require,module,exports){
+},{}],315:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -45482,7 +43030,7 @@ function getEventTarget(nativeEvent) {
 
 module.exports = getEventTarget;
 
-},{}],317:[function(require,module,exports){
+},{}],316:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -45604,7 +43152,7 @@ function getMarkupWrap(nodeName) {
 
 module.exports = getMarkupWrap;
 
-},{"./ExecutionEnvironment":226,"./invariant":325}],318:[function(require,module,exports){
+},{"./ExecutionEnvironment":225,"./invariant":324}],317:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -45686,7 +43234,7 @@ function getNodeForCharacterOffset(root, offset) {
 
 module.exports = getNodeForCharacterOffset;
 
-},{}],319:[function(require,module,exports){
+},{}],318:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -45728,7 +43276,7 @@ function getReactRootElementInContainer(container) {
 
 module.exports = getReactRootElementInContainer;
 
-},{}],320:[function(require,module,exports){
+},{}],319:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -45772,7 +43320,7 @@ function getTextContentAccessor() {
 
 module.exports = getTextContentAccessor;
 
-},{"./ExecutionEnvironment":226}],321:[function(require,module,exports){
+},{"./ExecutionEnvironment":225}],320:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -45819,7 +43367,7 @@ function getUnboundedScrollPosition(scrollable) {
 
 module.exports = getUnboundedScrollPosition;
 
-},{}],322:[function(require,module,exports){
+},{}],321:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -45859,7 +43407,7 @@ function hyphenate(string) {
 
 module.exports = hyphenate;
 
-},{}],323:[function(require,module,exports){
+},{}],322:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -45907,7 +43455,7 @@ function hyphenateStyleName(string) {
 
 module.exports = hyphenateStyleName;
 
-},{"./hyphenate":322}],324:[function(require,module,exports){
+},{"./hyphenate":321}],323:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -45971,7 +43519,7 @@ function instantiateReactComponent(descriptor) {
 
 module.exports = instantiateReactComponent;
 
-},{"./invariant":325}],325:[function(require,module,exports){
+},{"./invariant":324}],324:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -46033,7 +43581,7 @@ var invariant = function(condition, format, a, b, c, d, e, f) {
 
 module.exports = invariant;
 
-},{}],326:[function(require,module,exports){
+},{}],325:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -46105,7 +43653,7 @@ function isEventSupported(eventNameSuffix, capture) {
 
 module.exports = isEventSupported;
 
-},{"./ExecutionEnvironment":226}],327:[function(require,module,exports){
+},{"./ExecutionEnvironment":225}],326:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -46140,7 +43688,7 @@ function isNode(object) {
 
 module.exports = isNode;
 
-},{}],328:[function(require,module,exports){
+},{}],327:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -46191,7 +43739,7 @@ function isTextInputElement(elem) {
 
 module.exports = isTextInputElement;
 
-},{}],329:[function(require,module,exports){
+},{}],328:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -46223,7 +43771,7 @@ function isTextNode(object) {
 
 module.exports = isTextNode;
 
-},{"./isNode":327}],330:[function(require,module,exports){
+},{"./isNode":326}],329:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -46269,7 +43817,7 @@ function joinClasses(className/*, ... */) {
 
 module.exports = joinClasses;
 
-},{}],331:[function(require,module,exports){
+},{}],330:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -46329,7 +43877,7 @@ var keyMirror = function(obj) {
 
 module.exports = keyMirror;
 
-},{"./invariant":325}],332:[function(require,module,exports){
+},{"./invariant":324}],331:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -46372,7 +43920,7 @@ var keyOf = function(oneKeyObj) {
 
 module.exports = keyOf;
 
-},{}],333:[function(require,module,exports){
+},{}],332:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -46426,7 +43974,7 @@ function mapObject(obj, func, context) {
 
 module.exports = mapObject;
 
-},{}],334:[function(require,module,exports){
+},{}],333:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -46467,7 +44015,7 @@ function memoizeStringOnly(callback) {
 
 module.exports = memoizeStringOnly;
 
-},{}],335:[function(require,module,exports){
+},{}],334:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -46506,7 +44054,7 @@ var merge = function(one, two) {
 
 module.exports = merge;
 
-},{"./mergeInto":337}],336:[function(require,module,exports){
+},{"./mergeInto":336}],335:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -46655,7 +44203,7 @@ var mergeHelpers = {
 
 module.exports = mergeHelpers;
 
-},{"./invariant":325,"./keyMirror":331}],337:[function(require,module,exports){
+},{"./invariant":324,"./keyMirror":330}],336:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -46703,7 +44251,7 @@ function mergeInto(one, two) {
 
 module.exports = mergeInto;
 
-},{"./mergeHelpers":336}],338:[function(require,module,exports){
+},{"./mergeHelpers":335}],337:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -46739,7 +44287,7 @@ var mixInto = function(constructor, methodBag) {
 
 module.exports = mixInto;
 
-},{}],339:[function(require,module,exports){
+},{}],338:[function(require,module,exports){
 /**
  * Copyright 2014 Facebook, Inc.
  *
@@ -46778,7 +44326,7 @@ function monitorCodeUse(eventName, data) {
 
 module.exports = monitorCodeUse;
 
-},{"./invariant":325}],340:[function(require,module,exports){
+},{"./invariant":324}],339:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -46823,7 +44371,7 @@ function onlyChild(children) {
 
 module.exports = onlyChild;
 
-},{"./ReactDescriptor":256,"./invariant":325}],341:[function(require,module,exports){
+},{"./ReactDescriptor":255,"./invariant":324}],340:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -46858,7 +44406,7 @@ if (ExecutionEnvironment.canUseDOM) {
 
 module.exports = performance || {};
 
-},{"./ExecutionEnvironment":226}],342:[function(require,module,exports){
+},{"./ExecutionEnvironment":225}],341:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -46893,7 +44441,7 @@ var performanceNow = performance.now.bind(performance);
 
 module.exports = performanceNow;
 
-},{"./performance":341}],343:[function(require,module,exports){
+},{"./performance":340}],342:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -46980,7 +44528,7 @@ if (ExecutionEnvironment.canUseDOM) {
 
 module.exports = setInnerHTML;
 
-},{"./ExecutionEnvironment":226}],344:[function(require,module,exports){
+},{"./ExecutionEnvironment":225}],343:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -47031,7 +44579,7 @@ function shallowEqual(objA, objB) {
 
 module.exports = shallowEqual;
 
-},{}],345:[function(require,module,exports){
+},{}],344:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -47077,7 +44625,7 @@ function shouldUpdateReactComponent(prevDescriptor, nextDescriptor) {
 
 module.exports = shouldUpdateReactComponent;
 
-},{}],346:[function(require,module,exports){
+},{}],345:[function(require,module,exports){
 /**
  * Copyright 2014 Facebook, Inc.
  *
@@ -47154,7 +44702,7 @@ function toArray(obj) {
 
 module.exports = toArray;
 
-},{"./invariant":325}],347:[function(require,module,exports){
+},{"./invariant":324}],346:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -47349,7 +44897,7 @@ function traverseAllChildren(children, callback, traverseContext) {
 
 module.exports = traverseAllChildren;
 
-},{"./ReactInstanceHandles":264,"./ReactTextComponent":280,"./invariant":325}],348:[function(require,module,exports){
+},{"./ReactInstanceHandles":263,"./ReactTextComponent":279,"./invariant":324}],347:[function(require,module,exports){
 /**
  * Copyright 2014 Facebook, Inc.
  *
@@ -47399,298 +44947,10 @@ if ("production" !== "development") {
 
 module.exports = warning;
 
-},{"./emptyFunction":307}],349:[function(require,module,exports){
+},{"./emptyFunction":306}],348:[function(require,module,exports){
 module.exports = require('./lib/React');
 
-},{"./lib/React":232}],350:[function(require,module,exports){
-module.exports=require(206)
-},{"./focusNode":455,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/AutoFocusMixin.js":206}],351:[function(require,module,exports){
-module.exports=require(207)
-},{"./EventConstants":364,"./EventPropagators":369,"./ExecutionEnvironment":370,"./SyntheticInputEvent":435,"./keyOf":476,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/BeforeInputEventPlugin.js":207}],352:[function(require,module,exports){
-module.exports=require(208)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/CSSProperty.js":208}],353:[function(require,module,exports){
-module.exports=require(209)
-},{"./CSSProperty":352,"./dangerousStyleValue":450,"./hyphenateStyleName":467,"./memoizeStringOnly":478,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/CSSPropertyOperations.js":209}],354:[function(require,module,exports){
-module.exports=require(210)
-},{"./PooledClass":375,"./invariant":469,"./mixInto":482,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/CallbackQueue.js":210}],355:[function(require,module,exports){
-module.exports=require(211)
-},{"./EventConstants":364,"./EventPluginHub":366,"./EventPropagators":369,"./ExecutionEnvironment":370,"./ReactUpdates":425,"./SyntheticEvent":433,"./isEventSupported":470,"./isTextInputElement":472,"./keyOf":476,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ChangeEventPlugin.js":211}],356:[function(require,module,exports){
-module.exports=require(212)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ClientReactRootIndex.js":212}],357:[function(require,module,exports){
-module.exports=require(213)
-},{"./EventConstants":364,"./EventPropagators":369,"./ExecutionEnvironment":370,"./ReactInputSelection":407,"./SyntheticCompositionEvent":431,"./getTextContentAccessor":464,"./keyOf":476,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/CompositionEventPlugin.js":213}],358:[function(require,module,exports){
-module.exports=require(214)
-},{"./Danger":361,"./ReactMultiChildUpdateTypes":412,"./getTextContentAccessor":464,"./invariant":469,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/DOMChildrenOperations.js":214}],359:[function(require,module,exports){
-module.exports=require(215)
-},{"./invariant":469,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/DOMProperty.js":215}],360:[function(require,module,exports){
-module.exports=require(216)
-},{"./DOMProperty":359,"./escapeTextForBrowser":453,"./memoizeStringOnly":478,"./warning":492,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/DOMPropertyOperations.js":216}],361:[function(require,module,exports){
-module.exports=require(217)
-},{"./ExecutionEnvironment":370,"./createNodesFromMarkup":449,"./emptyFunction":451,"./getMarkupWrap":461,"./invariant":469,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/Danger.js":217}],362:[function(require,module,exports){
-module.exports=require(218)
-},{"./keyOf":476,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/DefaultEventPluginOrder.js":218}],363:[function(require,module,exports){
-module.exports=require(219)
-},{"./EventConstants":364,"./EventPropagators":369,"./ReactMount":410,"./SyntheticMouseEvent":437,"./keyOf":476,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/EnterLeaveEventPlugin.js":219}],364:[function(require,module,exports){
-module.exports=require(220)
-},{"./keyMirror":475,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/EventConstants.js":220}],365:[function(require,module,exports){
-module.exports=require(221)
-},{"./emptyFunction":451,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/EventListener.js":221}],366:[function(require,module,exports){
-module.exports=require(222)
-},{"./EventPluginRegistry":367,"./EventPluginUtils":368,"./accumulate":443,"./forEachAccumulated":456,"./invariant":469,"./isEventSupported":470,"./monitorCodeUse":483,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/EventPluginHub.js":222}],367:[function(require,module,exports){
-module.exports=require(223)
-},{"./invariant":469,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/EventPluginRegistry.js":223}],368:[function(require,module,exports){
-module.exports=require(224)
-},{"./EventConstants":364,"./invariant":469,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/EventPluginUtils.js":224}],369:[function(require,module,exports){
-module.exports=require(225)
-},{"./EventConstants":364,"./EventPluginHub":366,"./accumulate":443,"./forEachAccumulated":456,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/EventPropagators.js":225}],370:[function(require,module,exports){
-module.exports=require(226)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ExecutionEnvironment.js":226}],371:[function(require,module,exports){
-module.exports=require(227)
-},{"./DOMProperty":359,"./ExecutionEnvironment":370,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/HTMLDOMPropertyConfig.js":227}],372:[function(require,module,exports){
-module.exports=require(228)
-},{"./ReactPropTypes":418,"./invariant":469,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/LinkedValueUtils.js":228}],373:[function(require,module,exports){
-module.exports=require(229)
-},{"./ReactBrowserEventEmitter":378,"./accumulate":443,"./forEachAccumulated":456,"./invariant":469,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/LocalEventTrapMixin.js":229}],374:[function(require,module,exports){
-module.exports=require(230)
-},{"./EventConstants":364,"./emptyFunction":451,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/MobileSafariClickEventPlugin.js":230}],375:[function(require,module,exports){
-module.exports=require(231)
-},{"./invariant":469,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/PooledClass.js":231}],376:[function(require,module,exports){
-module.exports=require(232)
-},{"./DOMPropertyOperations":360,"./EventPluginUtils":368,"./ExecutionEnvironment":370,"./ReactChildren":379,"./ReactComponent":380,"./ReactCompositeComponent":382,"./ReactContext":383,"./ReactCurrentOwner":384,"./ReactDOM":385,"./ReactDOMComponent":387,"./ReactDefaultInjection":397,"./ReactDescriptor":400,"./ReactInstanceHandles":408,"./ReactMount":410,"./ReactMultiChild":411,"./ReactPerf":414,"./ReactPropTypes":418,"./ReactServerRendering":422,"./ReactTextComponent":424,"./onlyChild":484,"./warning":492,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/React.js":232}],377:[function(require,module,exports){
-module.exports=require(233)
-},{"./ReactEmptyComponent":402,"./ReactMount":410,"./invariant":469,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactBrowserComponentMixin.js":233}],378:[function(require,module,exports){
-module.exports=require(234)
-},{"./EventConstants":364,"./EventPluginHub":366,"./EventPluginRegistry":367,"./ReactEventEmitterMixin":404,"./ViewportMetrics":442,"./isEventSupported":470,"./merge":479,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactBrowserEventEmitter.js":234}],379:[function(require,module,exports){
-module.exports=require(235)
-},{"./PooledClass":375,"./traverseAllChildren":491,"./warning":492,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactChildren.js":235}],380:[function(require,module,exports){
-module.exports=require(236)
-},{"./ReactDescriptor":400,"./ReactOwner":413,"./ReactUpdates":425,"./invariant":469,"./keyMirror":475,"./merge":479,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactComponent.js":236}],381:[function(require,module,exports){
-module.exports=require(237)
-},{"./ReactDOMIDOperations":389,"./ReactMarkupChecksum":409,"./ReactMount":410,"./ReactPerf":414,"./ReactReconcileTransaction":420,"./getReactRootElementInContainer":463,"./invariant":469,"./setInnerHTML":487,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactComponentBrowserEnvironment.js":237}],382:[function(require,module,exports){
-module.exports=require(238)
-},{"./ReactComponent":380,"./ReactContext":383,"./ReactCurrentOwner":384,"./ReactDescriptor":400,"./ReactDescriptorValidator":401,"./ReactEmptyComponent":402,"./ReactErrorUtils":403,"./ReactOwner":413,"./ReactPerf":414,"./ReactPropTransferer":415,"./ReactPropTypeLocationNames":416,"./ReactPropTypeLocations":417,"./ReactUpdates":425,"./instantiateReactComponent":468,"./invariant":469,"./keyMirror":475,"./mapObject":477,"./merge":479,"./mixInto":482,"./monitorCodeUse":483,"./shouldUpdateReactComponent":489,"./warning":492,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactCompositeComponent.js":238}],383:[function(require,module,exports){
-module.exports=require(239)
-},{"./merge":479,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactContext.js":239}],384:[function(require,module,exports){
-module.exports=require(240)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactCurrentOwner.js":240}],385:[function(require,module,exports){
-module.exports=require(241)
-},{"./ReactDOMComponent":387,"./ReactDescriptor":400,"./ReactDescriptorValidator":401,"./mapObject":477,"./mergeInto":481,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactDOM.js":241}],386:[function(require,module,exports){
-module.exports=require(242)
-},{"./AutoFocusMixin":350,"./ReactBrowserComponentMixin":377,"./ReactCompositeComponent":382,"./ReactDOM":385,"./keyMirror":475,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactDOMButton.js":242}],387:[function(require,module,exports){
-module.exports=require(243)
-},{"./CSSPropertyOperations":353,"./DOMProperty":359,"./DOMPropertyOperations":360,"./ReactBrowserComponentMixin":377,"./ReactBrowserEventEmitter":378,"./ReactComponent":380,"./ReactMount":410,"./ReactMultiChild":411,"./ReactPerf":414,"./escapeTextForBrowser":453,"./invariant":469,"./keyOf":476,"./merge":479,"./mixInto":482,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactDOMComponent.js":243}],388:[function(require,module,exports){
-module.exports=require(244)
-},{"./EventConstants":364,"./LocalEventTrapMixin":373,"./ReactBrowserComponentMixin":377,"./ReactCompositeComponent":382,"./ReactDOM":385,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactDOMForm.js":244}],389:[function(require,module,exports){
-module.exports=require(245)
-},{"./CSSPropertyOperations":353,"./DOMChildrenOperations":358,"./DOMPropertyOperations":360,"./ReactMount":410,"./ReactPerf":414,"./invariant":469,"./setInnerHTML":487,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactDOMIDOperations.js":245}],390:[function(require,module,exports){
-module.exports=require(246)
-},{"./EventConstants":364,"./LocalEventTrapMixin":373,"./ReactBrowserComponentMixin":377,"./ReactCompositeComponent":382,"./ReactDOM":385,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactDOMImg.js":246}],391:[function(require,module,exports){
-module.exports=require(247)
-},{"./AutoFocusMixin":350,"./DOMPropertyOperations":360,"./LinkedValueUtils":372,"./ReactBrowserComponentMixin":377,"./ReactCompositeComponent":382,"./ReactDOM":385,"./ReactMount":410,"./invariant":469,"./merge":479,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactDOMInput.js":247}],392:[function(require,module,exports){
-module.exports=require(248)
-},{"./ReactBrowserComponentMixin":377,"./ReactCompositeComponent":382,"./ReactDOM":385,"./warning":492,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactDOMOption.js":248}],393:[function(require,module,exports){
-module.exports=require(249)
-},{"./AutoFocusMixin":350,"./LinkedValueUtils":372,"./ReactBrowserComponentMixin":377,"./ReactCompositeComponent":382,"./ReactDOM":385,"./merge":479,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactDOMSelect.js":249}],394:[function(require,module,exports){
-module.exports=require(250)
-},{"./ExecutionEnvironment":370,"./getNodeForCharacterOffset":462,"./getTextContentAccessor":464,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactDOMSelection.js":250}],395:[function(require,module,exports){
-module.exports=require(251)
-},{"./AutoFocusMixin":350,"./DOMPropertyOperations":360,"./LinkedValueUtils":372,"./ReactBrowserComponentMixin":377,"./ReactCompositeComponent":382,"./ReactDOM":385,"./invariant":469,"./merge":479,"./warning":492,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactDOMTextarea.js":251}],396:[function(require,module,exports){
-module.exports=require(252)
-},{"./ReactUpdates":425,"./Transaction":441,"./emptyFunction":451,"./mixInto":482,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactDefaultBatchingStrategy.js":252}],397:[function(require,module,exports){
-module.exports=require(253)
-},{"./BeforeInputEventPlugin":351,"./ChangeEventPlugin":355,"./ClientReactRootIndex":356,"./CompositionEventPlugin":357,"./DefaultEventPluginOrder":362,"./EnterLeaveEventPlugin":363,"./ExecutionEnvironment":370,"./HTMLDOMPropertyConfig":371,"./MobileSafariClickEventPlugin":374,"./ReactBrowserComponentMixin":377,"./ReactComponentBrowserEnvironment":381,"./ReactDOM":385,"./ReactDOMButton":386,"./ReactDOMForm":388,"./ReactDOMImg":390,"./ReactDOMInput":391,"./ReactDOMOption":392,"./ReactDOMSelect":393,"./ReactDOMTextarea":395,"./ReactDefaultBatchingStrategy":396,"./ReactDefaultPerf":398,"./ReactEventListener":405,"./ReactInjection":406,"./ReactInstanceHandles":408,"./ReactMount":410,"./SVGDOMPropertyConfig":426,"./SelectEventPlugin":427,"./ServerReactRootIndex":428,"./SimpleEventPlugin":429,"./createFullPageComponent":448,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactDefaultInjection.js":253}],398:[function(require,module,exports){
-module.exports=require(254)
-},{"./DOMProperty":359,"./ReactDefaultPerfAnalysis":399,"./ReactMount":410,"./ReactPerf":414,"./performanceNow":486,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactDefaultPerf.js":254}],399:[function(require,module,exports){
-module.exports=require(255)
-},{"./merge":479,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactDefaultPerfAnalysis.js":255}],400:[function(require,module,exports){
-module.exports=require(256)
-},{"./ReactContext":383,"./ReactCurrentOwner":384,"./merge":479,"./warning":492,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactDescriptor.js":256}],401:[function(require,module,exports){
-module.exports=require(257)
-},{"./ReactCurrentOwner":384,"./ReactDescriptor":400,"./ReactPropTypeLocations":417,"./monitorCodeUse":483,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactDescriptorValidator.js":257}],402:[function(require,module,exports){
-module.exports=require(258)
-},{"./invariant":469,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactEmptyComponent.js":258}],403:[function(require,module,exports){
-module.exports=require(259)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactErrorUtils.js":259}],404:[function(require,module,exports){
-module.exports=require(260)
-},{"./EventPluginHub":366,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactEventEmitterMixin.js":260}],405:[function(require,module,exports){
-module.exports=require(261)
-},{"./EventListener":365,"./ExecutionEnvironment":370,"./PooledClass":375,"./ReactInstanceHandles":408,"./ReactMount":410,"./ReactUpdates":425,"./getEventTarget":460,"./getUnboundedScrollPosition":465,"./mixInto":482,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactEventListener.js":261}],406:[function(require,module,exports){
-module.exports=require(262)
-},{"./DOMProperty":359,"./EventPluginHub":366,"./ReactBrowserEventEmitter":378,"./ReactComponent":380,"./ReactCompositeComponent":382,"./ReactDOM":385,"./ReactEmptyComponent":402,"./ReactPerf":414,"./ReactRootIndex":421,"./ReactUpdates":425,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactInjection.js":262}],407:[function(require,module,exports){
-module.exports=require(263)
-},{"./ReactDOMSelection":394,"./containsNode":445,"./focusNode":455,"./getActiveElement":457,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactInputSelection.js":263}],408:[function(require,module,exports){
-module.exports=require(264)
-},{"./ReactRootIndex":421,"./invariant":469,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactInstanceHandles.js":264}],409:[function(require,module,exports){
-module.exports=require(265)
-},{"./adler32":444,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactMarkupChecksum.js":265}],410:[function(require,module,exports){
-module.exports=require(266)
-},{"./DOMProperty":359,"./ReactBrowserEventEmitter":378,"./ReactCurrentOwner":384,"./ReactDescriptor":400,"./ReactInstanceHandles":408,"./ReactPerf":414,"./containsNode":445,"./getReactRootElementInContainer":463,"./instantiateReactComponent":468,"./invariant":469,"./shouldUpdateReactComponent":489,"./warning":492,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactMount.js":266}],411:[function(require,module,exports){
-module.exports=require(267)
-},{"./ReactComponent":380,"./ReactMultiChildUpdateTypes":412,"./flattenChildren":454,"./instantiateReactComponent":468,"./shouldUpdateReactComponent":489,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactMultiChild.js":267}],412:[function(require,module,exports){
-module.exports=require(268)
-},{"./keyMirror":475,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactMultiChildUpdateTypes.js":268}],413:[function(require,module,exports){
-module.exports=require(269)
-},{"./emptyObject":452,"./invariant":469,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactOwner.js":269}],414:[function(require,module,exports){
-module.exports=require(270)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactPerf.js":270}],415:[function(require,module,exports){
-module.exports=require(271)
-},{"./emptyFunction":451,"./invariant":469,"./joinClasses":474,"./merge":479,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactPropTransferer.js":271}],416:[function(require,module,exports){
-module.exports=require(272)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactPropTypeLocationNames.js":272}],417:[function(require,module,exports){
-module.exports=require(273)
-},{"./keyMirror":475,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactPropTypeLocations.js":273}],418:[function(require,module,exports){
-module.exports=require(274)
-},{"./ReactDescriptor":400,"./ReactPropTypeLocationNames":416,"./emptyFunction":451,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactPropTypes.js":274}],419:[function(require,module,exports){
-module.exports=require(275)
-},{"./PooledClass":375,"./ReactBrowserEventEmitter":378,"./mixInto":482,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactPutListenerQueue.js":275}],420:[function(require,module,exports){
-module.exports=require(276)
-},{"./CallbackQueue":354,"./PooledClass":375,"./ReactBrowserEventEmitter":378,"./ReactInputSelection":407,"./ReactPutListenerQueue":419,"./Transaction":441,"./mixInto":482,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactReconcileTransaction.js":276}],421:[function(require,module,exports){
-module.exports=require(277)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactRootIndex.js":277}],422:[function(require,module,exports){
-module.exports=require(278)
-},{"./ReactDescriptor":400,"./ReactInstanceHandles":408,"./ReactMarkupChecksum":409,"./ReactServerRenderingTransaction":423,"./instantiateReactComponent":468,"./invariant":469,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactServerRendering.js":278}],423:[function(require,module,exports){
-module.exports=require(279)
-},{"./CallbackQueue":354,"./PooledClass":375,"./ReactPutListenerQueue":419,"./Transaction":441,"./emptyFunction":451,"./mixInto":482,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactServerRenderingTransaction.js":279}],424:[function(require,module,exports){
-module.exports=require(280)
-},{"./DOMPropertyOperations":360,"./ReactBrowserComponentMixin":377,"./ReactComponent":380,"./ReactDescriptor":400,"./escapeTextForBrowser":453,"./mixInto":482,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactTextComponent.js":280}],425:[function(require,module,exports){
-module.exports=require(281)
-},{"./CallbackQueue":354,"./PooledClass":375,"./ReactCurrentOwner":384,"./ReactPerf":414,"./Transaction":441,"./invariant":469,"./mixInto":482,"./warning":492,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ReactUpdates.js":281}],426:[function(require,module,exports){
-module.exports=require(282)
-},{"./DOMProperty":359,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/SVGDOMPropertyConfig.js":282}],427:[function(require,module,exports){
-module.exports=require(283)
-},{"./EventConstants":364,"./EventPropagators":369,"./ReactInputSelection":407,"./SyntheticEvent":433,"./getActiveElement":457,"./isTextInputElement":472,"./keyOf":476,"./shallowEqual":488,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/SelectEventPlugin.js":283}],428:[function(require,module,exports){
-module.exports=require(284)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ServerReactRootIndex.js":284}],429:[function(require,module,exports){
-module.exports=require(285)
-},{"./EventConstants":364,"./EventPluginUtils":368,"./EventPropagators":369,"./SyntheticClipboardEvent":430,"./SyntheticDragEvent":432,"./SyntheticEvent":433,"./SyntheticFocusEvent":434,"./SyntheticKeyboardEvent":436,"./SyntheticMouseEvent":437,"./SyntheticTouchEvent":438,"./SyntheticUIEvent":439,"./SyntheticWheelEvent":440,"./invariant":469,"./keyOf":476,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/SimpleEventPlugin.js":285}],430:[function(require,module,exports){
-module.exports=require(286)
-},{"./SyntheticEvent":433,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/SyntheticClipboardEvent.js":286}],431:[function(require,module,exports){
-module.exports=require(287)
-},{"./SyntheticEvent":433,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/SyntheticCompositionEvent.js":287}],432:[function(require,module,exports){
-module.exports=require(288)
-},{"./SyntheticMouseEvent":437,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/SyntheticDragEvent.js":288}],433:[function(require,module,exports){
-module.exports=require(289)
-},{"./PooledClass":375,"./emptyFunction":451,"./getEventTarget":460,"./merge":479,"./mergeInto":481,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/SyntheticEvent.js":289}],434:[function(require,module,exports){
-module.exports=require(290)
-},{"./SyntheticUIEvent":439,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/SyntheticFocusEvent.js":290}],435:[function(require,module,exports){
-module.exports=require(291)
-},{"./SyntheticEvent":433,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/SyntheticInputEvent.js":291}],436:[function(require,module,exports){
-module.exports=require(292)
-},{"./SyntheticUIEvent":439,"./getEventKey":458,"./getEventModifierState":459,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/SyntheticKeyboardEvent.js":292}],437:[function(require,module,exports){
-module.exports=require(293)
-},{"./SyntheticUIEvent":439,"./ViewportMetrics":442,"./getEventModifierState":459,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/SyntheticMouseEvent.js":293}],438:[function(require,module,exports){
-module.exports=require(294)
-},{"./SyntheticUIEvent":439,"./getEventModifierState":459,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/SyntheticTouchEvent.js":294}],439:[function(require,module,exports){
-module.exports=require(295)
-},{"./SyntheticEvent":433,"./getEventTarget":460,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/SyntheticUIEvent.js":295}],440:[function(require,module,exports){
-module.exports=require(296)
-},{"./SyntheticMouseEvent":437,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/SyntheticWheelEvent.js":296}],441:[function(require,module,exports){
-module.exports=require(297)
-},{"./invariant":469,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/Transaction.js":297}],442:[function(require,module,exports){
-module.exports=require(298)
-},{"./getUnboundedScrollPosition":465,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/ViewportMetrics.js":298}],443:[function(require,module,exports){
-module.exports=require(299)
-},{"./invariant":469,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/accumulate.js":299}],444:[function(require,module,exports){
-module.exports=require(300)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/adler32.js":300}],445:[function(require,module,exports){
-module.exports=require(301)
-},{"./isTextNode":473,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/containsNode.js":301}],446:[function(require,module,exports){
-module.exports=require(302)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/copyProperties.js":302}],447:[function(require,module,exports){
-module.exports=require(303)
-},{"./toArray":490,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/createArrayFrom.js":303}],448:[function(require,module,exports){
-module.exports=require(304)
-},{"./ReactCompositeComponent":382,"./invariant":469,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/createFullPageComponent.js":304}],449:[function(require,module,exports){
-module.exports=require(305)
-},{"./ExecutionEnvironment":370,"./createArrayFrom":447,"./getMarkupWrap":461,"./invariant":469,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/createNodesFromMarkup.js":305}],450:[function(require,module,exports){
-module.exports=require(306)
-},{"./CSSProperty":352,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/dangerousStyleValue.js":306}],451:[function(require,module,exports){
-module.exports=require(307)
-},{"./copyProperties":446,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/emptyFunction.js":307}],452:[function(require,module,exports){
-module.exports=require(308)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/emptyObject.js":308}],453:[function(require,module,exports){
-module.exports=require(309)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/escapeTextForBrowser.js":309}],454:[function(require,module,exports){
-module.exports=require(310)
-},{"./traverseAllChildren":491,"./warning":492,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/flattenChildren.js":310}],455:[function(require,module,exports){
-module.exports=require(311)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/focusNode.js":311}],456:[function(require,module,exports){
-module.exports=require(312)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/forEachAccumulated.js":312}],457:[function(require,module,exports){
-module.exports=require(313)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/getActiveElement.js":313}],458:[function(require,module,exports){
-module.exports=require(314)
-},{"./invariant":469,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/getEventKey.js":314}],459:[function(require,module,exports){
-module.exports=require(315)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/getEventModifierState.js":315}],460:[function(require,module,exports){
-module.exports=require(316)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/getEventTarget.js":316}],461:[function(require,module,exports){
-module.exports=require(317)
-},{"./ExecutionEnvironment":370,"./invariant":469,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/getMarkupWrap.js":317}],462:[function(require,module,exports){
-module.exports=require(318)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/getNodeForCharacterOffset.js":318}],463:[function(require,module,exports){
-module.exports=require(319)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/getReactRootElementInContainer.js":319}],464:[function(require,module,exports){
-module.exports=require(320)
-},{"./ExecutionEnvironment":370,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/getTextContentAccessor.js":320}],465:[function(require,module,exports){
-module.exports=require(321)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/getUnboundedScrollPosition.js":321}],466:[function(require,module,exports){
-module.exports=require(322)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/hyphenate.js":322}],467:[function(require,module,exports){
-module.exports=require(323)
-},{"./hyphenate":466,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/hyphenateStyleName.js":323}],468:[function(require,module,exports){
-module.exports=require(324)
-},{"./invariant":469,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/instantiateReactComponent.js":324}],469:[function(require,module,exports){
-module.exports=require(325)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/invariant.js":325}],470:[function(require,module,exports){
-module.exports=require(326)
-},{"./ExecutionEnvironment":370,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/isEventSupported.js":326}],471:[function(require,module,exports){
-module.exports=require(327)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/isNode.js":327}],472:[function(require,module,exports){
-module.exports=require(328)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/isTextInputElement.js":328}],473:[function(require,module,exports){
-module.exports=require(329)
-},{"./isNode":471,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/isTextNode.js":329}],474:[function(require,module,exports){
-module.exports=require(330)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/joinClasses.js":330}],475:[function(require,module,exports){
-module.exports=require(331)
-},{"./invariant":469,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/keyMirror.js":331}],476:[function(require,module,exports){
-module.exports=require(332)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/keyOf.js":332}],477:[function(require,module,exports){
-module.exports=require(333)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/mapObject.js":333}],478:[function(require,module,exports){
-module.exports=require(334)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/memoizeStringOnly.js":334}],479:[function(require,module,exports){
-module.exports=require(335)
-},{"./mergeInto":481,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/merge.js":335}],480:[function(require,module,exports){
-module.exports=require(336)
-},{"./invariant":469,"./keyMirror":475,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/mergeHelpers.js":336}],481:[function(require,module,exports){
-module.exports=require(337)
-},{"./mergeHelpers":480,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/mergeInto.js":337}],482:[function(require,module,exports){
-module.exports=require(338)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/mixInto.js":338}],483:[function(require,module,exports){
-module.exports=require(339)
-},{"./invariant":469,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/monitorCodeUse.js":339}],484:[function(require,module,exports){
-module.exports=require(340)
-},{"./ReactDescriptor":400,"./invariant":469,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/onlyChild.js":340}],485:[function(require,module,exports){
-module.exports=require(341)
-},{"./ExecutionEnvironment":370,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/performance.js":341}],486:[function(require,module,exports){
-module.exports=require(342)
-},{"./performance":485,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/performanceNow.js":342}],487:[function(require,module,exports){
-module.exports=require(343)
-},{"./ExecutionEnvironment":370,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/setInnerHTML.js":343}],488:[function(require,module,exports){
-module.exports=require(344)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/shallowEqual.js":344}],489:[function(require,module,exports){
-module.exports=require(345)
-},{"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/shouldUpdateReactComponent.js":345}],490:[function(require,module,exports){
-module.exports=require(346)
-},{"./invariant":469,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/toArray.js":346}],491:[function(require,module,exports){
-module.exports=require(347)
-},{"./ReactInstanceHandles":408,"./ReactTextComponent":424,"./invariant":469,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/traverseAllChildren.js":347}],492:[function(require,module,exports){
-module.exports=require(348)
-},{"./emptyFunction":451,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/lib/warning.js":348}],493:[function(require,module,exports){
-module.exports=require(349)
-},{"./lib/React":376,"/Users/mikaelbrevik/Sites/repos/omniscientjs.github.io/node_modules/omniscient/node_modules/react/react.js":349}],494:[function(require,module,exports){
+},{"./lib/React":231}],349:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -47718,7 +44978,7 @@ var Link = React.createClass({displayName: 'Link',
 
 module.exports = Link;
 
-},{"./LinkMixin":495,"react":493}],495:[function(require,module,exports){
+},{"./LinkMixin":350,"react":348}],350:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -47767,7 +45027,7 @@ var LinkMixin = {
 
 module.exports = LinkMixin;
 
-},{"./RoutingContextMixin":496,"./invariant":505,"react":493}],496:[function(require,module,exports){
+},{"./RoutingContextMixin":351,"./invariant":360,"react":348}],351:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -47828,7 +45088,7 @@ var RoutingContextMixin = {
 
 module.exports = RoutingContextMixin;
 
-},{"./invariant":505,"react":493}],497:[function(require,module,exports){
+},{"./invariant":360,"react":348}],352:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -47887,7 +45147,7 @@ function copyProperties(obj, a, b, c, d, e, f) {
 module.exports = copyProperties;
 
 }).call(this,require('_process'))
-},{"_process":69}],498:[function(require,module,exports){
+},{"_process":69}],353:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -47966,7 +45226,7 @@ function createView(match) {
 module.exports = createView;
 module.exports.getViewProps = getViewProps;
 
-},{"./getStepProps":503,"./invariant":505,"./merge":510}],499:[function(require,module,exports){
+},{"./getStepProps":358,"./invariant":360,"./merge":365}],354:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -48108,7 +45368,7 @@ module.exports = {
   fetchProps:fetchProps
 };
 
-},{"./emptyFunction":501,"./getStepProps":503,"./merge":510,"bluebird":24}],500:[function(require,module,exports){
+},{"./emptyFunction":356,"./getStepProps":358,"./merge":365,"bluebird":24}],355:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -48226,7 +45486,7 @@ module.exports = {
   hasView:hasView
 };
 
-},{"./merge":510}],501:[function(require,module,exports){
+},{"./merge":365}],356:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -48272,7 +45532,7 @@ copyProperties(emptyFunction, {
 
 module.exports = emptyFunction;
 
-},{"./copyProperties":497}],502:[function(require,module,exports){
+},{"./copyProperties":352}],357:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -48304,7 +45564,7 @@ function fetchViews(match) {
 
 module.exports = fetchViews;
 
-},{"./merge":510,"bluebird":24}],503:[function(require,module,exports){
+},{"./merge":365,"bluebird":24}],358:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -48322,7 +45582,7 @@ function getStepProps(step) {
 
 module.exports = getStepProps;
 
-},{"./mergeInto":512}],504:[function(require,module,exports){
+},{"./mergeInto":367}],359:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -48355,7 +45615,7 @@ module.exports = {
   RoutingContextMixin:RoutingContextMixin
 };
 
-},{"./Link":494,"./LinkMixin":495,"./RoutingContextMixin":496,"./createView":498,"./data":499,"./descriptors":500,"./matchRoutes":509,"./route":513,"./routing/HashRouting":514,"./routing/PathnameRouting":515}],505:[function(require,module,exports){
+},{"./Link":349,"./LinkMixin":350,"./RoutingContextMixin":351,"./createView":353,"./data":354,"./descriptors":355,"./matchRoutes":364,"./route":368,"./routing/HashRouting":369,"./routing/PathnameRouting":370}],360:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014 Facebook, Inc.
@@ -48421,7 +45681,7 @@ if (process.env.NODE_ENV !== 'production') {
 module.exports = invariant;
 
 }).call(this,require('_process'))
-},{"_process":69}],506:[function(require,module,exports){
+},{"_process":69}],361:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -48433,7 +45693,7 @@ function isString(o) {
 
 module.exports = isString;
 
-},{}],507:[function(require,module,exports){
+},{}],362:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -48493,7 +45753,7 @@ var keyMirror = function(obj) {
 
 module.exports = keyMirror;
 
-},{"./invariant":505}],508:[function(require,module,exports){
+},{"./invariant":360}],363:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -48554,7 +45814,7 @@ function getScopedTrace(routes, name, match) {
 module.exports = makeHref;
 module.exports.getPattern = getPattern;
 
-},{"./descriptors":500,"./invariant":505}],509:[function(require,module,exports){
+},{"./descriptors":355,"./invariant":360}],364:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -48682,7 +45942,7 @@ function matchRoutes(routes, path, query) {
 
 module.exports = matchRoutes;
 
-},{"./descriptors":500,"./isString":506,"qs":517,"url-pattern":518}],510:[function(require,module,exports){
+},{"./descriptors":355,"./isString":361,"qs":372,"url-pattern":373}],365:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -48721,7 +45981,7 @@ var merge = function(one, two) {
 
 module.exports = merge;
 
-},{"./mergeInto":512}],511:[function(require,module,exports){
+},{"./mergeInto":367}],366:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -48859,7 +46119,7 @@ var mergeHelpers = {
 
 module.exports = mergeHelpers;
 
-},{"./invariant":505,"./keyMirror":507}],512:[function(require,module,exports){
+},{"./invariant":360,"./keyMirror":362}],367:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -48906,7 +46166,7 @@ function mergeInto(one, two) {
 
 module.exports = mergeInto;
 
-},{"./mergeHelpers":511}],513:[function(require,module,exports){
+},{"./mergeHelpers":366}],368:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -48936,7 +46196,7 @@ function route(routes, path, query) {
 
 module.exports = route;
 
-},{"./createView":498,"./data":499,"./fetchViews":502,"./matchRoutes":509,"bluebird":24,"react":493}],514:[function(require,module,exports){
+},{"./createView":353,"./data":354,"./fetchViews":357,"./matchRoutes":364,"bluebird":24,"react":348}],369:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -48988,7 +46248,7 @@ for(var Routing____Key in Routing){if(Routing.hasOwnProperty(Routing____Key)){Ha
 
 module.exports = HashRouting;
 
-},{"./Routing":516}],515:[function(require,module,exports){
+},{"./Routing":371}],370:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -49025,7 +46285,7 @@ for(var Routing____Key in Routing){if(Routing.hasOwnProperty(Routing____Key)){Pa
 
 module.exports = PathnameRouting;
 
-},{"./Routing":516}],516:[function(require,module,exports){
+},{"./Routing":371}],371:[function(require,module,exports){
 /**
  * @jsx React.DOM
  */
@@ -49154,7 +46414,7 @@ function throwError(err) {
 
 module.exports = Routing;
 
-},{"../createView":498,"../data":499,"../fetchViews":502,"../makeHref":508,"../matchRoutes":509,"qs":517,"react":493}],517:[function(require,module,exports){
+},{"../createView":353,"../data":354,"../fetchViews":357,"../makeHref":363,"../matchRoutes":364,"qs":372,"react":348}],372:[function(require,module,exports){
 /**
  * Object#toString() ref for stringify().
  */
@@ -49522,7 +46782,7 @@ function decode(str) {
   }
 }
 
-},{}],518:[function(require,module,exports){
+},{}],373:[function(require,module,exports){
 // Generated by CoffeeScript 1.7.1
 var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 

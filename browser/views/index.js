@@ -6,7 +6,7 @@ var Header = require('./header');
 var marked = require('marked');
 
 module.exports = component(function (routeProps) {
-  var cursor = routeProps.data.cursor();
+  var cursor = routeProps.cursor.cursor();
 
   return React.DOM.div({},
     Header(),

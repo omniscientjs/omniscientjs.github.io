@@ -1,3 +1,4 @@
+var React = require('react');
 var component = require('omniscient');
 
 var highlight = require('highlight.js');
@@ -26,7 +27,11 @@ var StructureView = component(preventUpdateMixin, function (cursor, statics) {
   }
 
   cursor = statics.structure.cursor();
-  statics.structure && statics.structure.once('swap', this.forceUpdate.bind(this));
+  statics.structure && statics.structure.once('swap', function () {
+    if (this.isMounted()) {
+      this.forceUpdate()
+    }
+  }.bind(this));
 
   var data = JSON.stringify(cursor.toJSON(), null, 2);
 
@@ -52,7 +57,6 @@ var Example = component([preventUpdateMixin, exampleMixin], function (example) {
   var structure = example.get('structure');
   var cursor = structure ? structure.cursor() : null;
   var name = example.get('name');
-
   var link = githubBaseUrl + name;
 
   return React.DOM.div({ key: name },
@@ -73,7 +77,8 @@ var Example = component([preventUpdateMixin, exampleMixin], function (example) {
 });
 
 module.exports = component(function (routeProps) {
-  var examples = routeProps.data.cursor('examples').toArray().map(Example);
+
+  var examples = routeProps.cursor.cursor().get('examples').toArray().map(Example);
 
   return React.DOM.div({},
     Header(),

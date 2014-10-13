@@ -9,8 +9,15 @@ var loadContentToCursor = require('../lib/loadContentToCursor');
 var doc = 'documentation';
 
 module.exports = component(function (routeProps) {
-  var cursor = routeProps.data.cursor();
+  var structure = routeProps.cursor;
+  var cursor = structure.cursor();
   var documentation = cursor.get('documentation');
+
+  structure.once('swap', function () {
+    if (this.isMounted()) {
+      this.forceUpdate()
+    }
+  }.bind(this));
 
   var content;
   if (!documentation) {

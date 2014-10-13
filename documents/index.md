@@ -8,6 +8,14 @@ Omniscient.js
 the cursors of [Om](https://github.com/swannodette/om), for js, using
 [Immutable.js](https://github.com/facebook/immutable-js).
 
+
+### Get latest stable version `1.1.0` by using NPM
+
+```
+$ npm install --save omniscient
+```
+---
+
 ```js
 var React     = require('react'),
     immstruct = require('immstruct'),

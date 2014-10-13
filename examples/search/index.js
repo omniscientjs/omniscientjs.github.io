@@ -4,7 +4,7 @@ var React     = require('react'),
 
 var d = React.DOM;
 
-var SearchBox = component(function (cursor) {
+var SearchBox = component(function (cursor) {
   function onChange (e) {
     cursor.update('search', function (currentSearch) {
       return e.currentTarget.value;
@@ -61,7 +61,7 @@ var structure = immstruct({
 
 module.exports.name = 'search';
 module.exports.structure = structure;
-module.exports.init = function (el) {
+module.exports.init = function (el) {
   render();
   structure.on('swap', render);
 

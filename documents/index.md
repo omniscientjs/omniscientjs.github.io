@@ -59,7 +59,7 @@ structure.on('swap', render);
 
 ### Reuseable mixins
 
-Omniscient is fully compatible with exising react components, and encourages reuse of your existing mixins.
+Omniscient is fully compatible with exising React components, and encourages reuse of your existing mixins.
 
 ```js
 var SelectOnRender = {
@@ -145,7 +145,7 @@ var List = component(function (cursor) {
 
 ### State
 
-Omniscient allows for component local state. That is, all the usual react component methods are available on `this` for use through mixins. You are free to `this.setState({ .. })` for component local view state.
+Omniscient allows for component local state. That is, all the usual React component methods are available on `this` for use through mixins. You are free to `this.setState({ .. })` for component local view state.
 
 ### Providing component keys
 

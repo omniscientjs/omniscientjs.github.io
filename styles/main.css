@@ -37,7 +37,8 @@ ul {
 
 .header-container a:hover {
   background: #e7e7e7;
-  transition: all ease-in-out 200ms;
+  -webkit-transition: all ease-in-out 200ms;
+          transition: all ease-in-out 200ms;
 }
 
 .header-container .logo-bit {
@@ -70,8 +71,17 @@ header,
   list-style: none;
   height: 40px;
 
+  display: -webkit-box;
+
+  display: -webkit-flex;
+
+  display: -ms-flexbox;
+
   display: flex;
-  align-items: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
 
   position: relative;
 }
@@ -221,7 +231,8 @@ h1 code, h2 code, h3 code, p code, li code {
   color: #555;
   text-shadow: 0 -1px 0 #222;
   font-weight: bold;
-  transition: all ease-in-out 300ms;
+  -webkit-transition: all ease-in-out 300ms;
+          transition: all ease-in-out 300ms;
 }
 .link-example:hover {
   color: #222;

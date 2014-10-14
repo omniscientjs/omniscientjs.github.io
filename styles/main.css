@@ -265,6 +265,12 @@ h1 code, h2 code, h3 code, p code, li code {
     font-size: 14px;
   }
 
+  header,
+  .content-container {
+    width: 95%;
+  }
+
+
   .link-github {
     display: none;
   }

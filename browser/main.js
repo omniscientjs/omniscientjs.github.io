@@ -1,3 +1,5 @@
+require('./lib/orientationbug');
+
 var fs = require('fs');
 
 var immstruct = require('immstruct');

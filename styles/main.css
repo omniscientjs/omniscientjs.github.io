@@ -6,6 +6,8 @@
      box-sizing: border-box;
 }
 
+html, body {-webkit-text-size-adjust: 100%;}
+
 body {
   font-size: 19px;
   font-family: 'Source Sans Pro', sans-serif;
@@ -308,6 +310,11 @@ h1 code, h2 code, h3 code, p code, li code {
 
 
 /* Helpers */
+
+.clickable {
+  cursor: pointer;
+}
+
 .cf:before,
 .cf:after {
     content: " "; /* 1 */

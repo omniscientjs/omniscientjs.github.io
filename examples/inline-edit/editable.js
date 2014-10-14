@@ -32,5 +32,5 @@ module.exports = component(EditMixin, function (cursor) {
                   FocusingInput(cursor, { onChange: this.onChange }),
                   d.span({}, " ", d.button({}, 'done')));
   }
-  return d.span({ onClick: this.onEdit }, cursor.get('text'));
+  return d.span({ onClick: this.onEdit, className: 'clickable' }, cursor.get('text'));
 });

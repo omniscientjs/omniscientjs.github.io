@@ -8,6 +8,10 @@ Omniscient.js
 the cursors of [Om](https://github.com/swannodette/om), for js, using
 [Immutable.js](https://github.com/facebook/immutable-js).
 
+<div class="github-badges">
+  <iframe src="http://ghbtns.com/github-btn.html?user=omniscientjs&repo=omniscient&type=watch&count=true&size=large" allowtransparency="true" frameborder="0" scrolling="0" width="140" height="30"></iframe>
+  <iframe src="http://ghbtns.com/github-btn.html?user=omniscientjs&repo=omniscient&type=fork&count=true&size=large" allowtransparency="true" frameborder="0" scrolling="0" width="140" height="30"></iframe>
+</div>
 
 ### Get latest stable version `1.1.0` by using NPM
 

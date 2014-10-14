@@ -57,12 +57,14 @@ ul {
 }
 
 header,
-.content-container {
+.content-container,
+.github-badges {
   width: 80%;
   max-width: 900px;
 
   margin: 0 auto;
 }
+
 /** // Header **/
 
 
@@ -117,12 +119,21 @@ header,
 /** Content **/
 .page-container {
   overflow: hidden;
+  margin-bottom: 30px;
+}
 
+.github-badges {
+  text-align: center;
   margin-bottom: 100px;
 }
 
 .content-container {
   line-height: 1.7em;
+}
+
+.content-container .github-badges {
+  width: 100%;
+  margin: 50px 0;
 }
 
 .content-container h1 {

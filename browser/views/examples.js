@@ -69,8 +69,8 @@ var Example = component([preventUpdateMixin, exampleMixin], function (example) {
     ),
     React.DOM.div({ className: 'example-container' },
       React.DOM.div({ className: 'example-wrapper cf' },
-        StructureView(cursor, { structure: structure }),
-        React.DOM.div({ className: 'example-box' })
+        React.DOM.div({ className: 'example-box' }),
+        StructureView(cursor, { structure: structure })
       )
     )
   );

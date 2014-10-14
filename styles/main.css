@@ -89,6 +89,7 @@ header,
 .navigation .link-github {
   position: absolute;
   right: 0;
+  top: 0;
 }
 
 /** // Navigation **/

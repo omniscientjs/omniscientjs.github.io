@@ -2,11 +2,13 @@ Omniscient.js
 =========
 
 <img src="https://raw.githubusercontent.com/omniscientjs/omniscient/master/omniscient_logo.png" align="right" width="150px">
-> A library providing an abstraction for React components that allows for top-down rendering of immutable data. Using cursors into immutable datastructures the nested components does not need knowledge of the entire immutable data structure, but are still capable of swapping out their own piece of data to trigger a re render of affected components.
+> A library providing an abstraction for React components that allows for fast top-down rendering embracing immutable data. Using cursors into immutable data structures, nested components does not need knowledge of a global data structure, but are still capable of swapping out their own piece of data inside the larger immutable data structure and trigger a re-render. As data is immutable, re-rendering can be fast.
 
 > Omniscient pairs the simplicity of [Quiescent](https://github.com/levand/quiescent) with
 the cursors of [Om](https://github.com/swannodette/om), for js, using
 [Immutable.js](https://github.com/facebook/immutable-js).
+
+See [documentation](/documentation) for more details.
 
 <div class="github-badges">
   <iframe src="http://ghbtns.com/github-btn.html?user=omniscientjs&repo=omniscient&type=watch&count=true&size=large" allowtransparency="true" frameborder="0" scrolling="0" width="140" height="30"></iframe>

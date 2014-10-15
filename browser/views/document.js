@@ -6,7 +6,20 @@ var loadContentToCursor = require('../lib/loadContentToCursor');
 
 var Header = require('./header');
 
-module.exports = component(function (cursor) {
+var HashChange = {
+  reloadHashChange: function () {
+    setTimeout(function () {
+      var hash = location.hash;
+      var hasHash = hash.length > 1;
+      if (hasHash) {
+        location.hash = "#";
+        location.hash = hash;
+      }
+    }, 0);
+  }
+};
+
+module.exports = component(HashChange, function (cursor) {
   var pageData = cursor.get('content');
 
   var content;
@@ -19,6 +32,8 @@ module.exports = component(function (cursor) {
         __html:marked(pageData)
       }
     });
+
+    this.reloadHashChange();
   }
 
   return React.DOM.div({}, content);

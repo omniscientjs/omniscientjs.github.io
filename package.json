@@ -29,11 +29,18 @@
   },
   "browserify": {
     "transform": [
+      [
+        "reactify",
+        {
+          "es6": true
+        }
+      ],
       "brfs"
     ]
   },
   "devDependencies": {
     "brfs": "^1.2.0",
-    "browserify": "^6.0.3"
+    "browserify": "^6.0.3",
+    "reactify": "^0.14.0"
   }
 }

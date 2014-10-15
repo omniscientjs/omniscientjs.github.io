@@ -26,6 +26,7 @@ var structure = immstruct('global', {
     require('../examples/welcome'),
     require('../examples/entry-list'),
     require('../examples/events'),
+    require('../examples/jsx-todo'),
     require('../examples/inline-edit'),
     require('../examples/search')
   ]

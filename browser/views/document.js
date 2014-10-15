@@ -6,20 +6,14 @@ var loadContentToCursor = require('../lib/loadContentToCursor');
 
 var Header = require('./header');
 
-var HashChange = {
-  reloadHashChange: function () {
-    setTimeout(function () {
-      var hash = location.hash;
-      var hasHash = hash.length > 1;
-      if (hasHash) {
-        location.hash = "#";
-        location.hash = hash;
-      }
-    }, 0);
-  }
-};
+var Promise = require('bluebird');
 
-module.exports = component(HashChange, function (cursor) {
+var mounted = defer();
+var docs = defer();
+
+var DidMount = { componentDidUpdate: mounted.resolve };
+
+module.exports = component(DidMount, function (cursor) {
   var pageData = cursor.get('content');
 
   var content;
@@ -32,9 +26,49 @@ module.exports = component(HashChange, function (cursor) {
         __html:marked(pageData)
       }
     });
-
-    this.reloadHashChange();
+    docs.resolve();
   }
 
   return React.DOM.div({}, content);
 });
+
+Promise
+  .all([mounted.promise, docs.promise])
+  .then(function () {
+    var hash = location.hash;
+    if (hash.length == 1) return;
+
+    var el = document.querySelector(hash);
+    if (!el) return;
+
+    setTimeout(function () {
+      var pos = findPos(el).top;
+      document.body.scrollTop = pos - 50; // slightly less
+    }, 0);
+  });
+
+
+function findPos (obj) {
+  var curtop = 0, curleft = 0;
+  if (obj.offsetParent) {
+    do {
+      curleft += obj.offsetLeft;
+      curtop += obj.offsetTop;
+    } while (obj = obj.offsetParent);
+  }
+  return { left: curleft, top: curtop };
+}
+
+// seriously? https://github.com/petkaantonov/bluebird/blob/master/API.md#deferred-migration
+function defer() {
+    var resolve, reject;
+    var promise = new Promise(function() {
+        resolve = arguments[0];
+        reject = arguments[1];
+    });
+    return {
+        resolve: resolve,
+        reject: reject,
+        promise: promise
+    };
+}

@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/omniscientjs/omniscientjs.github.io",
   "dependencies": {
+    "bluebird": "^2.3.5",
     "highlight.js": "^8.3.0",
     "immstruct": "^0.8.2",
     "immutable": "^2.3.0",

@@ -1,17 +1,12 @@
 var component = require('omniscient');
 var React = require('react');
-
 var Header = require('./header');
-var marked = require('marked');
 
-var loadContentToCursor = require('../lib/loadContentToCursor');
-
-var doc = 'documentation';
+var Document = require('./document');
 
 module.exports = component(function (routeProps) {
   var structure = routeProps.cursor;
-  var cursor = structure.cursor();
-  var documentation = cursor.get(doc);
+  var cursor = structure.cursor(['pages', 'documentation']);
 
   structure.once('swap', function () {
     if (this.isMounted()) {
@@ -19,22 +14,10 @@ module.exports = component(function (routeProps) {
     }
   }.bind(this));
 
-  var content;
-  if (!documentation) {
-    loadContentToCursor(doc, cursor);
-    content = React.DOM.p(null, 'Loading documentation...');
-  } else {
-    content = React.DOM.div({
-      dangerouslySetInnerHTML: {
-        __html:marked(documentation)
-      }
-    });
-  }
-
   return React.DOM.div({},
     Header(),
     React.DOM.div({ className: 'content-container' },
-      content
+      Document(cursor)
     )
   );
 });

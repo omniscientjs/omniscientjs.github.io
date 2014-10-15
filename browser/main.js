@@ -17,8 +17,10 @@ var RRouter = require('rrouter'),
     Route   = RRouter.Route;
 
 var structure = immstruct('global', {
-  index: fs.readFileSync(__dirname + '/../documents/index.md', 'utf-8'),
-  documentation: null,
+  pages: {
+    'index':         { doc: 'index', 'load-message': 'Loading Omniscient introduction...', content: null },
+    'documentation': { doc: 'documentation', 'load-message': 'Loading documentation...', content: null },
+  },
 
   examples: [
     require('../examples/welcome'),

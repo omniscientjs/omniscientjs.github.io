@@ -210,6 +210,36 @@ var InefficientAlwaysRenderingText = component(function (cursor) {
 });
 ```
 
+### Using Different Cursors than Immutable.js
+
+[Immutable.js](https://github.com/facebook/immutable-js) is used as an optional dependency per default
+as the cursor-check used in the provided `shouldCompontentUpdate` takes for granted that the cursors
+are Immutable.js cursors. You can easily override this by overriding two methods provided
+by Omniscient; `isCursor` and `isEqualCursor`.
+
+#### Overriding `isCursor` and `isEqualCursor`
+
+`isCursor` should return true if provided object is of cursor type.
+
+```js
+var component = require('omniscient');
+
+component.isCursor = function (potentialCursor) {
+  return potentialCursor instanceof MyCustomCursor;
+};
+```
+
+`isEqualCursor` should return true if two provided cursors are equal.
+
+```js
+var component = require('omniscient');
+
+component.isEqualCursor = function (oldCursor, newCursor) {
+  return oldCursor.unwrap() === newCursor.unwrap();
+};
+```
+
+
 ### Immstruct
 
 Immstruct is not a requirement for Omniscient, and you are free to choose any other cursor implementation, or you can use Immutable.js directly.

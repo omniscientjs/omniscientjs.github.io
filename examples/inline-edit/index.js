@@ -15,7 +15,7 @@ module.exports.name = 'inline-edit';
 module.exports.structure = data;
 module.exports.init = function (el) {
   render();
-  data.on('swap', render);
+  data.on('next-animation-frame', render);
 
   function render () {
     React.renderComponent(List(data.cursor('items')), el);

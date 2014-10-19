@@ -25,7 +25,7 @@ module.exports.name = 'welcome';
 module.exports.structure = structure;
 module.exports.init = function (el) {
   render();
-  structure.on('swap', render);
+  structure.on('next-animation-frame', render);
 
   function render () {
     React.renderComponent(Welcome(structure.cursor()), el);

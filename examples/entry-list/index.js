@@ -17,7 +17,7 @@ module.exports.name = 'entry-list';
 module.exports.structure = structure;
 module.exports.init = function (el) {
   render();
-  structure.on('swap', render);
+  structure.on('next-animation-frame', render);
 
   function render () {
     React.renderComponent(App(structure.cursor()), el);

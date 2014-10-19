@@ -63,7 +63,7 @@ module.exports.name = 'search';
 module.exports.structure = structure;
 module.exports.init = function (el) {
   render();
-  structure.on('swap', render);
+  structure.on('next-animation-frame', render);
 
   function render () {
     React.renderComponent(Search(structure.cursor()), el);

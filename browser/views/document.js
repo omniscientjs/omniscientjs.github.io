@@ -37,6 +37,7 @@ Promise
   .then(function () {
     var hash = location.hash;
     if (hash.length == 1) return;
+    if (!hash) return;
 
     var el = document.querySelector(hash);
     if (!el) return;

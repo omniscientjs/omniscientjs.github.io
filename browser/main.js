@@ -28,7 +28,8 @@ var structure = immstruct('global', {
     require('../examples/events'),
     require('../examples/jsx-todo'),
     require('../examples/inline-edit'),
-    require('../examples/search')
+    require('../examples/search'),
+    require('../examples/svg-eq')
   ]
 });
 

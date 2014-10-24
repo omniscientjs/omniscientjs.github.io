@@ -4,7 +4,9 @@ var React     = require('react'),
 
 var d = React.DOM;
 
-var SearchBox = component(function (cursor) {
+// component.debug();
+
+var SearchBox = component('SearchBox', function (cursor) {
   function onChange (e) {
     cursor.update('search', function (currentSearch) {
       return e.currentTarget.value;
@@ -16,12 +18,12 @@ var SearchBox = component(function (cursor) {
     onChange: onChange }));
 });
 
-var Match = component(function (cursor) {
+var Match = component('Match', function (cursor) {
   return d.li({},
               d.a({ href: cursor.get('url') }, cursor.get('title')));
 });
 
-var Matches = component(function (cursor) {
+var Matches = component('Matches', function (cursor) {
   var q = cursor.get('search');
   var libs = cursor.get('libs');
   var matches = libs.filter(function (lib) {
@@ -32,7 +34,7 @@ var Matches = component(function (cursor) {
   }));
 });
 
-var Search = component(function (cursor) {
+var Search = component('Search', function (cursor) {
   return d.div({},
               SearchBox(cursor),
               Matches(cursor));

@@ -29,7 +29,7 @@ var StructureView = component(preventUpdateMixin, function (cursor, statics) {
   cursor = statics.structure.cursor();
   statics.structure && statics.structure.once('swap', function () {
     if (this.isMounted()) {
-      this.forceUpdate()
+      this.forceUpdate();
     }
   }.bind(this));
 
@@ -57,8 +57,9 @@ var Example = component([preventUpdateMixin, exampleMixin], function (example) {
   var structure = example.get('structure');
   var cursor = structure ? structure.cursor() : null;
   var name = example.get('name');
-  var hideStructure = typeof example.get('showStructure') === 'boolean' && !example.get('showStructure');
   var link = githubBaseUrl + name;
+
+  var hideStructure = typeof example.get('showStructure') === 'boolean' && !example.get('showStructure');
 
   return React.DOM.div({ key: name },
     React.DOM.h2({ id: name },
@@ -71,7 +72,7 @@ var Example = component([preventUpdateMixin, exampleMixin], function (example) {
     React.DOM.div({ className: 'example-container' },
       React.DOM.div({ className: 'example-wrapper cf' },
         React.DOM.div({ className: 'example-box ' + name }),
-        !hideStructure ? StructureView(cursor, { structure: structure }) : null
+          StructureView(cursor, { structure: structure, hideStructure: hideStructure })
       )
     )
   );

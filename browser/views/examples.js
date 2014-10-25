@@ -33,6 +33,10 @@ var StructureView = component(preventUpdateMixin, function (cursor, statics) {
     }
   }.bind(this));
 
+  if (statics.hideStructure) {
+    return React.DOM.div();
+  }
+
   var data = JSON.stringify(cursor.toJSON(), null, 2);
 
   return React.DOM.pre({ className: 'structure-preview' },

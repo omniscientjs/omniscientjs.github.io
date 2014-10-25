@@ -57,7 +57,7 @@ var Example = component([preventUpdateMixin, exampleMixin], function (example) {
   var structure = example.get('structure');
   var cursor = structure ? structure.cursor() : null;
   var name = example.get('name');
-  var showStructure = example.get('showStructure');
+  var hideStructure = typeof example.get('showStructure') === 'boolean' && !example.get('showStructure');
   var link = githubBaseUrl + name;
 
   return React.DOM.div({ key: name },
@@ -71,7 +71,7 @@ var Example = component([preventUpdateMixin, exampleMixin], function (example) {
     React.DOM.div({ className: 'example-container' },
       React.DOM.div({ className: 'example-wrapper cf' },
         React.DOM.div({ className: 'example-box ' + name }),
-        showStructure ? StructureView(cursor, { structure: structure }) : null
+        !hideStructure ? StructureView(cursor, { structure: structure }) : null
       )
     )
   );

@@ -26,11 +26,13 @@ See [documentation](/documentation) for more details.
   <iframe src="http://ghbtns.com/github-btn.html?user=omniscientjs&repo=omniscient&type=fork&count=true&size=large" allowtransparency="true" frameborder="0" scrolling="0" width="140" height="30"></iframe>
 </div>
 
-### Get latest stable version `1.1.0` by using NPM
+### Get latest stable version `2.0.0` by using NPM
 
 ```
 $ npm install --save omniscient
 ```
+
+**Note:** This documentation is currently for Omniscient `<=v1.3.1` and React `<=v0.11.2`. The latest Omniscient `v2.0.0` has a new API for React `v0.12.0`. [See release notes to see changes](https://github.com/omniscientjs/omniscient/releases/tag/v2.0.0) 
 ---
 
 ```js

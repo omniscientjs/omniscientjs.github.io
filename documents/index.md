@@ -32,7 +32,10 @@ See [documentation](/documentation) for more details.
 $ npm install --save omniscient
 ```
 
-**Note:** This documentation is currently for Omniscient `<=v1.3.1` and React `<=v0.11.2`. The latest Omniscient `v2.0.0` has a new API for React `v0.12.0`. [See release notes to see changes](https://github.com/omniscientjs/omniscient/releases/tag/v2.0.0) 
+
+Note: This documentation is currently for Omniscient `<=v1.3.1` and React `<=v0.11.2`. The latest Omniscient `v2.0.0` has a new API for React `v0.12.0`. [See release notes to see changes](https://github.com/omniscientjs/omniscient/releases/tag/v2.0.0) 
+
+
 ---
 
 ```js

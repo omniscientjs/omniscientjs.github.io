@@ -1,3 +1,10 @@
+/**
+  This example is using an older version of Omniscient and React.
+  Pre 0.12.0 release of React.
+
+  There are minor breaking changes in the syntax from the latest version.
+***/
+
 module.exports = function (el) {
   var React   = require('react'),
       RRouter = require('rrouter'),

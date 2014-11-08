@@ -18,6 +18,6 @@ module.exports.init = function (el) {
   data.on('next-animation-frame', render);
 
   function render () {
-    React.renderComponent(List(data.cursor('items')), el);
+    React.render(List(data.cursor('items')), el);
   }
 };

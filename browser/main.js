@@ -12,9 +12,9 @@ marked.setOptions({
   }
 });
 
-var RRouter = require('rrouter'),
-    Routes  = RRouter.Routes,
-    Route   = RRouter.Route;
+var Router = require('react-router');
+var Route = React.createFactory(Router.Route);
+var Routes = React.createFactory(Router.Routes);
 
 var structure = immstruct('global', {
   pages: {
@@ -37,19 +37,17 @@ var Index = require('./views/index');
 var Documentation = require('./views/documentation');
 var ExampleList = require('./views/examples');
 
-var routes = Routes({},
-  Route({ name: 'main', path: '/', view: Index, cursor: structure }),
-  Route({ name: 'examples', path: '/examples', view: ExampleList, cursor: structure }),
-  Route({ name: 'documentation', path: '/documentation', view: Documentation, cursor: structure })
+var routes = Routes({ location: "history" },
+  Route({ name: 'main', path: '/', handler: Index, cursor: structure }),
+  Route({ name: 'examples', path: '/examples/', handler: ExampleList, cursor: structure }),
+  Route({ name: 'documentation', path: '/documentation/', handler: Documentation, cursor: structure })
 );
 
 var container = document.querySelector('.page-container');
-var routing = RRouter.start(routes, function (view) {
-  React.renderComponent(view, container);
-});
+var rerender = function (view) {
+  React.render(routes, container);
+};
 
 // lister for change and redraw
 structure.on('swap', rerender);
-function rerender () {
-  routing.update();
-}
+rerender();

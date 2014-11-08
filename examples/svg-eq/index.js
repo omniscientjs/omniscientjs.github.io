@@ -18,12 +18,12 @@ var structure = immstruct({ mic: { running: false, audio: [] } });
 
 mic.on('audio', function (array) {
   structure.cursor('mic').update('audio', function () {
-    return Immutable.Vector.from(array);
+    return Immutable.List(array);
   });
 });
 
-var Rect = component(function (sample, statics) {
-  var value = sample.deref() / MAX_VALUE * SIZE;
+var Rect = component(function (props, statics) {
+  var value = props.sample.deref() / MAX_VALUE * SIZE;
   return d.rect({ x: statics.i * WIDTH,
                   y: SIZE - value,
                   width: WIDTH,
@@ -44,7 +44,9 @@ function run () {
   });
 }
 
-var Eq = component(function (mic) {
+var Eq = component(function (props) {
+  var mic = props.cursor;
+
   if (!mic.get('running')) {
     return d.div({},
                  d.p({}, "This example shows an svg equalizer for your microphone (chrome only) "),
@@ -53,7 +55,7 @@ var Eq = component(function (mic) {
 
   var audio = mic.cursor('audio');
   var rects = [svgAttrs].concat(audio.map(function (value, i, parent) {
-    return Rect('rect-'+i, parent.cursor(i), { i: i });
+    return Rect('rect-'+i, { sample: parent.cursor(i), statics: { i: i } });
   }).toArray());
   return d.div({ className: 'eq' }, d.svg.apply(d.svg, rects));
 });
@@ -71,7 +73,7 @@ module.exports.init = function (el) {
   structure.on('swap', render);
 
   function render () {
-    React.renderComponent(Eq(structure.cursor('mic')), el);
+    React.render(Eq(structure.cursor('mic')), el);
   }
 };
 

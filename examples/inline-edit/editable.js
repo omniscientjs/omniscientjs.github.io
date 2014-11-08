@@ -26,11 +26,11 @@ var EditMixin = {
   }
 };
 
-module.exports = component(EditMixin, function (cursor) {
+module.exports = component(EditMixin, function (props) {
   if (this.state.editing) {
     return d.form({ onSubmit: this.onSubmit },
-                  FocusingInput(cursor, { onChange: this.onChange }),
+                  FocusingInput({ cursor: props.cursor, statics: { onChange: this.onChange } }),
                   d.span({}, " ", d.button({}, 'done')));
   }
-  return d.span({ onClick: this.onEdit, className: 'clickable' }, cursor.get('text'));
+  return d.span({ onClick: this.onEdit, className: 'clickable' }, props.cursor.get('text'));
 });

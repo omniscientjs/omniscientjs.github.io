@@ -20,6 +20,6 @@ module.exports.init = function (el) {
   structure.on('next-animation-frame', render);
 
   function render () {
-    React.renderComponent(App(structure.cursor()), el);
+    React.render(App(structure.cursor()), el);
   }
 };

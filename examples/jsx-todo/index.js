@@ -8,13 +8,14 @@ var structure = immstruct({
    { checked: false, text: 'Buy milk' },
    { checked: true, text: 'Make example application with JSX' },
    { checked: false, text: 'Compile using the --harmony flag' },
-   { checked: false, text: 'Check checkboxes' }
+   { checked: false, text: 'Check checkboxes' },
+   { checked: true, text: 'Update example to use React 0.12' }
  ]
 });
 
 var checkedMixin = {
  onChecked: function () {
-   this.props.cursor.item.update('checked', function (state) {
+   this.props.item.update('checked', function (state) {
      return !state;
    });
  }
@@ -28,7 +29,7 @@ var Item = component(checkedMixin, function(cursor) {
      {cursor.item.get('text')}
    </label>
  );
-});
+}).jsx;
 
 var List = component((cursors) => (
  <form>
@@ -40,7 +41,7 @@ var List = component((cursors) => (
      ).toArray()}
    </ul>
  </form>
-));
+)).jsx;
 
 module.exports.name = 'jsx-todo';
 module.exports.structure = structure;
@@ -49,7 +50,7 @@ module.exports.init = function (el) {
   structure.on('swap', render);
 
   function render () {
-    React.renderComponent(
+    React.render(
       <List items={structure.cursor('items')} />,
       el
     );

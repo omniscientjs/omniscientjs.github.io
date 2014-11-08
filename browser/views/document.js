@@ -13,7 +13,8 @@ var docs = defer();
 
 var DidMount = { componentDidUpdate: mounted.resolve };
 
-module.exports = component(DidMount, function (cursor) {
+module.exports = component(DidMount, function (props) {
+  var cursor = props.cursor;
   var pageData = cursor.get('content');
 
   var content;

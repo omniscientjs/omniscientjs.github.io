@@ -6,26 +6,26 @@ var d = React.DOM;
 
 // component.debug();
 
-var SearchBox = component('SearchBox', function (cursor) {
+var SearchBox = component('SearchBox', function (props) {
   function onChange (e) {
-    cursor.update('search', function (currentSearch) {
+    props.cursor.update('search', function (currentSearch) {
       return e.currentTarget.value;
     });
   }
   return d.div({}, d.input({
     placeholder: "Search..",
-    value: cursor.get('search'),
+    value: props.cursor.get('search'),
     onChange: onChange }));
 });
 
-var Match = component('Match', function (cursor) {
+var Match = component('Match', function (props) {
   return d.li({},
-              d.a({ href: cursor.get('url') }, cursor.get('title')));
+              d.a({ href: props.cursor.get('url') }, props.cursor.get('title')));
 });
 
-var Matches = component('Matches', function (cursor) {
-  var q = cursor.get('search');
-  var libs = cursor.get('libs');
+var Matches = component('Matches', function (props) {
+  var q = props.cursor.get('search');
+  var libs = props.cursor.get('libs');
   var matches = libs.filter(function (lib) {
     return lib.get('title').indexOf(q) !== -1 || lib.get('url').indexOf(q) !== -1;
   });
@@ -34,10 +34,10 @@ var Matches = component('Matches', function (cursor) {
   }));
 });
 
-var Search = component('Search', function (cursor) {
+var Search = component('Search', function (props) {
   return d.div({},
-              SearchBox(cursor),
-              Matches(cursor));
+              SearchBox(props.cursor),
+              Matches(props.cursor));
 });
 
 var structure = immstruct({
@@ -68,6 +68,6 @@ module.exports.init = function (el) {
   structure.on('next-animation-frame', render);
 
   function render () {
-    React.renderComponent(Search(structure.cursor()), el);
+    React.render(Search(structure.cursor()), el);
   }
 };

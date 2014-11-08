@@ -19,7 +19,9 @@ var preventUpdateMixin = {
   }
 };
 
-var StructureView = component(preventUpdateMixin, function (cursor, statics) {
+var StructureView = component(preventUpdateMixin, function (props, statics) {
+  var cursor = props.cursor;
+
   if (!cursor) {
     return React.DOM.pre({ className: 'structure-preview' },
       React.DOM.code(null, 'No state')
@@ -57,7 +59,8 @@ var exampleMixin = {
   }
 };
 
-var Example = component([preventUpdateMixin, exampleMixin], function (example) {
+var Example = component([preventUpdateMixin, exampleMixin], function (props) {
+  var example = props.cursor;
   var structure = example.get('structure');
   var cursor = structure ? structure.cursor() : null;
   var name = example.get('name');
@@ -76,7 +79,7 @@ var Example = component([preventUpdateMixin, exampleMixin], function (example) {
     React.DOM.div({ className: 'example-container' },
       React.DOM.div({ className: 'example-wrapper cf' },
         React.DOM.div({ className: 'example-box ' + name }),
-          StructureView(cursor, { structure: structure, hideStructure: hideStructure })
+          StructureView({ cursor: cursor, statics: { structure: structure, hideStructure: hideStructure }})
       )
     )
   );
@@ -84,7 +87,11 @@ var Example = component([preventUpdateMixin, exampleMixin], function (example) {
 
 module.exports = component(function (routeProps) {
 
-  var examples = routeProps.cursor.cursor().get('examples').toArray().map(Example);
+  var examples = routeProps.cursor.cursor()
+    .get('examples').toArray()
+    .map(function (cursor) {
+      return Example(cursor.get('name'), cursor);
+    });
 
   return React.DOM.div({},
     Header(),

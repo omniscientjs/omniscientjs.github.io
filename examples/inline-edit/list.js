@@ -4,8 +4,8 @@ var d = React.DOM;
 
 var Item = require('./item');
 
-module.exports = component(function (cursor) {
-  return d.ul({}, cursor.toArray().map(function (item, key) {
+module.exports = component(function (props) {
+  return d.ul({}, props.cursor.toArray().map(function (item, key) {
     return Item('item-' + key, item);
   }));
 });

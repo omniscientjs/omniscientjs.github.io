@@ -4,7 +4,9 @@ var React = require('react'),
 var List = require('./list');
 var AddPost = require('./add-post');
 
-module.exports = component(function (cursor, statics) {
+module.exports = component(function (props, statics) {
+  var cursor = props.cursor;
+
   return React.DOM.div({ key: cursor.get('id') },
     React.DOM.p(null,
                 cursor.get('title'),

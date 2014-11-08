@@ -3,7 +3,9 @@ var React = require('react'),
 
 var d = React.DOM;
 
-module.exports = component(function (cursor, statics) {
+module.exports = component(function (props, statics) {
+  var cursor = props.cursor;
+
   function deleteItem (e) {
     e.preventDefault();
     statics.events.emit('delete', cursor);

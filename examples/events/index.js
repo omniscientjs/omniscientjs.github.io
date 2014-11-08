@@ -10,10 +10,10 @@ events.on('event', function (data) {
 });
 
 
-var h = Heading({ text: 'Click me, I fire events in the console.' }, { events: events });
+var h = Heading({ text: 'Click me, I fire events in the console.', statics: { events: events } });
 
 module.exports.name = 'events';
 module.exports.structure = null;
 module.exports.init = function (el) {
-  React.renderComponent(h, el);
+  React.render(h, el);
 };

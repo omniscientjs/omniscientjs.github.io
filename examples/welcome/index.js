@@ -2,16 +2,18 @@ var React     = require('react'),
     immstruct = require('immstruct'),
     component = require('omniscient');
 
-var NameInput = component(function (cursor) {
+var NameInput = component(function (props) {
   var onChange = function (e) {
-    cursor.update('name', function (name) {
+    props.cursor.update('name', function (name) {
       return e.currentTarget.value;
     });
   };
-  return React.DOM.input({ value: cursor.get('name'), onChange: onChange });
+  return React.DOM.input({ value: props.cursor.get('name'), onChange: onChange });
 });
 
-var Welcome = component(function (cursor) {
+var Welcome = component(function (props) {
+  var cursor = props.cursor;
+
   var guest = cursor.get('guest');
   var name = guest.get('name') ? ", " + guest.get('name') : "";
   return React.DOM.section({},
@@ -28,6 +30,6 @@ module.exports.init = function (el) {
   structure.on('next-animation-frame', render);
 
   function render () {
-    React.renderComponent(Welcome(structure.cursor()), el);
+    React.render(Welcome(structure.cursor()), el);
   };
 };

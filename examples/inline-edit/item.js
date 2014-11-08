@@ -4,7 +4,7 @@ var d = React.DOM;
 
 var Editable = require('./editable');
 
-module.exports = component(function (cursor) {
-  return d.li({}, Editable(cursor));
+module.exports = component(function (props) {
+  return d.li({}, Editable(props.cursor));
 });
 

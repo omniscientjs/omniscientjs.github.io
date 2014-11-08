@@ -8,7 +8,7 @@ var FocusOnRender = {
   }
 };
 
-module.exports = component(FocusOnRender, function (cursor, statics) {
+module.exports = component(FocusOnRender, function (props, statics) {
   var onChange = statics.onChange || function () {};
-  return d.input({ value: cursor.get('text'), onChange: onChange });
+  return d.input({ value: props.cursor.get('text'), onChange: onChange });
 });

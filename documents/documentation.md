@@ -53,28 +53,35 @@ Then include `static/bundle.js` in your HTML.
 
 ```js
 var Component = component([name, ][mixins, ]renderFunction);
-Component([key: String, ]cursor: Cursor | Object<String, Cursor> [, statics: Object]);
+Component([key: String, ]cursor: Cursor | Object<String, Cursor|Object|Statics>);
 
 ```
 * `key` (*optional*) a key that is passed verbatim to the React component as `props.key` (e.g. for use in lists with repeating elements).
-* `cursor` (*optional*) a cursor or an object literal holding cursors to part(s) of an immutable data structure, needed for your rendering your component, changes to any of these will trigger re-render.
-* `statics` (*optional*) an object with static properties, does not cause a component to re-render on change.
+* `cursor` (*optional*) a cursor or an object literal holding cursors to part(s) of an immutable data structure, needed for your rendering your component, changes to any of these will trigger re-render. A **special property** statics is an *optional* object with static properties, does not cause a component to re-render on change.
+
+E.g. pass a name-less cursor
+```js
+Component(immutableStructure.cursor());
+// In component you can get cursor through props.cursor
+```
 
 E.g. passing a key, a single cursor and statics
 
 ```js
-var key = 'keyPassedToReactComponent';
-Component(key,
-  immutableStructure.cursor(),
-  { eventsFromChild: new EventEmitter() });
+Component('keyPassedToReactComponent', {
+  cursor: immutableStructure.cursor(),
+  statics: { eventsFromChild: new EventEmitter() }
+});
 ```
 
 E.g. passing multiple cursors and statics
 
 ```js
-Component(
-  { cursorOne: immutableStructure.cursor(), cursorTwo: immutableStructure.cursor(['somewhere', 'else']) },
-  { eventsFromChild: new EventEmitter() });
+Component({
+  cursorOne: immutableStructure.cursor(),
+  cursorTwo: immutableStructure.cursor(['somewhere', 'else']) },
+  statics: { eventsFromChild: new EventEmitter() }
+});
 ```
 
 ### Optional `name`
@@ -102,11 +109,11 @@ var Component = component(Logging, function () {
 This is the component's render function that is passed off to React. The function is called with the following parameters.
 
 ```js
-function (cursor, [, statics]) { }
+function (props[, statics]) { }
 ```
 
-* `cursor` (*optional*) is the cursor or the object literal holding cursors to the part(s) of the immutable data structure for the component
-* `statics` (*optional*) is an object of the received static values, that does not trigger a re-render when changed.
+* `props` (*optional*) is a object literal holding cursors to the part(s) of the immutable data structure for the component. If you pass in a name-less cursor, the cursor is available through `props.cursor`.
+* `statics` (*optional*) is an object of the received static values, that does not trigger a re-render when changed. You can also access the statics through the props or `this.props.statics`.
 
 A component's passed `cursor` is also available on `this.props.cursor` for reach in mixins.
 
@@ -117,7 +124,7 @@ If multiple `cursors` were passed as part of an object literal, e.g.
   cursorTwo: immutableStructure.cursor(['somewhere', 'else'])
 }
 ```
-all of these are available on `this.props.cursor`, as `this.props.cursor.cursorOne`and `this.props.cursor.cursorTwo` respectively.
+all of these are available on `this.props`, as `this.props.cursorOne`and `this.props.cursorTwo` respectively. If you pass in a *name-less* cursor (i.e. invoked as `Component(cursor)`), the cursor is available as `this.props.cursor`.
 
 `statics` are also available as `this.props.statics`.
 
@@ -134,11 +141,11 @@ When debugging, you should give your component names. This way the output will b
 and you can filter on components using regex.
 
 ```js
-var MyComponent = component("MyComponent", function () {
-  return React.DOM.text({}, "I output logging information on .shouldComponentUpdate() and .render()");
+var MyComponent = component('MyComponent', function () {
+  return React.DOM.text({}, 'I output logging information on .shouldComponentUpdate() and .render()');
 });
 
-React.renderComponent(MyComponent('my-key'), document.body);
+React.render(MyComponent('my-key'), document.body);
 ```
 
 #### Filtering Debugging

@@ -33,7 +33,7 @@ $ npm install --save omniscient
 ```
 
 
-Note: This documentation is currently for Omniscient `<=v1.3.1` and React `<=v0.11.2`. The latest Omniscient `v2.0.0` has a new API for React `v0.12.0`. [See release notes to see changes](https://github.com/omniscientjs/omniscient/releases/tag/v2.0.0) 
+Note: This documentation is now for Omniscient `>=v2.0.0` and React `>=v0.12.0`. To see earlier versions [see Github docs](https://github.com/omniscientjs/omniscientjs.github.io/tree/f350137f608ee31fb9c4d8467a2d9574a121cffc/documents).
 
 
 ---
@@ -43,26 +43,29 @@ var React     = require('react'),
     immstruct = require('immstruct'),
     component = require('omniscient');
 
-var NameInput = component(function (cursor) {
+var NameInput = component(function (props) {
   var onChange = function (e) {
-    cursor.update('name', function (name) {
+    props.cursor.update('name', function (name) {
       return e.currentTarget.value;
     });
   };
-  return React.DOM.input({ value: cursor.get('name'), onChange: onChange });
+  return React.DOM.input({ value: props.cursor.get('name'), onChange: onChange });
 });
 
-var Welcome = component(function (cursor) {
-  var guest = cursor.get('guest');
-  var name = guest.get('name') ? ", " + guest.get('name') : "";
-  return React.DOM.p({}, cursor.get('greeting'), name, "!",
-                         NameInput(guest));
+var Welcome = component(function (props) {
+  var guest = props.cursor.get('guest');
+  var name = guest.get('name') ? ', ' + guest.get('name') : ';
+
+  return React.DOM.p({},
+    props.cursor.get('greeting'), name, '!',
+    NameInput(guest)
+  );
 });
 
 var structure = immstruct({ greeting: 'Welcome', guest: { name: '' } });
 
 function render () {
-  React.renderComponent(
+  React.render(
     Welcome(structure.cursor()),
     document.querySelector('.app'));
 }
@@ -84,8 +87,8 @@ var SelectOnRender = {
   }
 };
 
-var FocusingInput = component(SelectOnRender, function (cursor) {
-  return React.DOM.input({ value: cursor.get('text') });
+var FocusingInput = component(SelectOnRender, function (props) {
+  return React.DOM.input({ value: props.cursor.get('text') });
 });
 ```
 
@@ -106,25 +109,29 @@ var SaveOnEdit = {
   }
 };
 
-var SavingFocusingInput = component([Props, SaveOnEdit, SelectOnRender], function (cursor) {
-  return React.DOM.input({ value: cursor.get('text'), onChange: this.onEdit });
+var SavingFocusingInput = component([Props, SaveOnEdit, SelectOnRender], function (props) {
+  return React.DOM.input({ value: props.cursor.get('text'), onChange: this.onEdit });
 });
 ```
 
 ### Statics
 
-When you need to provide other data for your component than what its rendering is based off of, you pass statics. By default, changing a static's value does not result in a re-rendering of a component.
+When you need to provide other data for your component than what its rendering is based off of, you pass statics. By default, changing a static's value does **not** result in a re-rendering of a component.
 
-Statics can be passed as second argument to your component.
+Statics can be passed as a property on your properties.
 
 ```js
-var FocusingInput = component(SelectOnRender, function (cursor, statics) {
+var FocusingInput = component(SelectOnRender, function (props, statics) {
   var onChange = statics.onChange || function () {};
-  return React.DOM.input({ value: cursor.get('text'), onChange: onChange });
+  // or this.props.statics
+
+  return React.DOM.input({ value: props.input.get('text'), onChange: onChange });
 });
 
-var SomeForm = component(function (cursor) {
-  return React.DOM.form({}, FocusingInput(cursor, { onChange: console.log.bind(console) }));
+var SomeForm = component(function (props) {
+  return React.DOM.form({},
+    FocusingInput({ input: props.cursor, statics: { onChange: console.log.bind(console) } })
+  );
 });
 ```
 
@@ -133,11 +140,11 @@ var SomeForm = component(function (cursor) {
 Communicating information back to the parent component from a child component can be done by making an event emitter available as a static for your child component.
 
 ```js
-var Item = component(function (cursor, statics) {
+var Item = component(function (props, statics) {
   var onClick = function () {
-    statics.channel.emit('data', cursor);
+    statics.channel.emit('data', props.items);
   };
-  return React.DOM.li({ onClick: onClick }, React.DOM.text({}, cursor.get('text')));
+  return React.DOM.li({ onClick: onClick }, React.DOM.text({}, props.item.get('text')));
 });
 
 
@@ -154,7 +161,7 @@ var mixins = {
 
 var List = component(function (cursor) {
   return React.DOM.ul({}, cursor.toArray().map(function (item) {
-    return Item(item, { channel: events });
+    return Item({ item: item, statics: { channel: events } });
   });
 });
 ```
@@ -168,12 +175,12 @@ Omniscient allows for component local state. That is, all the usual React compon
 For correct merging of states and components between render cycles, React needs a `key` as part of the props of a component. With Omniscient, such a key can be passed as the first argument to the `component` function.
 
 ```js
-var Item = component(function (cursor) {
-  return React.DOM.li({}, React.DOM.text(cursor.get('text')));
+var Item = component(function (props) {
+  return React.DOM.li({}, React.DOM.text(props.cursor.get('text')));
 });
 
-var List = component(function (cursor) {
-  return React.DOM.ul({}, cursor.toArray().map(function (item, key) {
+var List = component(function (props) {
+  return React.DOM.ul({}, props.cursor.toArray().map(function (item, key) {
     return Item(key, item);
   });
 });
@@ -210,8 +217,8 @@ component.shouldComponentUpdate = function (newProps, newState) {
   return true; // don't do do this
 };
 
-var InefficientAlwaysRenderingText = component(function (cursor) {
-  return React.DOM.text(cursor.get('text'));
+var InefficientAlwaysRenderingText = component(function (props) {
+  return React.DOM.text(props.cursor.get('text'));
 });
 ```
 

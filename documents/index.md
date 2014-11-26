@@ -26,7 +26,7 @@ See [documentation](/documentation) for more details.
   <iframe src="http://ghbtns.com/github-btn.html?user=omniscientjs&repo=omniscient&type=fork&count=true&size=large" allowtransparency="true" frameborder="0" scrolling="0" width="140" height="30"></iframe>
 </div>
 
-### Get latest stable version `2.0.0` by using NPM
+### Get latest stable version by using NPM
 
 ```
 $ npm install --save omniscient

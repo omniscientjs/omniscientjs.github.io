@@ -54,7 +54,7 @@ var NameInput = component(function (props) {
 
 var Welcome = component(function (props) {
   var guest = props.cursor.get('guest');
-  var name = guest.get('name') ? ', ' + guest.get('name') : ';
+  var name = guest.get('name') ? ', ' + guest.get('name') : '';
 
   return React.DOM.p({},
     props.cursor.get('greeting'), name, '!',

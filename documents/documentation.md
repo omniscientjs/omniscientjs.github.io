@@ -11,7 +11,7 @@ You are able to listen for when this replacement happens, and make React re-rend
 
 ## Installing
 
-Omniscient strongly encourages the use of [npm](https://www.npmjs.org/) and [browserify](http://browserify.org/). There is no distributed compiled file, as the project has a dependency to [React](http://facebook.github.io/react/) and we don't want to bundle React or rely on global variables. You can of course [bundle your own standalone module](#build-standalone).
+Omniscient strongly encourages the use of [npm](https://www.npmjs.org/) and [browserify](http://browserify.org/), but if you have React on your global namespace (`window`), you can use the dist files provided as [`omniscient.js`](https://github.com/omniscientjs/omniscient/blob/master/dist/omniscient.js) and [`omniscient.min.js`](https://github.com/omniscientjs/omniscient/blob/master/dist/omniscient.min.js).
 
 ### Install from NPM
 
@@ -167,21 +167,3 @@ for finding errors, you can also use filtering in your browser inspector.
 
 
 ---
-
-## Build Standalone
-
-You can build omniscient as a standalone bundle by using `browserify`, but you would be required to supply the required dependencies yourself.
-
-Clone the repository by doing
-
-```
-git clone https://github.com/omniscientjs/omniscient.git
-```
-
-Create a bundle using `browserify` and `derequire`.
-
-```
-$ cd omniscient
-$ npm install -g derequire
-$ browserify component.js --standalone Foo | derequire > omniscient.bundle.js
-```

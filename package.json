@@ -1,48 +1,31 @@
 {
-  "name": "omniscientjs.github.io",
+  "name": "omniscient-docs",
   "version": "1.0.0",
-  "description": "Homepage for Omniscient",
+  "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "watchify browser/*.js -o static/bundle.js -dv",
-    "build": "browserify browser/*.js > static/bundle.js"
+    "postinstall": "npm run build",
+    "watch-js": "watchify scripts/app.js -o static/bundle.js -dv",
+    "watch-css": "wr 'lessc --include-path=styles/ styles/app.less static/bundle.css' styles/",
+    "build-css": "lessc --include-path=styles/ styles/app.less static/bundle.css --autoprefix=\"last 2 versions\"",
+    "build-js": "browserify scripts/app.js > static/bundle.js",
+    "build": "npm run build-js & npm run build-css",
+    "watch": "npm run watch-css & npm run watch-js"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/omniscientjs/omniscientjs.github.io.git"
+  "engines": {
+    "node": "0.10.x"
   },
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/omniscientjs/omniscientjs.github.io/issues"
-  },
-  "homepage": "https://github.com/omniscientjs/omniscientjs.github.io",
   "dependencies": {
-    "bluebird": "^2.3.5",
-    "highlight.js": "^8.3.0",
-    "immstruct": "^1.0.0",
-    "immutable": "^3.0.3",
-    "lodash": "^2.4.1",
-    "marked": "^0.3.2",
-    "omniscient": "^2.0.0",
-    "react": "^0.12.0",
-    "react-router": "^0.10.2"
-  },
-  "browserify": {
-    "transform": [
-      [
-        "reactify",
-        {
-          "es6": true
-        }
-      ],
-      "brfs"
-    ]
-  },
-  "devDependencies": {
-    "brfs": "^1.2.0",
-    "browserify": "^6.0.3",
-    "reactify": "^0.15.2"
+    "browserify": "^8.1.1",
+    "highlight": "^0.2.3",
+    "highlight.js": "^8.4.0",
+    "less": "^2.3.1",
+    "less-plugin-autoprefix": "^1.3.0",
+    "marked": "^0.3.3",
+    "st": "^0.5.2",
+    "watchify": "^2.3.0",
+    "wr": "^1.3.1"
   }
 }

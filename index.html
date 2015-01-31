@@ -1,51 +1,189 @@
-<!DOCTYPE html>
-<html lang="en" prefix="og: http://ogp.me/ns#">
-<head>
-  <meta charset="UTF-8" />
-  <title>Omniscient.js</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<html>
+  <head>
+    <title>Omniscient</title>
 
-  <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/solarized_dark.min.css">
-  <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,300italic,400italic,600italic' rel='stylesheet' type='text/css'>
-  <link rel="stylesheet" href="styles/main.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/kimbie.dark.min.css">
+    <link rel="stylesheet" href="./static/bundle.css" media="screen" charset="utf-8">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </head>
+  <body>
+    <header class="mainHeader">
+      <nav class="mainNavigation">
+        <div class="mainNavigation-inner">
+          <h1>
+            <a href="/">
+              <svg width="50px" height="25px" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMax meet">
+               <g>
+                <title>Layer 1</title>
+                <path fill="black" d="m416.873962,103.126556c25.875885,25.8759 40.126068,60.279999 40.126068,96.873978s-14.250702,70.997604 -40.126068,96.873428c-25.876404,25.875366 -60.279999,40.126038 -96.873932,40.126038s-70.997589,-14.250671 -96.873993,-40.126038c-25.875351,-25.875824 -40.126053,-60.279449 -40.126053,-96.873428s14.249634,-70.998093 40.126053,-96.873978s60.279968,-40.126556 96.873993,-40.126556s70.997528,14.250671 96.873932,40.126556zm-12.109436,181.638428c16.872894,-16.872925 28.091919,-37.891312 32.717834,-60.756882c-3.605408,5.307693 -7.054443,7.277054 -9.189819,-4.603958c-2.199463,-19.37001 -19.990173,-6.996109 -31.177582,-13.876587c-11.774506,7.935806 -38.238556,-15.429062 -33.741058,10.923599c6.939331,11.886398 37.463074,-15.908005 22.248596,9.242767c-9.706177,17.557953 -35.492126,56.44072 -32.137756,76.596359c0.423279,29.365082 -30.004639,6.12323 -40.488342,-3.617737c-7.052277,-19.511749 -2.403381,-53.616165 -20.843781,-63.171387c-20.015381,-0.869095 -37.194427,-2.68811 -44.951538,-25.064056c-4.668152,-16.008682 4.967316,-39.84079 22.122833,-43.519989c25.112213,-15.77803 34.082458,18.477341 57.633636,19.114182c7.312408,-7.651138 27.243744,-10.083954 28.896362,-18.663574c-15.452667,-2.726624 19.604858,-12.993073 -1.479218,-18.832657c-11.631653,1.367828 -19.125916,12.060776 -12.942749,21.127396c-22.540314,5.255783 -23.262207,-32.61879 -44.929047,-20.672546c-0.550659,18.888336 -35.379791,6.123779 -12.05069,2.293671c8.015564,-3.502045 -13.073914,-13.650772 -1.680359,-11.806595c5.596619,-0.303986 24.438416,-6.906754 19.339447,-11.345871c10.49176,-6.512856 19.308472,15.597137 29.577576,-0.503555c7.414032,-12.379776 -3.109314,-14.665443 -12.402313,-8.390175c-5.239136,-5.866417 9.250214,-18.536766 22.030273,-24.011932c4.259308,-1.824898 8.327606,-2.819214 11.437988,-2.537704c6.437317,7.436531 18.342377,8.72464 18.965332,-0.894264c-15.942291,-7.635071 -33.520569,-11.668556 -51.720123,-11.668556c-26.121552,0 -50.965668,8.301338 -71.525818,23.651237c5.525497,2.531273 8.662079,5.682831 3.338867,9.712013c-4.135681,12.323067 -20.91658,28.865273 -35.647858,26.52343c-7.648972,13.190521 -12.686386,27.722687 -14.839874,42.953796c12.338593,4.082153 15.183472,12.161407 12.532303,14.863937c-6.287018,5.482147 -10.150848,13.253189 -12.141647,21.760544c4.016357,24.573288 15.565536,47.220566 33.519516,65.175095c22.641373,22.640869 52.744461,35.109924 84.764511,35.109924c32.01944,0 62.123016,-12.469116 84.764496,-35.109924l0,0z" id="svg_7" stroke="null"/>
+                <path fill="black" id="svg_4" d="m320,5.3125c-194.6875,0 -311.5,193.480423 -311.5,193.480423s116.8125,195.894577 311.5,195.894577s311.5,-194.6875 311.5,-194.6875s-116.8125,-194.6875 -311.5,-194.6875zm0,350.4375c-170.351563,0 -262.828125,-155.75 -262.828125,-155.75s92.476563,-155.75 262.828125,-155.75s262.828125,155.75 262.828125,155.75s-92.476563,155.75 -262.828125,155.75z"/>
+               </g>
+              </svg>
+            </a>
+          </h1>
 
-  <link rel="shortcut icon" href="favicon.ico">
+          <ul>
+            <li><a href="/guide.html">Guides</a></li>
+            <li><a href="/api.html">API</a></li>
+            <li><a href="/tutorials.html">Tutorials</a></li>
+          </ul>
+        </div>
+      </nav>
 
-  <meta name="title" content="Omniscient.js">
-  <meta name="description" content="A library providing an abstraction for React components that allows for fast top-down rendering embracing immutable data.">
+      <div class="mainHeader-illustration">
+        <div class="illustrationText">
+          <h1>Omniscient</h1>
+          <p>
+            Do fast top-down rendering embracing immutable data. With cursors into immutable data structures, components can easily swap their own piece of data inside the larger immutable data structure and only to render components that have changed their data layer.
+          </p>
 
-  <meta property="og:title" content="Omniscient.js" />
-  <meta property="og:type" content="website" />
-  <meta property="og:description" content="A library providing an abstraction for React components that allows for fast top-down rendering embracing immutable data." />
-  <meta property="og:url" content="http://omniscientjs.github.io/" />
-  <meta property="og:image" content="http://omniscientjs.github.io/assets/omniscient.png" />
+          <div class="github-badges">
+            <iframe src="http://ghbtns.com/github-btn.html?user=omniscientjs&amp;repo=omniscient&amp;type=watch&amp;count=true" allowtransparency="true" frameborder="0" scrolling="0" width="140" height="30"></iframe>
+            <iframe src="http://ghbtns.com/github-btn.html?user=omniscientjs&amp;repo=omniscient&amp;type=fork&amp;count=true" allowtransparency="true" frameborder="0" scrolling="0" width="140" height="30"></iframe>
+          </div>
+        </div>
 
-  <style> .eq { height: 300px; width: 400px; display: block; position: relative; } </style>
-</head>
-<body>
+        <svg width="100%" height="550" viewBox="0 0 600 225" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet">
+          <g>
+            <title>Layer 1</title>
+            <g class="active-path">
+              <polyline class="graphEdge" id="svg_18" points="397.74151611328125,401.7062072753906 422.5,418.2488708496094 447.25848388671875,434.7915344238281" stroke="#000000" stroke-width="5" fill="none" stroke-dasharray="5,5"/>
+              <polyline class="graphEdge" id="svg_17" points="311.259521484375,273.74151611328125 331.488037109375,312.5 351.7165832519531,351.25848388671875" stroke="#000000" stroke-width="5" fill="none" stroke-dasharray="5,5"/>
+              <polyline class="graphEdge" id="svg_16" points="356.25994873046875,193.2415313720703 336.79949951171875,215.75 317.3390197753906,238.25848388671875" stroke="#000000" stroke-width="5" fill="none" stroke-dasharray="5,5"/>
+              <polyline class="graphEdge" id="svg_14" points="299.64306640625,110.64816284179688 325.7007751464844,125.7142562866211 351.75848388671875,140.7803497314453" stroke="#000000" stroke-width="5" fill="none" stroke-dasharray="5,5"/>
+              <circle fill="#cccccc" stroke-width="0" cx="385.00001" cy="160" r="33.24153" id="svg_1" class="graphNode" stroke="#000000"/>
+              <circle fill="#cccccc" stroke-width="0" cx="301.99999" cy="256" r="17.74152" id="svg_3" class="graphNode" stroke="#000000"/>
+              <circle fill="#cccccc" stroke-width="0" cx="367.49998" cy="381.5" r="30.24152" id="svg_5" class="graphNode" stroke="#000000"/>
+              <circle fill="#cccccc" stroke-width="0" cx="478.99998" cy="456" r="31.74152" id="svg_6" class="graphNode" stroke="#000000"/>
+            </g>
+            <g>
+                <polyline class="graphEdge graphEdge--fade" id="svg_22" points="122.91644287109375,282.74151611328125 89.65998840332031,326.5 56.403541564941406,370.25848388671875" stroke="#000000" stroke-width="5" fill="none" stroke-dasharray="5,5"/>
+                <polyline class="graphEdge graphEdge--fade" id="svg_21" points="149.36302185058594,282.74151611328125 145.17288208007812,323.5 140.98275756835938,364.25848388671875" stroke="#000000" stroke-width="5" fill="none" stroke-dasharray="5,5"/>
+                <polyline class="graphEdge graphEdge--fade" id="svg_20" points="177.00497436523438,282.74151611328125 207.52903747558594,335 238.0531005859375,387.25848388671875" stroke="#000000" stroke-width="5" fill="none" stroke-dasharray="5,5"/>
+                <polyline class="graphEdge graphEdge--fade" id="svg_19" points="217.244140625,132.64306640625 197.04708862304688,167.45077514648438 176.8500213623047,202.25848388671875" stroke="#000000" stroke-width="5" fill="none" stroke-dasharray="5,5"/>
+                <polyline class="graphEdge graphEdge--fade" id="svg_15" points="417.0819396972656,193.2415313720703 428.6715087890625,205.25 440.2610778808594,217.25848388671875" stroke="#000000" stroke-width="5" fill="none" stroke-dasharray="5,5"/>
+            </g>
+            <g>
+              <circle fill="#cccccc" stroke-width="0" cx="467.99998" cy="246" r="28.74152" id="svg_4" class="graphNode graphNode--fade" stroke="#000000"/>
+              <circle fill="#007fff" stroke-width="0" cx="247.5" cy="80.5" r="52.14306" id="svg_2"  class="graphNode graphNode--blue" stroke="#000000"/>
+              <circle fill="#cccccc" stroke-width="0" cx="153.49999" cy="242.5" r="40.24152" id="svg_7" class="graphNode graphNode--fade" stroke="#000000"/>
+              <circle fill="#cccccc" stroke-width="0" cx="39.49999" cy="392.5" r="22.24152" stroke="#000000" id="svg_8" class="graphNode graphNode--fade"/>
+              <circle fill="#cccccc" stroke-width="0" cx="136.99999" cy="403" r="38.74152" id="svg_9" class="graphNode graphNode--fade" stroke="#000000"/>
+              <circle fill="#cccccc" stroke-width="0" cx="248.99999" cy="406" r="18.74152" id="svg_10" class="graphNode graphNode--fade" stroke="#000000"/>
+            </g>
+          </g>
+        </svg>
+      </div>
 
-  <div class="page-container">
+      <section class="infoBoxes">
+        <article>
+          <h2>Based On React</h2>
+          <p>
+            Omniscient uses React. This means you get all the advantages you get
+            with React: Virtual DOM, no bad templateing, no two-way databinding
+            and most of all, a static mental model.
+          </p>
+        </article><article>
+          <h2>Unidirectional</h2>
+          <p>
+            All communication is passed from input arguments, which means no local
+            state in each component. Causes referential transparent components which
+            again causes predictability and thus reliability.
+          </p>
+        </article><article>
+          <h2>Compositions</h2>
+          <p>
+            Build complex solutions by compositions instead of inheritance. By
+            combining small pieces of UI we can create large structures with much
+            simpler reasoning.
+          </p>
+        </article>
+      </section>
+      <a href="#content" class="chevronDown"><i></i></a>
+    </header>
 
-    <article class="content-container"></article>
+    <main class="mainContent" id="content">
 
-  </div>
+      <h2>Basic Usage</h2>
+      <div class="window">
+        <div class="control">
+          <ul>
+            <li></li>
+            <li></li>
+            <li></li>
+          </ul>
+        </div>
+        <div class="inner inner--result">
+          <div>Hello Omniscient</div>
+        </div>
+        <div class="inner inner--code">
+<pre><code class="js">var component = require('omniscient');
+var Hello = component((props) => &lt;div&gt;Hello {props.name}&lt;/div&gt;);
+React.render(Hello({ name: 'Omniscient' }, document.body);</code></pre>
+        </div>
 
-  <div class="github-badges">
-    <iframe src="http://ghbtns.com/github-btn.html?user=omniscientjs&repo=omniscient&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
-    <iframe src="http://ghbtns.com/github-btn.html?user=omniscientjs&repo=omniscient&type=fork&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="95" height="20"></iframe>
-  </div>
+      </div>
 
-  <script src="./static/bundle.js"></script>
+      <h2>Getting Started</h2>
+      <p>
+        Omniscient is just as much a way to think when you are building applications, as a library it self. In essense, Omniscient
+        is a small layer of syntactic sugar on top of React (for guiding usage) as well as a implemented <code>shouldComponentUpdate</code>,
+        which is optimized for usage with immutable data and the architectural style of Omniscient.
+      </p>
+      <p>
+        If you are totally new to Omniscient (and React), you can get started by reading the article <a href="https://github.com/omniscientjs/omniscient/wiki/Simpler-UI-Reasoning-with-Unidirectional-Dataflow-and-Immutable-Data">Simpler UI Reasoning with Unidirectional Dataflow and Immutable Data</a>.
+        This is an introductory article which explains some of the concepts of immutable data, cursors and
+        why Omniscient is worth trying out. If you prefer to see code instead of reading, you can see the obligatory example <a href="https://github.com/jcranendonk/todomvc-omniscient/">TodoMVC</a> by <a href="https://github.com/jcranendonk">@jcranendonk</a>.
+      </p>
+
+      <h3>Download and Use</h3>
+      <p>
+        You can download Omniscient through NPM, Bower or CDN. The easiest way, and will better share dependencies, is to use NPM:
+      </p>
+
+      <div class="window window--code">
+<pre><code class="shell">npm install --save omniscient</code></pre>
+      </div>
+
+      <p>
+        Or if Bower is your thing you can do:
+      </p>
+
+      <div class="window window--code">
+<pre><code class="shell">bower install --save omniscient</code></pre>
+      </div>
+
+      <p>
+        Or you can include the code through a CDN. Remember to also have React in your project.
+      </p>
+
+      <div class="window window--code">
+<pre><code class="html">&lt;script src="//cdnjs.cloudflare.com/ajax/libs/omniscient/2.1.0/omniscient.js"&gt;&lt;/script&gt;
+&lt;script src="//cdnjs.cloudflare.com/ajax/libs/omniscient/2.1.0/omniscient.min.js"&gt;&lt;/script&gt;</code></pre>
+      </div>
 
 
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      <p>As Omniscient is wrapped in a UMD, you can use it many different ways, through CommonJS, AMD or just through the window-object:</p>
 
-    ga('create', 'UA-55698127-1', 'auto');
-    ga('send', 'pageview');
-  </script>
-</body>
+      <div class="window window--code">
+<pre><code class="js">// Common.js (recommended)
+
+var component = require('omniscient');
+
+// or AMD:
+require(['omniscient'], function (component) {
+  // do something with component
+});
+
+
+// or as fallback Window-object:
+var component = window.Omniscient;
+</code></pre>
+      </div>
+
+    </main>
+
+    <a href="#" class="link--github">Fork on Github</a>
+  </body>
 </html>

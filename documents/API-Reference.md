@@ -1,3 +1,27 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [`component([displayName, ][mixins, ]function (props, statics) { })`](#componentdisplayname-mixins-function-props-statics--)
+  - [Parameter Setup](#parameter-setup)
+  - [Examples](#examples)
+    - [With ES2015 syntax](#with-es2015-syntax)
+- [`component.debug()`](#componentdebug)
+- [`component.debug(pattern)`](#componentdebugpattern)
+  - [Example](#example)
+- [`component.debug(logFunction)`](#componentdebuglogfunction)
+  - [Example](#example-1)
+- [`component.debug(pattern, logFunction)`](#componentdebugpattern-logfunction)
+  - [Example](#example-2)
+- [`component.shouldComponentUpdate`](#componentshouldcomponentupdate)
+  - [Example](#example-3)
+- [`component.withDefaults([Object: defaults])`](#componentwithdefaultsobject-defaults)
+  - ["Sandboxed" component Example](#sandboxed-component-example)
+  - [Omniscient Defaults](#omniscient-defaults)
+- [`shouldComponentUpdate.withDefaults([Object: defaults])`](#shouldcomponentupdatewithdefaultsobject-defaults)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 Given that:
 
 ```

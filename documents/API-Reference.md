@@ -1,6 +1,11 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+Given that:
+
+```
+var component = require('omniscient');
+```
+
+## Table of Contents
 
 - [`component([displayName, ][mixins, ]function (props, statics) { })`](#componentdisplayname-mixins-function-props-statics--)
   - [Parameter Setup](#parameter-setup)
@@ -20,13 +25,6 @@
   - [Omniscient Defaults](#omniscient-defaults)
 - [`shouldComponentUpdate.withDefaults([Object: defaults])`](#shouldcomponentupdatewithdefaultsobject-defaults)
 
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-Given that:
-
-```
-var component = require('omniscient');
-```
 
 ## `component([displayName, ][mixins, ]function (props, statics) { })`
 

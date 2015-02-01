@@ -115,12 +115,11 @@
           </ul>
         </div>
         <div class="inner inner--result">
-          <div>Hello Omniscient</div>
+          <div id="js-run-1"></div>
         </div>
         <div class="inner inner--code">
-<pre><code class="js">var component = require('omniscient');
-var Hello = component((props) => &lt;div&gt;Hello {props.name}&lt;/div&gt;);
-React.render(Hello({ name: 'Omniscient' }, document.body);</code></pre>
+          <pre><code class="js js--run">var Hello = component(({name}) => &lt;div&gt;Hello {name}&lt;/div&gt;);
+React.render(Hello({ name: 'Omniscient' }), document.getElementById('js-run-1'));</code></pre>
         </div>
 
       </div>
@@ -185,5 +184,10 @@ var component = window.Omniscient;
     </main>
 
     <a href="https://github.com/omniscientjs/omniscient" class="link--github">Fork on Github</a>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/omniscient/2.1.0/omniscient.min.js"></script>
+    <script src="scripts/browser.js"></script>
+    <script src="scripts/runnable-scripts.js"></script>
   </body>
 </html>

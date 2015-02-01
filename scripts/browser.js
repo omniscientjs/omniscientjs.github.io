@@ -1,0 +1,1 @@
+../node_modules/6to5/browser.js

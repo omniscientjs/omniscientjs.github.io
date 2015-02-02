@@ -409,6 +409,7 @@ pre code {
 }
 .window .control ul {
   height: 15px;
+  padding: 0;
 }
 .window .control ul li {
   border-radius: 100%;

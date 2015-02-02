@@ -105,6 +105,32 @@
 
     <main class="mainContent" id="content">
 
+      <h2>What is Omniscient?</h2>
+
+      <p>
+        Omniscient is a small library building on React. It adds syntactic sugar on creating component
+        for favoring small content-focused components and more composable functional style UI. Omniscient
+        also implements a default <code>shouldComponentUpdate</code> for using immutable data and
+        unidirectional rendering. If the syntactic sugar isn't your thing, you can use the provided
+        <code><a href="http://omniscientjs.github.io/api.html">shouldComponentUpdate</a></code> as a mixin
+        on your vanilla React components.
+      </p>
+
+      <p>
+        Some of the highlight of Omniscient include:
+      </p>
+
+      <ul>
+        <li>top-down rendering of components (one way data flow)</li>
+        <li>favors immutable data (with Immutable.js)</li>
+        <li>encourages small, composable components, and shared functionality through mixins</li>
+        <li>components only deal with their own piece of data</li>
+        <li>components can change their data, via cursors (without knowing where their data resides in the outer immutable data structure)</li>
+        <li>easily listen for changes across your data structure and trigger re-render</li>
+        <li>immutable data can give even faster re-renders than with pure React, as React can be prevented from even considering to re-render component trees with unchanged data</li>
+        <li>efficient, centrally defined <code>shouldComponentUpdate</code></li>
+      </ul>
+
       <h2>Basic Usage</h2>
       <div class="window">
         <div class="control">

@@ -176,7 +176,6 @@ ol {
   padding-left: 20px;
 }
 .mainHeader {
-  min-height: 100%;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
@@ -188,6 +187,9 @@ ol {
           justify-content: space-between;
   background: linear-gradient(to bottom, #0585a7 0%, #045e75 100%);
   border-bottom: 5px solid rgba(247, 179, 11, 0.9);
+}
+.mainHeader:not(.mainHeader--small) {
+  min-height: 100%;
 }
 .mainHeader.mainHeader--small {
   height: auto;

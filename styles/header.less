@@ -2,7 +2,9 @@
 @import "./globals/mixins";
 
 .mainHeader {
-  min-height: 100%;
+  &:not(.mainHeader--small) {
+    min-height: 100%;
+  }
   display: flex;
 
   flex-direction: column;

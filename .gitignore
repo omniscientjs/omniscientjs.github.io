@@ -2,6 +2,10 @@
 logs
 *.log
 
+_site
+.sass-cache
+
+
 .DS_Store
 
 # Runtime data

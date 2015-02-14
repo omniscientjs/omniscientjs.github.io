@@ -1,9 +1,9 @@
 <div class="nav-left">
   {% for collection in site.collections %}
     <div class="guides-left-collection">
-      <h3><a href="/{{ collection.label }}">{{ collection.collection }}</a></h3>
+      <h3><a href="/{{ collection[0].label }}">{{ collection[0].collection }}</a></h3>
       <ol>
-        {% for item in collection.docs %}
+        {% for item in collection[0].docs %}
         {% if item.hide != true %}
           <li>
             {{ item | sidebar_item_link}}

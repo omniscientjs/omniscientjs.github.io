@@ -1,3 +1,17 @@
+.editor {
+  display: none;
+}
+.editor-error {
+  color: #f25156;
+  pre {
+    font-size: 12px;
+    white-space: pre-wrap;       /* CSS 3 */
+    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    word-wrap: break-word;       /* Internet Explorer 5.5+ */
+  }
+}
 
 .window,
 pre code {
@@ -31,7 +45,7 @@ pre code {
 
 
 .window .inner  {
-  padding: 10px;
+  padding: 0.5rem;
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
 }

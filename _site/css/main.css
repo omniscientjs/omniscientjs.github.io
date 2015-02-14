@@ -1,0 +1,402 @@
+/**
+* Global Reset of all HTML Elements
+*
+* Resetting all of our HTML Elements ensures a smoother
+* visual transition between browsers. If you don't believe me,
+* try temporarily commenting out this block of code, then go
+* and look at Mozilla versus Safari, both good browsers with
+* a good implementation of CSS. The thing is, all browser CSS
+* defaults are different and at the end of the day if visual
+* consistency is what we're shooting for, then we need to
+* make sure we're resetting all spacing elements.
+*
+*/
+@import url(http://fonts.googleapis.com/css?family=Khula:400,700,600,300);
+html, body {
+  border: 0;
+  font-family: "Helvetica-Neue", "Helvetica", Arial, sans-serif;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0; }
+
+div, span, object, iframe, img, table, caption, thead, tbody,
+tfoot, tr, tr, td, article, aside, canvas, details, figure, hgroup, menu,
+nav, footer, header, section, summary, mark, audio, video {
+  border: 0;
+  margin: 0;
+  padding: 0; }
+
+h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, address, cit, code,
+del, dfn, em, ins, q, samp, small, strong, sub, sup, b, i, hr, dl, dt, dd,
+ol, ul, li, fieldset, legend, label {
+  border: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  margin: 0;
+  padding: 0; }
+
+article, aside, canvas, figure, figure img, figcaption, hgroup,
+footer, header, nav, section, audio, video {
+  display: block; }
+
+table {
+  border-collapse: separate;
+  border-spacing: 0; }
+  table caption, table th, table td {
+    text-align: left;
+    vertical-align: middle; }
+
+a img {
+  border: 0; }
+
+:focus {
+  outline: 0; }
+
+.hljs {
+  background: none;
+  margin: 0 0 40px; }
+
+body, html {
+  min-height: 100; }
+
+body {
+  font-family: 'Khula', sans-serif;
+  background: #2d2d2d;
+  color: rgba(239, 239, 239, 0.86); }
+
+.withSmallHeader {
+  padding-top: 100px; }
+
+* {
+  box-sizing: border-box; }
+
+.link--github {
+  background: url("/assets/github.png") center center no-repeat;
+  text-indent: -9999px;
+  background-size: contain;
+  position: absolute;
+  display: block;
+  top: 10px;
+  right: 10px; }
+
+.anchor-link {
+  display: block;
+  position: relative;
+  top: -30px;
+  visibility: hidden; }
+
+a:link, a:visited {
+  color: #0EC2DB;
+  text-decoration: none; }
+
+a:hover {
+  color: #0cadc3; }
+
+a:active {
+  color: #098293; }
+
+ul, ol {
+  list-style-position: inside;
+  padding-left: 20px; }
+
+.mainHeader {
+  height: 100%;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: linear-gradient(to bottom, #0585A7 0%, #045e75 100%);
+  border-bottom: 5px solid #f7b30b; }
+
+.mainHeader.mainHeader--small {
+  height: auto;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: #0585A7; }
+
+.mainHeader-illustration {
+  width: 90%;
+  max-width: 1100px;
+  margin: 0 auto;
+  flex: 1 0 50%;
+  display: flex;
+  align-items: center; }
+  .mainHeader-illustration svg {
+    margin: auto;
+    flex: 3 0 30%; }
+
+.mainHeader-illustration .illustrationText {
+  flex: 1 1 30%; }
+  .mainHeader-illustration .illustrationText .github-badges {
+    margin-top: 15px;
+    text-align: center; }
+  .mainHeader-illustration .illustrationText h1 {
+    font-size: 2.5rem; }
+
+.infoBoxes {
+  width: 90%;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  padding: 20px 0;
+  align-items: stretch;
+  justify-content: space-between; }
+  .infoBoxes article {
+    background: rgba(0, 0, 0, 0.3);
+    color: rgba(239, 239, 239, 0.86);
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
+    display: inline-block;
+    padding: 25px;
+    width: 33%; }
+    .infoBoxes article h2 {
+      font-size: 1.5rem; }
+
+.mainNavigation-inner {
+  width: 90%;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  justify-content: space-between; }
+  .mainNavigation-inner a {
+    display: block;
+    margin-right: 20px; }
+  .mainNavigation-inner ul {
+    display: flex;
+    list-style-type: none;
+    margin-top: 5px; }
+    .mainNavigation-inner ul li a {
+      color: #f7b30b;
+      text-transform: uppercase;
+      text-decoration: none;
+      font-weight: 300;
+      font-size: 1.2rem; }
+      .mainNavigation-inner ul li a:hover {
+        color: #c89107; }
+
+.mainNavigation-inner h1 a {
+  display: block; }
+  .mainNavigation-inner h1 a svg {
+    display: block; }
+    .mainNavigation-inner h1 a svg path {
+      transition: all 300ms;
+      fill: rgba(239, 239, 239, 0.86);
+      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4); }
+  .mainNavigation-inner h1 a:hover svg path {
+    fill: #0EC2DB; }
+
+.chevronDown {
+  height: 25px;
+  display: block;
+  text-align: center;
+  transition: all 400ms; }
+  .chevronDown i {
+    transition: all 400ms;
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    margin-bottom: 6px;
+    height: 5px;
+    width: 50px;
+    top: 10px;
+    opacity: 0.5; }
+    .chevronDown i:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 51%;
+      background: #0EC2DB;
+      -webkit-transform: skew(0deg, 6deg);
+      -moz-transform: skew(0deg, 6deg);
+      -ms-transform: skew(0deg, 6deg);
+      -o-transform: skew(0deg, 6deg);
+      transform: skew(0deg, 6deg); }
+    .chevronDown i:after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: 50%;
+      background: #0EC2DB;
+      -webkit-transform: skew(0deg, -6deg);
+      -moz-transform: skew(0deg, -6deg);
+      -ms-transform: skew(0deg, -6deg);
+      -o-transform: skew(0deg, -6deg);
+      transform: skew(0deg, -6deg); }
+  .chevronDown:hover i {
+    opacity: 1; }
+
+.graphNode--blue {
+  fill: #003854;
+  -webkit-animation-name: 'pulse_animation';
+  -webkit-animation-duration: 2500ms;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  -webkit-transform-origin: 70% 70%; }
+
+.graphEdge--fade,
+.graphNode--fade {
+  -webkit-animation-name: 'fade_animation';
+  -webkit-animation-duration: 5000ms;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear; }
+
+@-webkit-keyframes pulse_animation {
+  0% {
+    -webkit-transform: scale(1); }
+  50% {
+    -webkit-transform: scale(0.95); }
+  100% {
+    -webkit-transform: scale(1); } }
+@-webkit-keyframes fade_animation {
+  0% {
+    opacity: 1; }
+  20% {
+    opacity: .9; }
+  30% {
+    opacity: .2; }
+  50% {
+    opacity: .2; }
+  60% {
+    opacity: .2; }
+  70% {
+    opacity: .2; }
+  100% {
+    opacity: 1; } }
+.window,
+pre code {
+  background: #eee8ea;
+  width: 100%;
+  border-radius: 3px;
+  margin: 20px auto;
+  box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2); }
+
+.window .control {
+  padding: 10px; }
+
+.window .control ul {
+  height: 15px;
+  padding-left: 0; }
+
+.window .control ul li {
+  border-radius: 100%;
+  height: 15px;
+  width: 15px;
+  background: #f25156;
+  display: inline-block;
+  margin-right: 3px; }
+
+.window .control ul li:nth-of-type(2) {
+  background: #ffc109; }
+
+.window .control ul li:nth-of-type(3) {
+  background: #0ed439; }
+
+.window .inner {
+  padding: 10px;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px; }
+
+.window .inner--code--withoutResult {
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px; }
+
+.window .inner--code,
+.window .window--code,
+pre code {
+  padding: 0 10px;
+  background: #141414; }
+
+.inner--result {
+  padding-top: 20px;
+  color: #474747;
+  font-size: 20px;
+  font-weight: 300; }
+
+pre code {
+  background: #141414;
+  display: block;
+  padding: 10px; }
+
+.hljs {
+  background: #141414; }
+
+.mainContent {
+  width: 90%;
+  max-width: 1100px;
+  margin: 0 auto; }
+
+.mainContent h1,
+.mainContent h2,
+.mainContent h3 {
+  margin-top: 50px;
+  font-size: 2rem;
+  font-weight: 100;
+  position: relative;
+  color: #f7b30b; }
+
+.mainContent h1 {
+  margin-top: 0; }
+
+.mainContent h2 {
+  font-size: 1.5rem; }
+
+.mainContent h3 {
+  font-size: 1.2rem; }
+
+.mainContent p {
+  margin-bottom: 20px; }
+
+.mainContent img {
+  max-width: 100%; }
+
+.edit-page-link {
+  position: absolute;
+  top: -0.8rem;
+  right: 0;
+  font-size: 0.7rem; }
+
+.column {
+  margin-left: calc(31% + 30px); }
+
+.nav-left {
+  float: left;
+  width: 31%;
+  margin-right: 30px; }
+
+.nav-left ul,
+.nav-left ol {
+  padding: 0; }
+
+.nav-left h3 {
+  margin: 0 0 20px; }
+
+.nav-left > :not(:first-child) {
+  margin-top: 30px; }
+
+.nav-left h3 a {
+  font-size: 1.3rem;
+  font-weight: 100;
+  color: #f7b30b; }
+
+.guides-left-collection:not(:last-child) {
+  padding-bottom: 20px;
+  border-bottom: 3px dashed rgba(0, 0, 0, 0.3); }
+
+.docs-prevnext {
+  margin: 20px 0; }
+  .docs-prevnext:after {
+    content: "";
+    display: table;
+    clear: both; }
+
+.docs-prev {
+  float: left; }
+
+.docs-next {
+  float: right; }

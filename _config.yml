@@ -1,0 +1,25 @@
+# Site settings
+title: Omniscient.js
+description: > # this means to ignore newlines until "baseurl:"
+  A library providing an abstraction for React components that allows for
+  fast top-down rendering embracing immutable data for js.
+baseurl: "" # the subpath of your site, e.g. /blog/
+url: "http://omniscientjs.github.io/" # the base hostname & protocol for your site
+
+# Build settings
+markdown: kramdown
+
+collections:
+  guides:
+    output: true
+    collection: Guides
+    permalink: /guides/:path/
+  tutorials:
+    output: true
+    collection: Tutorials
+    permalink: /tutorials/:path/
+
+permalink: pretty
+
+kramdown:
+  input: GFM

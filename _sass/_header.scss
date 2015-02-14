@@ -1,0 +1,138 @@
+@import "./globals/colors";
+@import "./globals/mixins";
+
+.mainHeader {
+  height: 100%;
+  max-height: 100%;
+  display: flex;
+
+  flex-direction: column;
+  justify-content: space-between;
+
+  // background: linear-gradient(to bottom, #93cede 0%,#75bdd1 41%,#49a5bf 100%); /* W3C */
+  // background: linear-gradient(to bottom, #61dafb 0%,#59c9e5 100%);
+  background: linear-gradient(to bottom, $color-header-background 0%, $color-header-background--bottom 100%);
+
+  border-bottom: 5px solid $color-header-border;
+}
+.mainHeader.mainHeader--small {
+  height: auto;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: $color-header-background;
+}
+.mainHeader-illustration {
+  @include width-constraint;
+
+  flex: 1 0 50%;
+  display: flex;
+  align-items: center;
+
+  svg {
+    margin: auto;
+    flex: 3 0 30%;
+  }
+}
+.mainHeader-illustration .illustrationText {
+  flex: 1 1 30%;
+
+  .github-badges {
+    margin-top: 15px;
+    text-align: center;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+  }
+}
+
+
+.infoBoxes {
+  @include width-constraint;
+  display: flex;
+  padding: 20px 0;
+  align-items: stretch;
+  justify-content: space-between;
+
+  article {
+    h2 {
+      font-size: 1.5rem;
+    }
+    background: rgba(0,0,0, 0.3);
+    color: $color-white-fontColor;
+    text-shadow: 1px 1px 1px rgba(0,0,0,.4);
+
+    display: inline-block;
+    padding: 25px;
+    width: 33%;
+  }
+}
+
+.mainNavigation-inner {
+  @include width-constraint;
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  justify-content: space-between;
+
+  a {
+    display: block;
+    margin-right: 20px;
+  }
+
+  ul {
+    display: flex;
+    list-style-type: none;
+    margin-top: 5px;
+
+    li a {
+      color: $color-header-linkColor;
+
+      text-transform: uppercase;
+      text-decoration: none;
+      font-weight: 300;
+      font-size: 1.2rem;
+
+      &:hover {
+        color: darken($color-header-linkColor, 10%);
+      }
+    }
+  }
+}
+
+.mainNavigation-inner h1 a {
+  display: block;
+  svg {
+    display: block;
+
+    path {
+      transition: all 300ms;
+      fill: $color-white-fontColor;
+      text-shadow: 1px 1px 1px rgba(0,0,0,.4);
+    }
+  }
+
+  &:hover svg path {
+    fill: $color-blue-light;
+  }
+}
+
+
+.chevronDown {
+  height: 25px;
+  display: block;
+  text-align: center;
+    transition: all 400ms;
+
+  i {
+    transition: all 400ms;
+    @include chevron($color-blue-light, 5px, 50px);
+    top: 10px;
+    opacity: 0.5;
+  }
+
+  &:hover i {
+    opacity: 1;
+  }
+}

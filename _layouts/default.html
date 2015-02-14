@@ -1,0 +1,17 @@
+<html>
+  {% include head.html %}
+  <body class="withSmallHeader">
+    <header class="mainHeader mainHeader--small">
+      {% include nav.html %}
+    </header>
+
+    <main class="mainContent js-tutorials-content" id="content">
+      {% include nav-left.html %}
+
+      <section class="column" id="content">
+        {{ content }}
+      </section>
+    </main>
+    <a href="https://github.com/omniscientjs/" class="link--github">Fork on Github</a>
+  </body>
+</html>

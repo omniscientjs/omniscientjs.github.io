@@ -1,0 +1,23 @@
+---
+layout: guides
+collection: tutorials
+title: All Tutorials
+hide: true
+permalink: /tutorials/
+name: 00-all-tutorials
+next: 01-editing-basic-tutorial-creating-list-with-live-filtering
+---
+
+Here is a complete list of all the tutorials that exsists in the Omniscient documentation. If you feel
+like there's something missing, please help us out by sending a pull request or posting an issue!
+
+
+<ol>
+{% for item in site.tutorials %}
+{% if item.hide != true %}
+  <li>
+    {{ item | sidebar_item_link}}
+  </li>
+{% endif %}
+{% endfor %}
+</ol>

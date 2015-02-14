@@ -1,0 +1,88 @@
+<html>
+  {% include head.html %}
+  <body>
+    <header class="mainHeader">
+      {% include nav.html %}
+
+      <div class="mainHeader-illustration">
+        <div class="illustrationText">
+          <h1>Omniscient</h1>
+          <p>
+            Do fast top-down rendering embracing immutable data. With cursors into immutable data structures, components can easily swap their own piece of data inside the larger immutable data structure and only to render components that have changed their data layer.
+          </p>
+
+          <div class="github-badges">
+            <iframe src="http://ghbtns.com/github-btn.html?user=omniscientjs&amp;repo=omniscient&amp;type=watch&amp;count=true" allowtransparency="true" frameborder="0" scrolling="0" width="140" height="30"></iframe>
+            <iframe src="http://ghbtns.com/github-btn.html?user=omniscientjs&amp;repo=omniscient&amp;type=fork&amp;count=true" allowtransparency="true" frameborder="0" scrolling="0" width="140" height="30"></iframe>
+          </div>
+        </div>
+
+        <svg width="100%" height="550" viewBox="0 0 600 225" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet">
+          <g>
+            <title>Layer 1</title>
+            <g class="active-path">
+              <polyline class="graphEdge" id="svg_18" points="397.74151611328125,401.7062072753906 422.5,418.2488708496094 447.25848388671875,434.7915344238281" stroke="#000000" stroke-width="5" fill="none" stroke-dasharray="5,5"/>
+              <polyline class="graphEdge" id="svg_17" points="311.259521484375,273.74151611328125 331.488037109375,312.5 351.7165832519531,351.25848388671875" stroke="#000000" stroke-width="5" fill="none" stroke-dasharray="5,5"/>
+              <polyline class="graphEdge" id="svg_16" points="356.25994873046875,193.2415313720703 336.79949951171875,215.75 317.3390197753906,238.25848388671875" stroke="#000000" stroke-width="5" fill="none" stroke-dasharray="5,5"/>
+              <polyline class="graphEdge" id="svg_14" points="299.64306640625,110.64816284179688 325.7007751464844,125.7142562866211 351.75848388671875,140.7803497314453" stroke="#000000" stroke-width="5" fill="none" stroke-dasharray="5,5"/>
+              <circle fill="#cccccc" stroke-width="0" cx="385.00001" cy="160" r="33.24153" id="svg_1" class="graphNode" stroke="#000000"/>
+              <circle fill="#cccccc" stroke-width="0" cx="301.99999" cy="256" r="17.74152" id="svg_3" class="graphNode" stroke="#000000"/>
+              <circle fill="#cccccc" stroke-width="0" cx="367.49998" cy="381.5" r="30.24152" id="svg_5" class="graphNode" stroke="#000000"/>
+              <circle fill="#cccccc" stroke-width="0" cx="478.99998" cy="456" r="31.74152" id="svg_6" class="graphNode" stroke="#000000"/>
+            </g>
+            <g>
+                <polyline class="graphEdge graphEdge--fade" id="svg_22" points="122.91644287109375,282.74151611328125 89.65998840332031,326.5 56.403541564941406,370.25848388671875" stroke="#000000" stroke-width="5" fill="none" stroke-dasharray="5,5"/>
+                <polyline class="graphEdge graphEdge--fade" id="svg_21" points="149.36302185058594,282.74151611328125 145.17288208007812,323.5 140.98275756835938,364.25848388671875" stroke="#000000" stroke-width="5" fill="none" stroke-dasharray="5,5"/>
+                <polyline class="graphEdge graphEdge--fade" id="svg_20" points="177.00497436523438,282.74151611328125 207.52903747558594,335 238.0531005859375,387.25848388671875" stroke="#000000" stroke-width="5" fill="none" stroke-dasharray="5,5"/>
+                <polyline class="graphEdge graphEdge--fade" id="svg_19" points="217.244140625,132.64306640625 197.04708862304688,167.45077514648438 176.8500213623047,202.25848388671875" stroke="#000000" stroke-width="5" fill="none" stroke-dasharray="5,5"/>
+                <polyline class="graphEdge graphEdge--fade" id="svg_15" points="417.0819396972656,193.2415313720703 428.6715087890625,205.25 440.2610778808594,217.25848388671875" stroke="#000000" stroke-width="5" fill="none" stroke-dasharray="5,5"/>
+            </g>
+            <g>
+              <circle fill="#cccccc" stroke-width="0" cx="467.99998" cy="246" r="28.74152" id="svg_4" class="graphNode graphNode--fade" stroke="#000000"/>
+              <circle fill="#007fff" stroke-width="0" cx="247.5" cy="80.5" r="52.14306" id="svg_2"  class="graphNode graphNode--blue" stroke="#000000"/>
+              <circle fill="#cccccc" stroke-width="0" cx="153.49999" cy="242.5" r="40.24152" id="svg_7" class="graphNode graphNode--fade" stroke="#000000"/>
+              <circle fill="#cccccc" stroke-width="0" cx="39.49999" cy="392.5" r="22.24152" stroke="#000000" id="svg_8" class="graphNode graphNode--fade"/>
+              <circle fill="#cccccc" stroke-width="0" cx="136.99999" cy="403" r="38.74152" id="svg_9" class="graphNode graphNode--fade" stroke="#000000"/>
+              <circle fill="#cccccc" stroke-width="0" cx="248.99999" cy="406" r="18.74152" id="svg_10" class="graphNode graphNode--fade" stroke="#000000"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+
+      <section class="infoBoxes">
+        <article>
+          <h2>Based On React</h2>
+          <p>
+            Omniscient uses React. This means you get all the advantages you get
+            with React: Virtual DOM, no bad templateing, no two-way databinding
+            and most of all, a static mental model.
+          </p>
+        </article><article>
+          <h2>Unidirectional</h2>
+          <p>
+            All communication is passed from input arguments, which means no local
+            state in each component. Causes referential transparent components which
+            again causes predictability and thus reliability.
+          </p>
+        </article><article>
+          <h2>Compositions</h2>
+          <p>
+            Build complex solutions by compositions instead of inheritance. By
+            combining small pieces of UI we can create large structures with much
+            simpler reasoning.
+          </p>
+        </article>
+      </section>
+      <a href="#content" class="chevronDown"><i></i></a>
+    </header>
+
+    <main class="mainContent">
+      {% include nav-left.html %}
+      <section class="column" id="content">
+        {{ content }}
+      </section>
+    </main>
+
+    <a href="https://github.com/omniscientjs/" class="link--github">Fork on Github</a>
+  </body>
+</html>

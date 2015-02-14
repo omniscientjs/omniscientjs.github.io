@@ -1,0 +1,22 @@
+---
+layout: guides
+collection: guides
+title: All Guides
+hide: true
+permalink: /guides/
+name: 00-all-guides
+next: 01-simpler-ui-reasoning-with-unidirectional
+---
+
+Here is a complete list of all the guides that exsists in the Omniscient documentation. If you feel
+like there's something missing, please help us out by sending a pull request or posting an issue!
+
+<ol>
+{% for item in site.guides %}
+{% if item.hide != true %}
+  <li>
+    {{ item | sidebar_item_link}}
+  </li>
+{% endif %}
+{% endfor %}
+</ol>

@@ -1,0 +1,41 @@
+@import "./globals/mixins";
+@import "./globals/colors";
+
+.mainContent {
+  @include width-constraint;
+}
+
+.mainContent h1,
+.mainContent h2,
+.mainContent h3 {
+  margin-top: 50px;
+  font-size: 2rem;
+  font-weight: 100;
+  position: relative;
+
+  color: $color-organge-normal;
+}
+.mainContent h1 {
+  margin-top: 0;
+}
+.mainContent h2 {
+  font-size: 1.5rem;
+}
+.mainContent h3 {
+  font-size: 1.2rem;
+}
+
+.mainContent p {
+  margin-bottom: 20px;
+}
+
+.mainContent img {
+  max-width: 100%;
+}
+
+.edit-page-link {
+  position: absolute;
+  top: -0.8rem;
+  right: 0;
+  font-size: 0.7rem;
+}

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Omniscient.js</title>
+    <description>A library providing an abstraction for React components that allows for fast top-down rendering embracing immutable data for js.
+</description>
+    <link>http://omniscientjs.github.io//</link>
+    <atom:link href="http://omniscientjs.github.io//feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Sat, 14 Feb 2015 01:41:09 +0100</pubDate>
+    <lastBuildDate>Sat, 14 Feb 2015 01:41:09 +0100</lastBuildDate>
+    <generator>Jekyll v2.5.3</generator>
+    
+  </channel>
+</rss>

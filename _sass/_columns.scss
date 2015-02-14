@@ -1,0 +1,31 @@
+@import "globals/size";
+
+.column {
+  margin-left: calc(#{$column-sidebar-width} + #{$column-sidebar-margin});
+}
+
+.nav-left {
+  float: left;
+  width: $column-sidebar-width;
+  margin-right: $column-sidebar-margin;
+}
+.nav-left ul,
+.nav-left ol {
+  padding: 0;
+}
+.nav-left h3 {
+  margin: 0 0 20px;
+}
+.nav-left > :not(:first-child) {
+  margin-top: 30px;
+}
+.nav-left h3 a {
+  font-size: 1.3rem;
+  font-weight: 100;
+  color: $color-organge-normal;
+}
+
+.guides-left-collection:not(:last-child) {
+  padding-bottom: 20px;
+  border-bottom: 3px dashed rgba(0,0,0,0.3);
+}

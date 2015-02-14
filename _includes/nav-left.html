@@ -1,0 +1,16 @@
+<div class="nav-left">
+  {% for collection in site.collections %}
+    <div class="guides-left-collection">
+      <h3><a href="/{{ collection[1].label }}">{{ collection[1].collection }}</a></h3>
+      <ol>
+        {% for item in collection[1].docs %}
+        {% if item.hide != true %}
+          <li>
+            {{ item | sidebar_item_link}}
+          </li>
+        {% endif %}
+        {% endfor %}
+      </ol>
+    </div>
+  {% endfor %}
+</div>

@@ -46,7 +46,7 @@ function render () {
 structure.on('swap', render);
 ```
 
-Here, Omniscient get passed a new cursor to `message`. Cursors are immutable, so while you might attempt the following, it will probably not turn out the way you expected:
+Here, Omniscient gets passed a new cursor to `message`. Cursors are immutable, so while you might attempt the following, it will probably not turn out the way you expected:
 
 ```js
 var App = component(function (props) {

@@ -14,9 +14,12 @@ like there's something missing, please help us out by sending a pull request or 
 <ol>
 {% for item in site.guides %}
 {% if item.hide != true %}
-  <li>
-    {{ item | sidebar_item_link}}
-  </li>
+  {% assign pageID = @context.registers[:page]["id"] %}
+  {% assign itemID = item["name"]%}
+  {% assign className = pageID == itemID ? ' class="active"' : '' %}
+    <li>
+      <a href="/{{item["collection"]}}/{{itemID}}"{{className}}>{{item["title"]}}</a>
+    </li>
 {% endif %}
 {% endfor %}
 </ol>

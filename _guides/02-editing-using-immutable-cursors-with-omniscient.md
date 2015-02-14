@@ -6,9 +6,9 @@ name: 02-editing-using-immutable-cursors-with-omniscient
 prev: 01-simpler-ui-reasoning-with-unidirectional
 ---
 
-This is a small writeup on how to use [Immutable.js](https://github.com/facebook/immutable-js) and [immstruct](https://github.com/omniscientjs/immstruct). It's not strictly a Omniscient specific guide, but immstruct is often used with Omniscient and works great with it.
+This is a small writeup on how to use [Immutable.js](https://github.com/facebook/immutable-js) and [immstruct](https://github.com/omniscientjs/immstruct). It's not strictly an Omniscient specific guide, but immstruct is often used with Omniscient, and works great with it.
 
-You often see the following usage:
+You often see the following when immstruct is used with Omniscient:
 
 ```js
 var App = component(function (props) {
@@ -30,13 +30,13 @@ render();
 
 What is really happening with `props.cursor.update()`?
 
-when you do
+When you do
 
 ```js
 props.cursor.update(function () { return 'Hello'; });
 ```
 
-An event (`swap`) is triggered in immstruct, and with Omniscient and React, you render the entire structure again, with:
+A `swap` event is triggered in immstruct, and with Omniscient and React you render the entire structure again with:
 
 ```js
 function render () {
@@ -46,19 +46,19 @@ function render () {
 structure.on('swap', render);
 ```
 
-So we see, actually, with Omniscient we get passed a new cursor. They are immutable. But if, however, you try to use the cursor twice in a Omniscient component, like so:
+Here, Omniscient get passed a new cursor to `message`. Cursors are immutable, so while you might attempt the following, it will probably not turn out the way you expected:
 
 ```js
 var App = component(function (props) {
    var change = function () {
-      props.cursor.update(function (current) { return current + 'Hello'; });
-      props.cursor.update(function (current) { return current + 'Bye'; });
+      props.cursor.update(function (current) { return current + 'Hello'; });
+      props.cursor.update(function (current) { return current + 'Bye'; });
    };
    return <button onClick={change}>{props.cursor.deref()}</button>
 });
 ```
 
-You first will update the structure to have `FooHello`, and then update to be `FooBye`. The result will be a button with the text `FooBye`, not `FooHelloBye` as you might expect. This is due to the immutability. Because you update the cursor in the same call stack. So the second time `props.cursor.update` is invoked, it is on the original cursor, not the cursor after the update on the line before. So what you would need to do, as they are immutable, is to store the previous cursor. Like so:
+This will first update the structure to contain `FooHello`, and then update it again to contain `FooBye`. The result will be a button with the text `FooBye`, not `FooHelloBye` as you might expect. This is because of immutability. Every cursor update returns a new cursor, containing the updated value. So the second time around when `props.cursor.update` is invoked, you are actually operating on the original cursor. To make this work, you need to keep the resulting cursor from the first `update` and update it with `'Bye'`:
 
 ```js
 var App = component(function (props) {
@@ -72,7 +72,7 @@ var App = component(function (props) {
 
 This will give the expected result `FooHelloBye`.
 
-You can easily store the cursor and use it in the same stack. It will cause the render to happens multiple time, but you wouldn't loose data - as long as you take into consideration that cursors, as the structure, is immutable.
+Updating the structure twice will cause multiple renders, but you wouldn't loose data - as long as you take into consideration that both the underlying structure and the cursors are immutable.
 
 ## A note on the structure
 
@@ -82,30 +82,28 @@ Having the following structure
 var structure = immstruct({ message: 'Foo' });
 ```
 
-And invoking `structure.cursor()`, you get a new cursor. `structure.cursor()` returns a new cursor based on the updated structure (reachable by doing `structure.current`). This is a method call for creating a new cursor, not a reference to an existing cursor, as `props.cursor.cursor('subpath')` would be. See examples below.
+And invoking `structure.cursor()`, you get a new cursor based on the current structure (reachable by doing `structure.current`). Note that this is a method call for creating a new cursor, not a method for creating a cursor to a path of an existing cursor, like `props.cursor.cursor('subpath')` would be. 
 
 ## Some examples
 
 ```js
-// New cursor for top node, and update that value
-structure.cursor().update(/* ... */);
+// New cursor for top node, and update that value to `someNewValue`
+structure.cursor().update(/* .. */);
 
-// New cursor for top node, with the updated value from above
+// New cursor for top node, containing the updated value from above
 structure.cursor();
 
+// New cursor again
+var newCursor = structure.cursor();
 
-// new cursor again
-var cursorReference = structure.cursor();
-// cursorReference is now a cursor to the structure **when the cursor was created**.
+var anotherCursor = newCursor.update(/* .. */); // update the structure again
 
-var newCursorReference = cursorReference.update(/* .. */); // update structure referenced
-
-cursorReference //=> Still a reference to the "old" data
-newCursorReference //=> Reference to the new data
-structure.cursor() //=> Reference to the new data (create a new cursor)
+newCursor          //=> Still points to the first updated data
+anotherCursor      //=> Points to the updated data
+structure.cursor() //=> Create another cursor that points to the updated data 
 ```
 
-This is applicable when you do this on `structure`. The immstruct construct. If you have a cursor, it is a different story:
+This is applicable when operating directly on a `structure`. If you have a cursor, it behaves slightly different:
 
 ```js
 // New sub cursor for top node, and update that value

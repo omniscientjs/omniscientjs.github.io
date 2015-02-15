@@ -56,7 +56,7 @@ body, html {
 
 body {
   font-family: 'Khula', sans-serif;
-  min-width: 450px;
+  min-width: 350px;
   background: #2d2d2d;
   color: rgba(239, 239, 239, 0.86); }
 
@@ -101,7 +101,7 @@ ul, ol {
 
 .mainHeader {
   min-height: 100%;
-  min-width: 450px;
+  min-width: 350px;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -131,7 +131,7 @@ ul, ol {
   width: 90%;
   max-width: 1100px;
   margin: 0 auto;
-  min-width: 450px;
+  min-width: 350px;
   -webkit-flex-wrap: wrap;
       -ms-flex-wrap: wrap;
           flex-wrap: wrap;
@@ -175,7 +175,7 @@ ul, ol {
   width: 90%;
   max-width: 1100px;
   margin: 0 auto;
-  min-width: 450px;
+  min-width: 350px;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -211,7 +211,7 @@ ul, ol {
   width: 90%;
   max-width: 1100px;
   margin: 0 auto;
-  min-width: 450px;
+  min-width: 350px;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -425,7 +425,7 @@ code {
   width: 90%;
   max-width: 1100px;
   margin: 0 auto;
-  min-width: 450px; }
+  min-width: 350px; }
 
 .mainContent h1, .mainContent h2, .mainContent h3 {
   margin-top: 50px;
@@ -481,7 +481,7 @@ code {
   padding-bottom: 20px;
   border-bottom: 3px dashed rgba(0, 0, 0, 0.3); }
 
-@media (max-width: 450px) {
+@media (max-width: 350px) {
   .nav-left {
     display: none; }
   .column {

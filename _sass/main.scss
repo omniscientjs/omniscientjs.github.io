@@ -2,6 +2,7 @@
 
 @import "globals/reset";
 @import "globals/colors";
+@import "globals/size";
 
 .hljs {
   background: none;
@@ -16,6 +17,7 @@ body, html {
 
 body {
   font-family: 'Khula', sans-serif;
+  min-width: $min-width;
 
   background: $color-darkGray-background;
   color: $color-white-fontColor;
@@ -38,6 +40,12 @@ body {
   display: block;
   top: 10px;
   right: 10px;
+}
+
+@media (max-width: $first-breakpoint-width) {
+  .link--github {
+    display: none;
+  }
 }
 
 .anchor-link {

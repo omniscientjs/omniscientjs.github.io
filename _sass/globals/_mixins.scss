@@ -3,6 +3,7 @@
   width: 90%;
   max-width: 1100px;
   margin: 0 auto;
+  min-width: $min-width;
 }
 
 @mixin chevron ($color, $height: 30px, $width: 200px) {

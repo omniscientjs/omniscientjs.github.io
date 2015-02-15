@@ -56,6 +56,7 @@ body, html {
 
 body {
   font-family: 'Khula', sans-serif;
+  min-width: 450px;
   background: #2d2d2d;
   color: rgba(239, 239, 239, 0.86); }
 
@@ -73,6 +74,10 @@ body {
   display: block;
   top: 10px;
   right: 10px; }
+
+@media (max-width: 650px) {
+  .link--github {
+    display: none; } }
 
 .anchor-link {
   display: block;
@@ -96,6 +101,7 @@ ul, ol {
 
 .mainHeader {
   min-height: 100%;
+  min-width: 450px;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -125,6 +131,7 @@ ul, ol {
   width: 90%;
   max-width: 1100px;
   margin: 0 auto;
+  min-width: 450px;
   -webkit-flex-wrap: wrap;
       -ms-flex-wrap: wrap;
           flex-wrap: wrap;
@@ -159,10 +166,15 @@ ul, ol {
   .mainHeader-illustration .illustrationText h1 {
     font-size: 2.5rem; }
 
+@media (max-width: 450px) {
+  .mainHeader-illustration svg {
+    display: none; } }
+
 .infoBoxes {
   width: 90%;
   max-width: 1100px;
   margin: 0 auto;
+  min-width: 450px;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -198,6 +210,7 @@ ul, ol {
   width: 90%;
   max-width: 1100px;
   margin: 0 auto;
+  min-width: 450px;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -410,7 +423,8 @@ code {
 .mainContent {
   width: 90%;
   max-width: 1100px;
-  margin: 0 auto; }
+  margin: 0 auto;
+  min-width: 450px; }
 
 .mainContent h1, .mainContent h2, .mainContent h3 {
   margin-top: 50px;
@@ -466,7 +480,7 @@ code {
   padding-bottom: 20px;
   border-bottom: 3px dashed rgba(0, 0, 0, 0.3); }
 
-@media (max-width: 650px) {
+@media (max-width: 450px) {
   .nav-left {
     display: none; }
   .column {

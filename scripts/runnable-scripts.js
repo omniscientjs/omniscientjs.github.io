@@ -84,7 +84,7 @@
       var msg = e.message;
       if (resultEl) {
         var error = document.createElement('pre');
-        error.innerText = msg;
+        error.innerHTML = msg;
 
         var errorEl = document.createElement('span');
         errorEl.className = 'editor-error';

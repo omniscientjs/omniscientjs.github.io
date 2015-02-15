@@ -43,6 +43,10 @@ function render () {
     Count({ counter: data.cursor('counter') }),
     document.getElementById('editor-2'));
 }
+
+setInterval(
+  () => data.cursor('counter').update(i => i + 1),
+  2000);
 </textarea>
     </div>
 </div>

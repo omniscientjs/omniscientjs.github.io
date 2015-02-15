@@ -22,13 +22,14 @@
       viewportMargin: Infinity,
       theme: 'kimbie-dark'
     });
+    var timers = { timeouts: [], intervals: [] };
     editor.on('change', function () {
-      run(editor);
+      run(editor, timers);
     });
-    run(editor);
+    run(editor, timers);
   }
 
-  function run (editor) {
+  function run (editor, timers) {
     var src = editor.doc.getValue();
     var match = src.match(/['"](editor-[0-9]+)['"]/);
     var resultEl;
@@ -36,7 +37,23 @@
       resultEl = document.getElementById(match[1]);
     }
     try {
-      to5.run(src);
+      timers.timeouts.forEach(clearTimeout);
+      timers.intervals.forEach(clearInterval);
+      timers.timeouts = [];
+      timers.intervals = [];
+      var newSetTimeout = function () {
+        var id = setTimeout.apply(this, arguments);
+        timers.timeouts.push(id);
+        return id;
+      };
+      var newSetInterval = function () {
+        var id = setInterval.apply(this, arguments);
+        timers.intervals.push(id);
+        return id;
+      };
+      var compiledCode = to5.transform(src).code;
+      var fn = new Function('setTimeout', 'setInterval', compiledCode);
+      fn(newSetTimeout, newSetInterval);
     }
     catch (e) {
       var msg = e.message;

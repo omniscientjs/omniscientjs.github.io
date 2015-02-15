@@ -148,6 +148,7 @@ ul, ol {
       -ms-flex-align: center;
           align-items: center; }
   .mainHeader-illustration svg {
+    min-width: 450px;
     margin: auto;
     -webkit-box-flex: 3;
     -webkit-flex: 3 0 30%;

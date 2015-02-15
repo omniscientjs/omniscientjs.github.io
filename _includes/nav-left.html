@@ -1,5 +1,8 @@
 <div class="nav-left">
   {% for collection in site.collections %}
+    {% if collection[1].label == 'playground' %}
+      {% continue %}
+    {% endif %}
     <div class="guides-left-collection">
       <h3><a href="/{{ collection[1].label }}">{{ collection[1].collection }}</a></h3>
       <ol>

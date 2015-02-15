@@ -14,6 +14,10 @@ collections:
     output: true
     collection: Guides
     permalink: /guides/:path/
+  playground:
+    output: true
+    collection: Playground
+    permalink: /playground/:path/
   tutorials:
     output: true
     collection: Tutorials

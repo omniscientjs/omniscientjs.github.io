@@ -160,7 +160,7 @@ ul, ol {
   -webkit-flex: 1 1 30%;
       -ms-flex: 1 1 30%;
           flex: 1 1 30%;
-  min-width: 450px; }
+  min-width: 350px; }
   .mainHeader-illustration .illustrationText .github-badges {
     margin-top: 15px;
     text-align: center; }

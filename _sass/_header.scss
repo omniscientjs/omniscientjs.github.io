@@ -41,7 +41,7 @@
 }
 .mainHeader-illustration .illustrationText {
   flex: 1 1 30%;
-  min-width: 450px;
+  min-width: $min-width;
 
   .github-badges {
     margin-top: 15px;

@@ -8,7 +8,7 @@ In its simplest form, an Omniscient component very much resembles a React compon
 
 <div class='window'>
   <div class='control'><ul><li></li><li></li><li></li></ul></div>
-  <div id='editor-1' class='inner inner--result'></div>
+  <div id='result-1' class='inner inner--result'></div>
   <div class='inner inner--code'>
 <textarea class='editor'>
 var Greet = component(({name}) =>
@@ -16,7 +16,7 @@ var Greet = component(({name}) =>
 
 React.render(
   Greet({ name: 'Omniscient' }),
-  document.getElementById('editor-1'));</textarea>
+  document.getElementById('result-1'));</textarea>
     </div>
 </div>
 
@@ -24,7 +24,7 @@ The code below shows Omniscient used in cooperation with Immstruct and the curso
 
 <div class='window'>
   <div class='control'><ul><li></li><li></li><li></li></ul></div>
-  <div id='editor-2' class='inner inner--result'></div>
+  <div id='result-2' class='inner inner--result'></div>
   <div class='inner inner--code'>
 <textarea class='editor'>
 var Count = component(({counter}) => {
@@ -41,7 +41,7 @@ render();
 function render () {
   React.render(
     Count({ counter: data.cursor('counter') }),
-    document.getElementById('editor-2'));
+    document.getElementById('result-2'));
 }
 
 setInterval(

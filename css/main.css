@@ -481,7 +481,7 @@ code {
   padding-bottom: 20px;
   border-bottom: 3px dashed rgba(0, 0, 0, 0.3); }
 
-@media (max-width: 350px) {
+@media (max-width: 650px) {
   .nav-left {
     display: none; }
   .column {

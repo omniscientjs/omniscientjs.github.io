@@ -1,0 +1,369 @@
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Editing Basic Tutorial Creating List with Live Filtering</title>
+  <meta name="description" content="A library providing an abstraction for React components that allows for fast top-down rendering embracing immutable data for js.
+">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/kimbie.dark.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://omniscientjs.github.io//tutorials/01-editing-basic-tutorial-creating-list-with-live-filtering/">
+  <link rel="alternate" type="application/rss+xml" title="Omniscient.js" href="http://omniscientjs.github.io//feed.xml" />
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+  <script> hljs.initHighlightingOnLoad(); </script>
+</head>
+
+  <body class="withSmallHeader">
+    <header class="mainHeader mainHeader--small">
+      <nav class="mainNavigation">
+  <div class="mainNavigation-inner">
+    <h1>
+      <a href="/">
+        <svg width="50px" height="25px" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMax meet">
+         <g>
+          <title>Layer 1</title>
+          <path fill="black" d="m416.873962,103.126556c25.875885,25.8759 40.126068,60.279999 40.126068,96.873978s-14.250702,70.997604 -40.126068,96.873428c-25.876404,25.875366 -60.279999,40.126038 -96.873932,40.126038s-70.997589,-14.250671 -96.873993,-40.126038c-25.875351,-25.875824 -40.126053,-60.279449 -40.126053,-96.873428s14.249634,-70.998093 40.126053,-96.873978s60.279968,-40.126556 96.873993,-40.126556s70.997528,14.250671 96.873932,40.126556zm-12.109436,181.638428c16.872894,-16.872925 28.091919,-37.891312 32.717834,-60.756882c-3.605408,5.307693 -7.054443,7.277054 -9.189819,-4.603958c-2.199463,-19.37001 -19.990173,-6.996109 -31.177582,-13.876587c-11.774506,7.935806 -38.238556,-15.429062 -33.741058,10.923599c6.939331,11.886398 37.463074,-15.908005 22.248596,9.242767c-9.706177,17.557953 -35.492126,56.44072 -32.137756,76.596359c0.423279,29.365082 -30.004639,6.12323 -40.488342,-3.617737c-7.052277,-19.511749 -2.403381,-53.616165 -20.843781,-63.171387c-20.015381,-0.869095 -37.194427,-2.68811 -44.951538,-25.064056c-4.668152,-16.008682 4.967316,-39.84079 22.122833,-43.519989c25.112213,-15.77803 34.082458,18.477341 57.633636,19.114182c7.312408,-7.651138 27.243744,-10.083954 28.896362,-18.663574c-15.452667,-2.726624 19.604858,-12.993073 -1.479218,-18.832657c-11.631653,1.367828 -19.125916,12.060776 -12.942749,21.127396c-22.540314,5.255783 -23.262207,-32.61879 -44.929047,-20.672546c-0.550659,18.888336 -35.379791,6.123779 -12.05069,2.293671c8.015564,-3.502045 -13.073914,-13.650772 -1.680359,-11.806595c5.596619,-0.303986 24.438416,-6.906754 19.339447,-11.345871c10.49176,-6.512856 19.308472,15.597137 29.577576,-0.503555c7.414032,-12.379776 -3.109314,-14.665443 -12.402313,-8.390175c-5.239136,-5.866417 9.250214,-18.536766 22.030273,-24.011932c4.259308,-1.824898 8.327606,-2.819214 11.437988,-2.537704c6.437317,7.436531 18.342377,8.72464 18.965332,-0.894264c-15.942291,-7.635071 -33.520569,-11.668556 -51.720123,-11.668556c-26.121552,0 -50.965668,8.301338 -71.525818,23.651237c5.525497,2.531273 8.662079,5.682831 3.338867,9.712013c-4.135681,12.323067 -20.91658,28.865273 -35.647858,26.52343c-7.648972,13.190521 -12.686386,27.722687 -14.839874,42.953796c12.338593,4.082153 15.183472,12.161407 12.532303,14.863937c-6.287018,5.482147 -10.150848,13.253189 -12.141647,21.760544c4.016357,24.573288 15.565536,47.220566 33.519516,65.175095c22.641373,22.640869 52.744461,35.109924 84.764511,35.109924c32.01944,0 62.123016,-12.469116 84.764496,-35.109924l0,0z" id="svg_7" stroke="null"/>
+          <path fill="black" id="svg_4" d="m320,5.3125c-194.6875,0 -311.5,193.480423 -311.5,193.480423s116.8125,195.894577 311.5,195.894577s311.5,-194.6875 311.5,-194.6875s-116.8125,-194.6875 -311.5,-194.6875zm0,350.4375c-170.351563,0 -262.828125,-155.75 -262.828125,-155.75s92.476563,-155.75 262.828125,-155.75s262.828125,155.75 262.828125,155.75s-92.476563,155.75 -262.828125,155.75z"/>
+         </g>
+        </svg>
+      </a>
+    </h1>
+
+    <ul>
+      <li><a href="/guides">Guides</a></li>
+      <li><a href="/api">API</a></li>
+      <li><a href="/tutorials">Tutorials</a></li>
+    </ul>
+  </div>
+</nav>
+    </header>
+
+    <main class="mainContent js-tutorials-content" id="content">
+      <div class="nav-left">
+  
+    <div class="guides-left-collection">
+      <h3><a href="/guides">Guides</a></h3>
+      <ol>
+        
+        
+        
+        
+        
+        
+        
+          <li>
+            <a href="/guides/01-simpler-ui-reasoning-with-unidirectional">Simpler UI Reasoning with Unidirectional Dataflow and Immutable Data</a>
+          </li>
+        
+        
+        
+        
+        
+        
+          <li>
+            <a href="/guides/02-editing-using-immutable-cursors-with-omniscient">Editing Using Immutable Cursors with Omniscient</a>
+          </li>
+        
+        
+      </ol>
+    </div>
+  
+    <div class="guides-left-collection">
+      <h3><a href="/tutorials">Tutorials</a></h3>
+      <ol>
+        
+        
+        
+        
+        
+        
+        
+          <li>
+            <a href="/tutorials/01-editing-basic-tutorial-creating-list-with-live-filtering">Editing Basic Tutorial Creating List with Live Filtering</a>
+          </li>
+        
+        
+        
+        
+        
+        
+          <li>
+            <a href="/tutorials/02-editing-basic-tutorial-creating-list-with-live-filtering-jsx-edition">Editing Basic Tutorial Creating List with Live Filtering - JSX Edition</a>
+          </li>
+        
+        
+      </ol>
+    </div>
+  
+</div>
+
+      <section class="column" id="content">
+        <h1>
+  Editing Basic Tutorial Creating List with Live Filtering
+  <a class="edit-page-link" href="https://github.com/omniscientjs/omniscient/tree/master/_tutorials/01-editing-basic-tutorial-creating-list-with-live-filtering.md" target="_blank">Edit on GitHub</a>
+</h1>
+
+<div class="subHeader"></div>
+
+<p>If you haven’t read the Omniscient introduction article yet, you should probably <a href="/guides/01-simpler-ui-reasoning-with-unidirectional">read it before you get started</a> on this tutorial. The previous article in this series introduces the concepts and architecture. In this example we will see how we can use <a href="https://github.com/facebook/react">React</a>, <a href="https://github.com/omniscientjs/omniscient">Omniscient.js</a>, and <a href="https://github.com/facebook/immutable-js">Immutable.js</a> a rudimentary search filtering of javascript libraries and frameworks. You can see a <a href="http://omniscientjs.github.io/examples/#search">running demo on the Omniscient homepage</a> and the <a href="https://github.com/omniscientjs/omniscientjs.github.io/blob/master/examples/search/index.js">complete source code on Github</a>. After we’ve implemented the example, we’ll look into how we can debug an Omniscient application, and see what components get re-rendered.</p>
+
+<p><em>Note: This tutorial was updated October 29. 2014, to match React <code>v0.12.0</code> and Omniscient <code>v2.0.0</code>. See the <a href="https://github.com/omniscientjs/omniscient/wiki/Basic-Tutorial:-Creating-List-with-Live-Filtering/7567f0991ce2a8915b27d375af96c4a3d41c0fe3">tutorial for React <code>pre v0.12</code> and Omniscient pre <code>v2.0.0</code></a></em></p>
+
+<p>For this example, we’re creating a small application where we can search for different javascript libraries and frameworks. We should start by requiring the modules we want to use. A basic stack with Omniscient is React, immstruct and of course Omniscient (amd Immutable.js wrapped through immstruct).</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span><span style="color:#080;font-weight:bold">var</span> React     = require(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">react</span><span style="color:#710">'</span></span>),
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>    immstruct = require(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">immstruct</span><span style="color:#710">'</span></span>),
+<span class="line-numbers"><a href="#n3" name="n3">3</a></span>    component = require(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">omniscient</span><span style="color:#710">'</span></span>);
+</pre></div>
+</div>
+</div>
+
+<p>To show a list of different javascript projects, we should have a top structure with our data defined as a immutable structure. We are creating a list of different project and their URLs, but also a empty string with <code>search</code>. This will be the current search query, that we want as an active filter. The entire application state is defined in that structure alone. If we wanted, we could have started the application with a predefined search – making it easier to test and demo.</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"> <a href="#n1" name="n1">1</a></span><span style="color:#080;font-weight:bold">var</span> structure = immstruct({
+<span class="line-numbers"> <a href="#n2" name="n2">2</a></span>  <span style="color:#606">search</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#710">'</span></span>,
+<span class="line-numbers"> <a href="#n3" name="n3">3</a></span>  <span style="color:#606">libs</span>: [
+<span class="line-numbers"> <a href="#n4" name="n4">4</a></span>    { <span style="color:#606">title</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Backbone.js</span><span style="color:#710">'</span></span>, <span style="color:#606">url</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">http://documentcloud.github.io/backbone/</span><span style="color:#710">'</span></span> },
+<span class="line-numbers"> <a href="#n5" name="n5">5</a></span>    { <span style="color:#606">title</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">AngularJS</span><span style="color:#710">'</span></span>, <span style="color:#606">url</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">https://angularjs.org/</span><span style="color:#710">'</span></span> },
+<span class="line-numbers"> <a href="#n6" name="n6">6</a></span>    { <span style="color:#606">title</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">jQuery</span><span style="color:#710">'</span></span>, <span style="color:#606">url</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">http://jquery.com/</span><span style="color:#710">'</span></span> },
+<span class="line-numbers"> <a href="#n7" name="n7">7</a></span>    { <span style="color:#606">title</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Prototype</span><span style="color:#710">'</span></span>, <span style="color:#606">url</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">http://www.prototypejs.org/</span><span style="color:#710">'</span></span> },
+<span class="line-numbers"> <a href="#n8" name="n8">8</a></span>    { <span style="color:#606">title</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">React</span><span style="color:#710">'</span></span>, <span style="color:#606">url</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">http://facebook.github.io/react/</span><span style="color:#710">'</span></span> },
+<span class="line-numbers"> <a href="#n9" name="n9">9</a></span>    { <span style="color:#606">title</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Omniscient</span><span style="color:#710">'</span></span>, <span style="color:#606">url</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">https://github.com/omniscientjs/omniscient</span><span style="color:#710">'</span></span> },
+<span class="line-numbers"><strong><a href="#n10" name="n10">10</a></strong></span>    { <span style="color:#606">title</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Ember</span><span style="color:#710">'</span></span>, <span style="color:#606">url</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">http://emberjs.com/</span><span style="color:#710">'</span></span> },
+<span class="line-numbers"><a href="#n11" name="n11">11</a></span>    { <span style="color:#606">title</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Knockout.js</span><span style="color:#710">'</span></span>, <span style="color:#606">url</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">http://knockoutjs.com/</span><span style="color:#710">'</span></span> },
+<span class="line-numbers"><a href="#n12" name="n12">12</a></span>    { <span style="color:#606">title</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Dojo</span><span style="color:#710">'</span></span>, <span style="color:#606">url</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">http://dojotoolkit.org/</span><span style="color:#710">'</span></span> },
+<span class="line-numbers"><a href="#n13" name="n13">13</a></span>    { <span style="color:#606">title</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Mootools</span><span style="color:#710">'</span></span>, <span style="color:#606">url</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">http://mootools.net/</span><span style="color:#710">'</span></span> },
+<span class="line-numbers"><a href="#n14" name="n14">14</a></span>    { <span style="color:#606">title</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Underscore</span><span style="color:#710">'</span></span>, <span style="color:#606">url</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">http://documentcloud.github.io/underscore/</span><span style="color:#710">'</span></span> },
+<span class="line-numbers"><a href="#n15" name="n15">15</a></span>    { <span style="color:#606">title</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Lodash</span><span style="color:#710">'</span></span>, <span style="color:#606">url</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">http://lodash.com/</span><span style="color:#710">'</span></span> },
+<span class="line-numbers"><a href="#n16" name="n16">16</a></span>    { <span style="color:#606">title</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Moment</span><span style="color:#710">'</span></span>, <span style="color:#606">url</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">http://momentjs.com/</span><span style="color:#710">'</span></span> },
+<span class="line-numbers"><a href="#n17" name="n17">17</a></span>    { <span style="color:#606">title</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Express</span><span style="color:#710">'</span></span>, <span style="color:#606">url</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">http://expressjs.com/</span><span style="color:#710">'</span></span> },
+<span class="line-numbers"><a href="#n18" name="n18">18</a></span>    { <span style="color:#606">title</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Koa</span><span style="color:#710">'</span></span>, <span style="color:#606">url</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">http://koajs.com</span><span style="color:#710">'</span></span> },
+<span class="line-numbers"><a href="#n19" name="n19">19</a></span>  ]
+<span class="line-numbers"><strong><a href="#n20" name="n20">20</a></strong></span>});
+</pre></div>
+</div>
+</div>
+
+<p>We could also load the data lazily. This is a operation that shouldn’t be a part of our UI, but a separate module handling models and collections. We could send a cursor to where we want the data populated using Immutable.js. For instance:</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"> <a href="#n1" name="n1">1</a></span><span style="color:#080;font-weight:bold">var</span> storage = require(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">./storage</span><span style="color:#710">'</span></span>);
+<span class="line-numbers"> <a href="#n2" name="n2">2</a></span>
+<span class="line-numbers"> <a href="#n3" name="n3">3</a></span><span style="color:#080;font-weight:bold">var</span> structure = immstruct({
+<span class="line-numbers"> <a href="#n4" name="n4">4</a></span>  <span style="color:#606">search</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#710">'</span></span>,
+<span class="line-numbers"> <a href="#n5" name="n5">5</a></span>  <span style="color:#606">libs</span>: [ ]
+<span class="line-numbers"> <a href="#n6" name="n6">6</a></span>});
+<span class="line-numbers"> <a href="#n7" name="n7">7</a></span>
+<span class="line-numbers"> <a href="#n8" name="n8">8</a></span><span style="color:#777">// This uses AJAX and swaps the empty libs list</span>
+<span class="line-numbers"> <a href="#n9" name="n9">9</a></span><span style="color:#777">// in our structure to a new one with the new models.</span>
+<span class="line-numbers"><strong><a href="#n10" name="n10">10</a></strong></span>storage.fetchLibraries(structure.cursor(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">libs</span><span style="color:#710">'</span></span>));
+</pre></div>
+</div>
+</div>
+
+<p>There would’t be any need for doing anything else. If our <code>fetchLibraries</code> method swapped the value in our structure, we would get an event from <code>immstruct</code> telling us that a value has been swapped in the data structure. We should re-render if this happens.</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"> <a href="#n1" name="n1">1</a></span>render();
+<span class="line-numbers"> <a href="#n2" name="n2">2</a></span>structure.on(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">swap</span><span style="color:#710">'</span></span>, render);
+<span class="line-numbers"> <a href="#n3" name="n3">3</a></span>
+<span class="line-numbers"> <a href="#n4" name="n4">4</a></span><span style="color:#080;font-weight:bold">function</span> <span style="color:#06B;font-weight:bold">render</span> () {
+<span class="line-numbers"> <a href="#n5" name="n5">5</a></span>  React.render(
+<span class="line-numbers"> <a href="#n6" name="n6">6</a></span>    Search(structure.cursor()),
+<span class="line-numbers"> <a href="#n7" name="n7">7</a></span>    document.body
+<span class="line-numbers"> <a href="#n8" name="n8">8</a></span>  );
+<span class="line-numbers"> <a href="#n9" name="n9">9</a></span>}
+</pre></div>
+</div>
+</div>
+
+<p>Remember, <code>structure</code> is the immutable structure we created, and it emits event, <code>swap</code>, using immstruct, when this event is emitted, we want to re-render the entire component tree, starting with a top parent component. We’ll call it <code>Search</code> in this example.</p>
+
+<p>Now we us start implementing <code>Search</code>, which will consist of a <code>SearchBox</code> and a set of <code>Matches</code>. This is pretty straight forward, we are simply making HTML elements and describing our view in a declarative way using components. Much like doing markup, but in Javascript.</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span><span style="color:#080;font-weight:bold">var</span> Search = component(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Search</span><span style="color:#710">'</span></span>, <span style="color:#080;font-weight:bold">function</span> (props) {
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>  <span style="color:#080;font-weight:bold">return</span> React.DOM.div({ },
+<span class="line-numbers"><a href="#n3" name="n3">3</a></span>              SearchBox(props.cursor.cursor(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">search</span><span style="color:#710">'</span></span>)),
+<span class="line-numbers"><a href="#n4" name="n4">4</a></span>              Matches(props.cursor));
+<span class="line-numbers"><a href="#n5" name="n5">5</a></span>});
+</pre></div>
+</div>
+</div>
+
+<p>As we see, a component can be created by using Omniscient. The first argument is a string representation of the component and is used for debugging, as well as Component name for React. The second argument is the component implementation it self as a function. This function is a render function. When a component should render this function is executed, and when it’s return value will be the presentation of this component. The render function of a component is passed cursor, which is the cursor a parent component or the top renderer is serving. In our case we, <code>Search</code> will get passed an object literal with a property of our cursor to the entire application state through <code>structure.cursor()</code> as defined in our <code>render</code> function above.</p>
+
+<p>As we see, <code>Search</code>, this is a small component that only outputs a division with two sub-components; <code>SearchBox</code> and <code>Matches</code>. The empty object as first argument to the React div-element is HTML metadata to the div. We see that <code>Matches</code> gets the same cursor as <code>Search</code> has (a cursor to the entire structure), as it is a representation of the entire state, but the <code>SearchBox</code> only need information about the search query. It should’t concern it self with how the list is stored or handled.</p>
+
+<p>The next natural step is to list out all the matches based on the search query - as is the main part of our application. We don’t have any way of altering the search query yet, but that doesn’t matter. We have the search query as a value inside our global application state, and with it being empty, we should list out all our javascript projects.</p>
+
+<p>A list of matches in turn consist of a single <code>Match</code>. This will be a component that merely presents a javascript library as a list item with an anchor-element, like so:</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span><span style="color:#080;font-weight:bold">var</span> Match = component(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Match</span><span style="color:#710">'</span></span>, <span style="color:#080;font-weight:bold">function</span> (props) {
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>  <span style="color:#080;font-weight:bold">var</span> cursor = props.cursor;
+<span class="line-numbers"><a href="#n3" name="n3">3</a></span>  <span style="color:#080;font-weight:bold">return</span> d.li({}, d.a({ <span style="color:#606">href</span>: cursor.get(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">url</span><span style="color:#710">'</span></span>) }, cursor.get(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">title</span><span style="color:#710">'</span></span>)));
+<span class="line-numbers"><a href="#n4" name="n4">4</a></span>});
+</pre></div>
+</div>
+</div>
+
+<p>The <code>Matches</code> component is far more interesting, and is the heart of the application. We have to get the search query and all projects, and we have to filter the projects based on that query. The matches should be presented to the browser in a un-ordered list of elements.</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"> <a href="#n1" name="n1">1</a></span><span style="color:#080;font-weight:bold">var</span> Matches = component(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Matches</span><span style="color:#710">'</span></span>, <span style="color:#080;font-weight:bold">function</span> (props) {
+<span class="line-numbers"> <a href="#n2" name="n2">2</a></span>  <span style="color:#777">// get our cursor from the properties.</span>
+<span class="line-numbers"> <a href="#n3" name="n3">3</a></span>  <span style="color:#080;font-weight:bold">var</span> cursor = props.cursor;
+<span class="line-numbers"> <a href="#n4" name="n4">4</a></span>
+<span class="line-numbers"> <a href="#n5" name="n5">5</a></span>  <span style="color:#777">// Get the value from search query</span>
+<span class="line-numbers"> <a href="#n6" name="n6">6</a></span>  <span style="color:#080;font-weight:bold">var</span> q = cursor.get(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">search</span><span style="color:#710">'</span></span>);
+<span class="line-numbers"> <a href="#n7" name="n7">7</a></span>
+<span class="line-numbers"> <a href="#n8" name="n8">8</a></span>  <span style="color:#777">// Get all projects</span>
+<span class="line-numbers"> <a href="#n9" name="n9">9</a></span>  <span style="color:#080;font-weight:bold">var</span> libs = cursor.get(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">libs</span><span style="color:#710">'</span></span>);
+<span class="line-numbers"><strong><a href="#n10" name="n10">10</a></strong></span>
+<span class="line-numbers"><a href="#n11" name="n11">11</a></span>  <span style="color:#777">// Get all javascript projects that matches the query</span>
+<span class="line-numbers"><a href="#n12" name="n12">12</a></span>  <span style="color:#080;font-weight:bold">var</span> matches = libs.filter(<span style="color:#080;font-weight:bold">function</span> (lib) {
+<span class="line-numbers"><a href="#n13" name="n13">13</a></span>    <span style="color:#080;font-weight:bold">return</span> lib.get(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">title</span><span style="color:#710">'</span></span>).indexOf(q) !== -<span style="color:#00D">1</span> || lib.get(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">url</span><span style="color:#710">'</span></span>).indexOf(q) !== -<span style="color:#00D">1</span>;
+<span class="line-numbers"><a href="#n14" name="n14">14</a></span>  });
+<span class="line-numbers"><a href="#n15" name="n15">15</a></span>
+<span class="line-numbers"><a href="#n16" name="n16">16</a></span>  <span style="color:#777">// Present the matches</span>
+<span class="line-numbers"><a href="#n17" name="n17">17</a></span>  <span style="color:#080;font-weight:bold">return</span> React.DOM.ul({}, matches.toArray().map(<span style="color:#080;font-weight:bold">function</span> (lib, i) {
+<span class="line-numbers"><a href="#n18" name="n18">18</a></span>    <span style="color:#080;font-weight:bold">return</span> Match(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">match-</span><span style="color:#710">'</span></span> + lib.get(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">title</span><span style="color:#710">'</span></span>), lib);
+<span class="line-numbers"><a href="#n19" name="n19">19</a></span>  }));
+<span class="line-numbers"><strong><a href="#n20" name="n20">20</a></strong></span>});
+</pre></div>
+</div>
+</div>
+
+<p>Even this, the main part of our application, shouldn’t do anything that is not related to the presentation. We only want to present the items that match our search query, so we filter the list of libraries and only select those that contains our search query, either in the name or the URL. Now we actually have a working filterable list of javascript projects, we just don’t have a way of filtering. But if we try to change our initial search query like so:</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span><span style="color:#080;font-weight:bold">var</span> structure = immstruct({
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>  <span style="color:#606">search</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Omniscient</span><span style="color:#710">'</span></span>,
+<span class="line-numbers"><a href="#n3" name="n3">3</a></span>  <span style="color:#777">// ...</span>
+<span class="line-numbers"><a href="#n4" name="n4">4</a></span>});
+</pre></div>
+</div>
+</div>
+
+<p>… and refresh the browser, we would see only Omniscient being presented in the list. And every time we refresh the browser, this is what we see. Pure, predictable components. But altering the source code and refreshing the browser isn’t really user friendly - or fast. We should create a own separate component for updating the search query.</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span><span style="color:#080;font-weight:bold">var</span> SearchBox = component(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">SearchBox</span><span style="color:#710">'</span></span>, <span style="color:#080;font-weight:bold">function</span> (props) {
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>  <span style="color:#080;font-weight:bold">return</span> React.DOM.div({}, d.input({
+<span class="line-numbers"><a href="#n3" name="n3">3</a></span>    <span style="color:#606">placeholder</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Search..</span><span style="color:#710">&quot;</span></span>,
+<span class="line-numbers"><a href="#n4" name="n4">4</a></span>    <span style="color:#606">value</span>: props.cursor.deref(),
+<span class="line-numbers"><a href="#n5" name="n5">5</a></span>    <span style="color:#606">onChange</span>: <span style="color:#950">this</span>.changeHandler
+<span class="line-numbers"><a href="#n6" name="n6">6</a></span>  }));
+<span class="line-numbers"><a href="#n7" name="n7">7</a></span>});
+</pre></div>
+</div>
+</div>
+
+<p>The <code>SearchBox</code> is easy, but we see two things here that might be new. The cursor we get passed is a cursor directly to the search string. This means that to get the string we need to de-reference the cursor by calling <code>props.cursor.deref()</code>. By having the value as the de-referenced cursor we have a input box with the search query text. Another thing here is the <code>changeHandler</code>. We have seen a event handler previously, but not the <code>onChange</code>. <code>onChange</code> is triggered every time the input is changed (not blurred as one might expect).</p>
+
+<p>We create a small mixin that can handle the change for us. As this is javascript and we can share a context with the component through <code>this</code>. The passed cursor is available through the property <code>this.props.cursor</code> inside the mixin, and the cursor points directly to the search query in the structure.</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"> <a href="#n1" name="n1">1</a></span><span style="color:#080;font-weight:bold">var</span> mixins = {
+<span class="line-numbers"> <a href="#n2" name="n2">2</a></span>  <span style="color:#06B;font-weight:bold">changeHandler</span>: <span style="color:#080;font-weight:bold">function</span> (e) {
+<span class="line-numbers"> <a href="#n3" name="n3">3</a></span>    <span style="color:#950">this</span>.props.cursor.update(<span style="color:#080;font-weight:bold">function</span> (currentSearch) {
+<span class="line-numbers"> <a href="#n4" name="n4">4</a></span>      <span style="color:#080;font-weight:bold">return</span> e.currentTarget.value;
+<span class="line-numbers"> <a href="#n5" name="n5">5</a></span>    });
+<span class="line-numbers"> <a href="#n6" name="n6">6</a></span>  }
+<span class="line-numbers"> <a href="#n7" name="n7">7</a></span>};
+<span class="line-numbers"> <a href="#n8" name="n8">8</a></span>
+<span class="line-numbers"> <a href="#n9" name="n9">9</a></span><span style="color:#777">// Change our SearchBox from above to add the mixins</span>
+<span class="line-numbers"><strong><a href="#n10" name="n10">10</a></strong></span><span style="color:#080;font-weight:bold">var</span> SearchBox = component(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">SearchBox</span><span style="color:#710">'</span></span>, mixins, <span style="color:#080;font-weight:bold">function</span> (props) { <span style="color:#777">/* same as before */</span> });
+<span class="line-numbers"><a href="#n11" name="n11">11</a></span>
+</pre></div>
+</div>
+</div>
+
+<p>The <code>changeHandler</code> has one small job: update the cursor with the new value of the input box. This will swap the search query in the immutable structure and through immstruct tell the application the do the re-render, as immstruct emits an event and we listen to that event and trigger render. That is it. That is our entire live filter application. It is pretty awesome and really easy to reason about - almost as simple as HTML it self. But let’s think a bit about what is happening here. What happens when we re-render, and how do we debug.</p>
+
+<p>Check out the <a href="https://github.com/omniscientjs/omniscientjs.github.io/blob/master/examples/search/index.js">complete source code on Github</a>.</p>
+
+<h3 id="analysing-re-renders">Analysing Re-renders</h3>
+
+<p>The re-render is interesting here. We will go through, top-down, see if the components have changed. So when a new input is registered in our text field, we swap out the search query value in our structure and trigger a re-render. When the re-render happens, we see if the cursor passed to <code>Search</code> has changed, where we do:</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span>React.render(
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>  Search(structure.cursor()),
+<span class="line-numbers"><a href="#n3" name="n3">3</a></span>  document.body
+<span class="line-numbers"><a href="#n4" name="n4">4</a></span>);
+</pre></div>
+</div>
+</div>
+
+<p>It has changed, as a part of the object has changed. So we do a re-render. The component function is executed, and we again see if <code>SearchBox</code> and <code>Matches</code> has changed. Both have changed, as both have access to the search query, so we trigger a re-render on both of them. The search box simply renders out the new updated state to the browser, setting input value, but the <code>Matches</code> how ever, generates a new list of sub-components, by filtering all javascript projects based on the search query.</p>
+
+<p>If we activate the Omniscient debugger, we can see what happens next:</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre><span class="line-numbers"><a href="#n1" name="n1">1</a></span><span style="color:#777">// Activate debug-modus</span>
+<span class="line-numbers"><a href="#n2" name="n2">2</a></span>component.debug();
+</pre></div>
+</div>
+</div>
+
+<p>While having the debug-mode activated, we try to go from <code>e</code> to <code>en</code> in the input box. We should get 4 results. The debug output is</p>
+
+<pre><code>&lt;Search&gt;: shouldComponentUpdate =&gt; true (cursors have changed)
+&lt;Search&gt;: render
+&lt;SearchBox&gt;: shouldComponentUpdate =&gt; true (cursors have changed)
+&lt;SearchBox&gt;: render
+&lt;Matches&gt;: shouldComponentUpdate =&gt; true (cursors have changed)
+&lt;Matches&gt;: render
+&lt;Match key=match-Backbone.js&gt;: shouldComponentUpdate =&gt; false
+&lt;Match key=match-Omniscient&gt;: shouldComponentUpdate =&gt; false
+&lt;Match key=match-Underscore&gt;: shouldComponentUpdate =&gt; false
+&lt;Match key=match-Moment&gt;: shouldComponentUpdate =&gt; false
+</code></pre>
+
+<p>We see that all the parent components and the SearchBox are re-rendered. What is interesting is that none the <code>Match</code> components isn’t re-rendering. <code>Matches</code> re-renders, and removes several elements that doesn’t match our query. The libraries that do match our query, is outputed but they havent changed, so they don’t re-render - they just remain from the previous render.</p>
+
+<p>If we remove a letter from the search query (making it <code>e</code> again), the debug-output for the <code>Match</code> component show:</p>
+
+<pre><code>&lt;Match key=match-Backbone.js&gt;: shouldComponentUpdate =&gt; false
+&lt;Match key=match-jQuery&gt;: render
+&lt;Match key=match-Prototype&gt;: render
+&lt;Match key=match-React&gt;: render
+&lt;Match key=match-Omniscient&gt;: shouldComponentUpdate =&gt; false
+&lt;Match key=match-Ember&gt;: render
+&lt;Match key=match-Mootools&gt;: render
+&lt;Match key=match-Underscore&gt;: shouldComponentUpdate =&gt; false
+&lt;Match key=match-Moment&gt;: shouldComponentUpdate =&gt; false
+&lt;Match key=match-Express&gt;: render
+</code></pre>
+
+<p>We can see that all the components that matched the previous query are still unchanged, and only the new components get rendered.</p>
+
+<h2 id="summary">Summary</h2>
+
+<p>This has been a introductory tutorial for how we can use Omniscient and React to make applications. The application we created in this tutorial, was fairly naïve and doesn’t face the problems of real life. It is very rare we can have code as clean and small as this, but this shows, at the most basic level, how we can reason about a component based, top-down rendered, UI. It can be challenging at first, to switch out our “normal” way of designing Javascript software, and having a loop that iterates everytime we make a small change. It also might seem like this would be slow and un-optimized, but the smart implementation of React and the reference checks of Omniscient and Immutable.js will actually allow us to create fast, responsive, applications. You can see more <a href="https://github.com/omniscientjs/omniscientjs.github.io/tree/master/examples">example source codes on Github</a> or <a href="http://omniscientjs.github.io/examples">try them out on the Omniscient homepage</a>. On the Omniscient homepage, you can also see how the immutable structure state is changing over the course of the application life time.</p>
+
+<p>If you have any comments on this architecture, think this is a horrible idea, or simply have questions about Omniscient, you can reach out on <a href="https://github.com/omniscientjs/omniscient/issues">Github issues</a> or ping us at Twitter: <a href="https://twitter.com/mikaelbrevik">@mikaelbrevik</a> and <a href="https://twitter.com/torgeir">@torgeir</a>.</p>
+
+<div class="docs-prevnext">
+  
+  
+  
+  
+  
+    <a class="docs-next" href="/tutorials/02-editing-basic-tutorial-creating-list-with-live-filtering-jsx-edition">Next &rarr;</a>
+  
+</div>
+
+      </section>
+    </main>
+    <a href="https://github.com/omniscientjs/" class="link--github">Fork on Github</a>
+  </body>
+</html>

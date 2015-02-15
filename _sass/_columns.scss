@@ -29,3 +29,12 @@
   padding-bottom: 20px;
   border-bottom: 3px dashed rgba(0,0,0,0.3);
 }
+
+@media (max-width: $min-width) {
+  .nav-left {
+    display: none;
+  }
+  .column {
+    margin-left: 0;
+  }
+}

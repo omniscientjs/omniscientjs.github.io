@@ -47,10 +47,6 @@ a img {
 :focus {
   outline: 0; }
 
-.hljs {
-  background: none;
-  margin: 0 0 40px; }
-
 body, html {
   min-height: 100; }
 
@@ -100,6 +96,7 @@ ul, ol {
   padding-left: 20px; }
 
 .mainHeader {
+  z-index: 3;
   min-height: 100%;
   min-width: 350px;
   display: -webkit-box;
@@ -344,6 +341,49 @@ ul, ol {
   100% {
     opacity: 1; } }
 
+.CodeMirror {
+  z-index: 0;
+  padding-bottom: 0.5rem; }
+
+.CodeMirror, .inner--result {
+  font-size: 1rem; }
+
+.window .CodeMirror-lines {
+  padding: 0;
+  padding-left: 0.4rem; }
+
+.playground .window .CodeMirror-lines {
+  padding: 0; }
+.playground .CodeMirror {
+  border-bottom-left-radius: 3px; }
+.playground .CodeMirror-line-numbers {
+  font-size: 0.2rem; }
+.playground .CodeMirror, .playground .inner--result {
+  font-size: 1.15rem; }
+.playground .window {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: row wrap;
+      -ms-flex-flow: row wrap;
+          flex-flow: row wrap; }
+.playground .control {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 100%;
+      -ms-flex: 1 100%;
+          flex: 1 100%; }
+.playground .inner--code {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 65%;
+      -ms-flex: 1 65%;
+          flex: 1 65%; }
+.playground .inner--result {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 35%;
+      -ms-flex: 1 35%;
+          flex: 1 35%; }
+
 .editor {
   display: none; }
 
@@ -362,7 +402,7 @@ ul, ol {
     word-wrap: break-word;
     /* Internet Explorer 5.5+ */ }
 
-.window, pre code {
+.window {
   background: #eee8ea;
   width: 100%;
   border-radius: 3px;
@@ -391,7 +431,9 @@ ul, ol {
   background: #0ed439; }
 
 .window .inner {
-  padding: 0 0.75rem 0.25rem 0.75rem;
+  padding: 0.5rem 0.75rem 0.1rem 0.75rem; }
+
+.window .inner--result {
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px; }
 
@@ -399,20 +441,25 @@ ul, ol {
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px; }
 
-.window .inner--code, .window .window--code, pre code {
+.window.window--code {
+  background: none; }
+
+.window .inner--code {
+  padding: 0; }
+
+pre code {
   padding: 0 10px;
   background: #141414; }
 
 .inner--result {
-  padding-top: 20px;
   color: #474747;
-  font-size: 20px;
   font-weight: 300; }
 
 pre code {
   background: #141414;
   display: block;
-  padding: 10px; }
+  padding: 10px;
+  border-radius: 3px; }
 
 code {
   background: #141414;
@@ -477,10 +524,6 @@ code {
   font-weight: 100;
   color: #f7b30b; }
 
-.guides-left-collection:not(:last-child) {
-  padding-bottom: 20px;
-  border-bottom: 3px dashed rgba(0, 0, 0, 0.3); }
-
 @media (max-width: 650px) {
   .nav-left {
     display: none; }
@@ -499,3 +542,9 @@ code {
 
 .docs-next {
   float: right; }
+
+form {
+  margin: 0; }
+
+input[type=text], textarea {
+  font-size: 1rem; }

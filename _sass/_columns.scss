@@ -25,11 +25,6 @@
   color: $color-organge-normal;
 }
 
-.guides-left-collection:not(:last-child) {
-  padding-bottom: 20px;
-  border-bottom: 3px dashed rgba(0,0,0,0.3);
-}
-
 @media (max-width: $first-breakpoint-width) {
   .nav-left {
     display: none;

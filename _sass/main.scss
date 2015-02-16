@@ -4,11 +4,6 @@
 @import "globals/colors";
 @import "globals/size";
 
-.hljs {
-  background: none;
-  margin: 0 0 40px;
-}
-
 @import url(http://fonts.googleapis.com/css?family=Khula:400,700,600,300);
 
 body, html {
@@ -80,3 +75,4 @@ ul, ol {
 @import "content";
 @import "columns";
 @import "next-nav";
+@import "forms";

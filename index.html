@@ -8,7 +8,6 @@ In its simplest form, an Omniscient component very much resembles a React compon
 
 <div class='window'>
   <div class='control'><ul><li></li><li></li><li></li></ul></div>
-  <div id='result-1' class='inner inner--result'></div>
   <div class='inner inner--code'>
 <textarea class='editor'>
 var Greet = component(({name}) =>
@@ -17,18 +16,19 @@ var Greet = component(({name}) =>
 React.render(
   Greet({ name: 'Omniscient' }),
   document.getElementById('result-1'));</textarea>
-    </div>
+  </div>
+  <div id='result-1' class='inner inner--result'></div>
 </div>
 
 The code below shows Omniscient used in cooperation with Immstruct and the cursors of Immutable.js - a "render loop" pattern you'll often see with Omniscient apps. Whenever the data of an Immstruct instance changes, an event is fired and React can be told to re-render your application. When using immutable data structures, Omniscient will take care to only re-render the parts of your application who's data actually changed. As components receive cursors that point into these immutable data structures, each component can easily update its own data without knowledge of the other parts of the data structure.
 
 <div class='window'>
   <div class='control'><ul><li></li><li></li><li></li></ul></div>
-  <div id='result-2' class='inner inner--result'></div>
   <div class='inner inner--code'>
 <textarea class='editor'>
 var Count = component(({counter}) =>
-  <div>Count {counter.deref()}!
+  <div>
+    <span>Count {counter.deref()}! </span>
     <button onClick={() => counter.update(n => n + 1)}>inc</button>
     <button onClick={() => counter.update(n => n - 1)}>dec</button>
   </div>);
@@ -47,7 +47,8 @@ setInterval(
   () => data.cursor('counter').update(i => i + 1),
   2000);
 </textarea>
-    </div>
+  </div>
+  <div id='result-2' class='inner inner--result'></div>
 </div>
 
 Immstruct along with Immutable.js is a perfect fit for your Omniscient apps.

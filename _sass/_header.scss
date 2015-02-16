@@ -3,6 +3,7 @@
 @import "./globals/size";
 
 .mainHeader {
+  z-index: 3; // .CodeMirror pre is 2
   min-height: 100%;
   min-width: $min-width;
   display: flex;

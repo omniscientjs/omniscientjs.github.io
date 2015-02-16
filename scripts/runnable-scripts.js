@@ -17,8 +17,9 @@
   }
 
   function createEditors (runnable) {
-    var useHash = runnable.dataset['hash'];
+    var isLarge = runnable.dataset['large'];
     var options = {
+      lineNumbers: isLarge,
       lineWrapping: true,
       viewportMargin: Infinity,
       theme: 'kimbie-dark',
@@ -33,7 +34,7 @@
 
     var urlCode;
 
-    if (useHash) {
+    if (isLarge) {
       var initialCode = location.hash.replace(/^#/, '');
       src = decodeURIComponent(initialCode) || src;
       editor.setValue(src);

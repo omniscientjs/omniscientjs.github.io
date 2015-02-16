@@ -27,12 +27,11 @@ The code below shows Omniscient used in cooperation with Immstruct and the curso
   <div id='result-2' class='inner inner--result'></div>
   <div class='inner inner--code'>
 <textarea class='editor'>
-var Count = component(({counter}) => {
-  return <div>Count {counter.deref()}!
+var Count = component(({counter}) =>
+  <div>Count {counter.deref()}!
     <button onClick={() => counter.update(n => n + 1)}>inc</button>
     <button onClick={() => counter.update(n => n - 1)}>dec</button>
-  </div>
-});
+  </div>);
 
 var data = immstruct({ counter: 42 });
 data.on('swap', render);

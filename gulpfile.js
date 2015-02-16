@@ -20,7 +20,11 @@ gulp.task('sass', function () {
 
 gulp.task('watch', function () {
     gulp.watch('_sass/*.scss', ['sass']);
-    gulp.watch(['*.html', '**/*.html'], ['jekyll-build']);
+    gulp.watch([
+      'scripts/*.js',
+      'scripts/**/*.js',
+      '*.html',
+      '**/*.html'], ['jekyll-build']);
 });
 
 gulp.task('default', ['sass', 'jekyll-build']);

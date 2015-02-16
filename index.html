@@ -2,6 +2,19 @@
 layout: homepage
 ---
 
+<h2>Omniscients Rationale</h2>
+
+<ul>
+<li><strong>top-down rendering</strong> of components (<em>unidirectional</em> data flow)</li>
+<li>favors <strong>immutable</strong> data (with Immutable.js)</li>
+<li>encourages <strong>small, composable components</strong>, and <strong>shared functionality</strong> through mixins</li>
+<li><strong>Seperation of concern.</strong> Components only deal with their own piece of data</li>
+<li>components can only <strong>change their own data</strong>, via <em>cursors</em> (without knowing where their data resides in the outer immutable data structure)</li>
+<li>easily listen for changes <strong>across your data structure</strong> and trigger re-render</li>
+<li>immutable data can give even <strong>faster re-renders</strong> than with pure React, as React can be prevented from even considering to re-render component trees with unchanged data</li>
+<li><strong>efficient, centrally</strong> defined shouldComponentUpdate</li>
+</ul>
+
 <h2>Basic Usage</h2>
 
 In its simplest form, an Omniscient component very much resembles a React component, however, its primary focus is on content. Components take props that are easily accessible as parameters of the component's render function.

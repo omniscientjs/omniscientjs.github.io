@@ -37,9 +37,10 @@
     if (isLarge) {
       var initialCode = location.hash.replace(/^#/, '');
       try {
-        src = decodeURIComponent(initialCode);
+        initialCode = decodeURIComponent(initialCode);
       }
       catch (ignore) { }
+      src = initialCode || src;
       editor.setValue(src);
     }
 

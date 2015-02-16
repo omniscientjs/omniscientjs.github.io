@@ -45,14 +45,14 @@
 
     var timers = { timeouts: [], intervals: [] };
     editor.on('change', function () {
-      run(editor.doc.getValue(), timers);
+      run(isLarge, editor.doc.getValue(), timers);
     });
-    run(src, timers);
+    run(isLarge, src, timers);
   }
 
   var throttledReplaceState = throttle(replaceStateValue, 2000);
 
-  function run (src, timers) {
+  function run (isLarge, src, timers) {
     var match = src.match(/['"](result(-[0-9]+)?)['"]/);
     var resultEl;
     if (match && match[1]) {
@@ -86,7 +86,9 @@
       fn(newSetTimeout,
          newSetInterval);
 
-      throttledReplaceState(src);
+      if (isLarge) {
+        throttledReplaceState(src);
+      }
     }
     catch (e) {
       var msg = e.message;

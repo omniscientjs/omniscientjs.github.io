@@ -122,6 +122,17 @@
   }
 }
 
+
+@media (max-width: $remove-graphics-width) {
+  .mainNavigation-inner ul {
+    li:nth-last-child(1),
+    li:nth-last-child(2) {
+      display: none;
+    }
+  }
+}
+
+
 .mainNavigation-inner h1 a {
   display: block;
   svg {

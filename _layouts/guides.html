@@ -2,6 +2,7 @@
 layout: default
 ---
 
+
 <h1>
   {{ page.title }}
   <a class="edit-page-link" href="https://github.com/omniscientjs/omniscient/tree/master/{{ page.relative_path }}" target="_blank">Edit on GitHub</a>
@@ -15,11 +16,7 @@ layout: default
 
 <div class="docs-prevnext">
   {% if page.prev %}
-  {% assign first = page.prev | split: "-" | first %}
-  {% if first != '00' %}
-
     <a class="docs-prev" href="/{{ page.collection }}/{{ page.prev }}">&larr; Prev</a>
-  {% endif %}
   {% endif %}
   {% if page.next %}
     <a class="docs-next" href="/{{ page.collection }}/{{ page.next }}">Next &rarr;</a>

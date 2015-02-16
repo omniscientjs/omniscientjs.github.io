@@ -23,9 +23,11 @@ $color-topNode: $color-blue-darkest;
 
 $color-infoBoxes: $color-white-bg;
 
+$color-leftNav: $color-blue-darkest;
+$color-leftNav-header: $color-blue-darkest;
 
 // Links
 
 $color-links: $color-blue-normal;
-$color-links--hover: darken($color-links, 5%);
-$color-links--active: darken($color-links, 15%);
+$color-links--hover: darken($color-links, 15%);
+$color-links--active: darken($color-links, 25%);

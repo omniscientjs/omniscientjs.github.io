@@ -53,7 +53,7 @@ body, html {
 body {
   font-family: 'Khula', sans-serif;
   min-width: 350px;
-  background: #ECF0F1;
+  background: #fafafa;
   color: #2d2d2d; }
 
 .withSmallHeader {
@@ -190,7 +190,7 @@ ul, ol {
           justify-content: space-between; }
   .infoBoxes article {
     background: rgba(0, 0, 0, 0.3);
-    color: #ECF0F1;
+    color: #fafafa;
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
     display: inline-block;
     padding: 25px;

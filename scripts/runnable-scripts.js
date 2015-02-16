@@ -36,7 +36,10 @@
 
     if (isLarge) {
       var initialCode = location.hash.replace(/^#/, '');
-      src = decodeURIComponent(initialCode) || src;
+      try {
+        src = decodeURIComponent(initialCode);
+      }
+      catch (ignore) { }
       editor.setValue(src);
     }
 
@@ -46,6 +49,8 @@
     });
     run(src, timers);
   }
+
+  var throttledReplaceState = throttle(replaceStateValue, 2000);
 
   function run (src, timers) {
     var match = src.match(/['"](result(-[0-9]+)?)['"]/);
@@ -80,6 +85,8 @@
 
       fn(newSetTimeout,
          newSetInterval);
+
+      throttledReplaceState(src);
     }
     catch (e) {
       var msg = e.message;
@@ -106,5 +113,23 @@
     } else {
       cm.execCommand('insertSoftTab')
     }
+  }
+
+  function replaceStateValue (value) {
+    history.replaceState(null, 'playground', '#' + encodeURIComponent(value));
+  }
+
+  function throttle (fn, ms) {
+    var timeout;
+    return function () {
+      var self = this, args = [].slice.call(arguments);
+      if (timeout) {
+        clearTimeout(timeout);
+        timeout = undefined;
+      }
+      timeout = setTimeout(function () {
+        fn.apply(self, args);
+      }, ms);
+    };
   }
 })();

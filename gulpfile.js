@@ -3,9 +3,6 @@ var sass        = require('gulp-sass');
 var prefix      = require('gulp-autoprefixer');
 var cp          = require('child_process');
 
-/**
- * Build the Jekyll Site
- */
 gulp.task('jekyll-build', function (done) {
     return cp.spawn('jekyll', ['build'], {stdio: 'inherit'})
         .on('close', done);
@@ -22,8 +19,8 @@ gulp.task('sass', function () {
 });
 
 gulp.task('watch', function () {
-    gulp.watch('_scss/*.scss', ['sass']);
-    gulp.watch(['index.html', '_layouts/*.html', '_posts/*'], ['jekyll-build']);
+    gulp.watch('_sass/*.scss', ['sass']);
+    gulp.watch(['*.html', '**/*.html'], ['jekyll-build']);
 });
 
 gulp.task('default', ['sass', 'jekyll-build']);

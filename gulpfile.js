@@ -13,18 +13,21 @@ gulp.task('sass', function () {
         .pipe(sass({
             includePaths: ['_sass']
         }))
+        .on('error', console.error.bind(console))
         .pipe(prefix(['last 15 versions', '> 1%', 'ie 8', 'ie 7']))
         .pipe(gulp.dest('_site/css'))
         .pipe(gulp.dest('css'));
 });
 
-gulp.task('watch', function () {
-    gulp.watch('_sass/*.scss', ['sass']);
+gulp.task('watch', ['default'], function () {
+    gulp.watch('_sass/**/*.scss', ['sass']);
     gulp.watch([
       'scripts/*.js',
       'scripts/**/*.js',
       '*.html',
-      '**/*.html'], ['jekyll-build']);
+      '**/*.html',
+      '!_site/**',
+       '**/*.md'], ['jekyll-build']);
 });
 
 gulp.task('default', ['sass', 'jekyll-build']);

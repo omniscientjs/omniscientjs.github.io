@@ -9,7 +9,10 @@ layout: default
 
 <div class="subHeader">{{ page.description }}</div>
 
-{{ content }}
+<div class="fromMarkdown">
+  {{ content }}
+</div>
+
 <div class="docs-prevnext">
   {% if page.prev %}
   {% assign first = page.prev | split: "-" | first %}

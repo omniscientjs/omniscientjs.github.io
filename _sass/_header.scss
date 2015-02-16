@@ -14,8 +14,6 @@
   // background: linear-gradient(to bottom, #93cede 0%,#75bdd1 41%,#49a5bf 100%); /* W3C */
   // background: linear-gradient(to bottom, #61dafb 0%,#59c9e5 100%);
   background: linear-gradient(to bottom, $color-header-background 0%, $color-header-background--bottom 100%);
-
-  border-bottom: 5px solid $color-header-border;
 }
 .mainHeader.mainHeader--small {
   height: auto;
@@ -74,7 +72,7 @@
       font-size: 1.5rem;
     }
     background: rgba(0,0,0, 0.3);
-    color: $color-white-fontColor;
+    color: $color-infoBoxes;
     text-shadow: 1px 1px 1px rgba(0,0,0,.4);
 
     display: inline-block;
@@ -109,6 +107,7 @@
 
     li a {
       color: $color-header-linkColor;
+      transition: all 300ms;
 
       text-transform: uppercase;
       text-decoration: none;
@@ -116,7 +115,8 @@
       font-size: 1.2rem;
 
       &:hover {
-        color: darken($color-header-linkColor, 10%);
+        color: darken($color-header-linkColor, 20%);
+        text-shadow: 1px 1px 0px rgba(0,0,0,.2);
       }
     }
   }
@@ -129,13 +129,14 @@
 
     path {
       transition: all 300ms;
-      fill: $color-white-fontColor;
+      fill: $color-header-linkColor;
       text-shadow: 1px 1px 1px rgba(0,0,0,.4);
     }
   }
 
   &:hover svg path {
-    fill: $color-blue-light;
+    fill: darken($color-header-linkColor, 20%);
+    text-shadow: 1px 1px 0px rgba(0,0,0,.2);
   }
 }
 

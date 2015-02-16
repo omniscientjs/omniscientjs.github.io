@@ -1,10 +1,10 @@
 ---
-layout: default
+layout: guides
 ---
 
 Given that:
 
-```
+```js
 var component = require('omniscient');
 ```
 
@@ -13,14 +13,15 @@ var component = require('omniscient');
 The API of Omniscient is pretty simple, you create a component with a render function, and mixins if you need them. When using the created component, you can pass a cursor or an object as data to the component. If you simply pass a cursor, the cursor will be accessible on the `props.cursor` accessor. This data will be accessible in the render function of the component (as props). In the passed data object, if it's within the `statics` property, the changes won't get tracker (see below).
 
 ### Parameter Setup
-```
+
+```js
 var MyComponent = component([displayName, ][mixins, ]function (props, statics) { });
 MyComponent([key: String, ](Object: data | Cursor));
 ```
 
 ### Examples
 
-```
+```js
 // Create component with display name MyComponentName
 var MyComponent = component(function MyComponentName (props) {
   return (<div>Hello {props.cursor.get('name')}</div>);
@@ -29,7 +30,8 @@ React.render(MyComponent(myCursor), document.body);
 ```
 
 Without cursor
-```
+
+```js
 var MyComponent = component(function MyComponentName (props) {
   return (<div>Hello {props.name}</div>);
 });
@@ -37,7 +39,8 @@ React.render(MyComponent({ name: 'Omniscient'), document.body);
 ```
 
 As JSX
-```
+
+```js
 var MyComponent = component(function MyComponentName (props) {
   return (<div>Hello {props.name}</div>);
 }).jsx; // notice jsx
@@ -45,7 +48,8 @@ React.render(<MyComponent name={'Omniscient'} />, document.body);
 ```
 
 With mixins:
-```
+
+```js
 var myMixins = {
   componentDidMount: function () {
      // do something
@@ -61,7 +65,8 @@ React.render(<MyComponent name={'Omniscient'} />, document.body);
 ```
 
 With multiple mixins (compositions):
-```
+
+```js
 var someMixins = {
   componentDidMount: function () {
      // do something
@@ -85,23 +90,29 @@ React.render(<MyComponent name={'Omniscient'} />, document.body);
 ```
 
 #### With ES2015 syntax
-```
+
+```js
 // Create component with display name MyComponentName
 var MyComponent = component('MyComponentName', ({name}) => (<div>Hello {name}</div>));
 React.render(<MyComponent name={'Omniscient'} />, document.body);
 ```
+
 *Notice: As we can't use a named function, we can define component name as first argument.*
 
 ## `component.debug()`
+
 Activate debugging. Debug when a component is rendered, and the decision of `shouldComponentUpdate`.
 
 
 ## `component.debug(pattern)`
+
 Activate debugging. Pattern is a Regular Expression. Only log messages which matches passed regex.
 
 ### Example
+
 Only show debug statements for components with key or name `MyComponent`.
-```
+
+```js
 component.debug(/MyComponent/i)
 ```
 
@@ -110,7 +121,7 @@ Activate debug, and define how to log messages. Log all messages (do not filter 
 
 ### Example
 
-```
+```js
 component.debug(function (debugMessage) {
   saveMessageToFile(debugMessage);
 });
@@ -122,7 +133,7 @@ Activate debug, for messages matching passed regex pattern and pass log message 
 
 ### Example
 
-```
+```js
 component.debug(/MyComponent/i, function (debugMessage) {
   saveMessageToFile(debugMessage);
 });
@@ -134,14 +145,15 @@ This is the mixin used to determine if a component should update or not. If you 
 
 You can also directly require the mixin, to save bytes in your source code:
 
-```
+```js
 var shouldComponentUpdate = require('omniscient/shouldupdate');
 ```
 
 ### Example
 
 Through omniscient:
-```
+
+```js
 var shouldComponentUpdate = require('omniscient').shouldComponentUpdate;
 
 var MyComponent = React.createClass({
@@ -150,7 +162,8 @@ var MyComponent = React.createClass({
 ```
 
 Requiring directly
-```
+
+```js
 var shouldComponentUpdate = require('omniscient/shouldupdate');
 
 var MyComponent = React.createClass({
@@ -164,7 +177,8 @@ var MyComponent = React.createClass({
 You can create a "local" instance of the Omniscient component creator by using the `.withDefaults` methods. This also allows you to override any defaults that Omniscient uses to check equality of objects, unwrap cursors, etc. See below on section about defaults for what to override.
 
 ### "Sandboxed" component Example
-```
+
+```js
 var component = require('omniscient');
 
 // Create a local component factory with "normal" defaults
@@ -181,7 +195,7 @@ assert(localComponent.foo !== component.foo);
 
 This is an overview of all properties that can be overridden in Omniscient. All properties are functions that have default implementations, and can be overwritten (just for the local component which is returned).
 
-```
+```js
 var component = require('omniscient');
 
 var localComponent = component.withDefaults({
@@ -200,7 +214,7 @@ As with the component creator, you can create local instances of `shouldComponen
 
 This is a complete overview of the defaults you can override on `shouldComponentUpdate`:
 
-```
+```js
 var shouldComponentUpdate = require('omniscient/shouldupdate');
 
 var localShouldUpdate = shouldComponentUpdate.withDefaults({

@@ -1,27 +1,31 @@
 // Color palette
-$color-blue-darkest: #003854;
-$color-blue-dark: #0E5470;
-$color-blue-normal: #0585A7;
+$color-blue-darkest: #2C3E50;
+$color-blue-dark: #2980B9;
+$color-blue-normal: #3498DB;
 $color-blue-light: #0EC2DB;
-$color-organge-normal: opacify(#F7B30B, 0.9);;
+$color-organge-normal: #E74C3C;
 
+$color-white-bg: #ECF0F1;
+$color-darkGray-background: $color-white-bg;
+$color-white-fontColor: #2d2d2d;
 
+$color-header-border: $color-blue-light;
+$color-header-background: $color-blue-light;
+$color-header-background--bottom: $color-blue-normal;
 
-$color-blue-react: #61dafb;
-$color-red-react: #cc7a6f;
-
-
-$color-darkGray-background: #2d2d2d;
-$color-white-fontColor: rgba(239, 239, 239, 0.86); // #fefefe;
-
-
-$color-header-background: $color-blue-normal;
-$color-header-border: $color-organge-normal;
-$color-header-background--bottom: darken($color-blue-normal, 10%);
-
-$color-header-linkColor: $color-organge-normal;
+$color-header-linkColor: $color-blue-darkest;
 
 
 // Graph colors:
 
 $color-topNode: $color-blue-darkest;
+
+
+$color-infoBoxes: $color-white-bg;
+
+
+// Links
+
+$color-links: $color-blue-normal;
+$color-links--hover: darken($color-links, 5%);
+$color-links--active: darken($color-links, 15%);

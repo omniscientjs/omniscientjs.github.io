@@ -1,7 +1,7 @@
 @import "globals/size";
 
 .column {
-  margin-left: calc(#{$column-sidebar-width} + #{$column-sidebar-margin});
+  margin-left: calc(#{$column-sidebar-width} + #{$column-sidebar-margin + 1});
 }
 
 .nav-left {

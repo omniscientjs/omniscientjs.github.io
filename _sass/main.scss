@@ -51,16 +51,16 @@ body {
 }
 
 a:link, a:visited {
-  color: $color-blue-light;
+  color: $color-links;
   text-decoration: none;
 }
 
 a:hover {
-  color: darken($color-blue-light, 5%);
+  color: $color-links--hover;
 }
 
 a:active {
-  color: darken($color-blue-light, 15%);
+  color: $color-links--active;
 }
 
 

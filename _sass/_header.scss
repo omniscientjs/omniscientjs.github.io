@@ -41,6 +41,8 @@
 .mainHeader-illustration .illustrationText {
   flex: 1 1 30%;
   min-width: $min-width;
+  color: $color-infoBoxes;
+  text-shadow: 1px 1px 1px rgba(0,0,0,.4);
 
   .github-badges {
     margin-top: 15px;

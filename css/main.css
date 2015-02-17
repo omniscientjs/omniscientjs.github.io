@@ -112,8 +112,8 @@ ul, ol {
   -webkit-justify-content: space-between;
       -ms-flex-pack: justify;
           justify-content: space-between;
-  background: -webkit-linear-gradient(top, #0EC2DB 0%, #3498DB 100%);
-  background: linear-gradient(to bottom, #0EC2DB 0%, #3498DB 100%); }
+  background: -webkit-linear-gradient(top, #2980B9 0%, #3e5771 100%);
+  background: linear-gradient(to bottom, #2980B9 0%, #3e5771 100%); }
 
 .mainHeader.mainHeader--small {
   height: auto;
@@ -156,7 +156,9 @@ ul, ol {
   -webkit-flex: 1 1 30%;
       -ms-flex: 1 1 30%;
           flex: 1 1 30%;
-  min-width: 350px; }
+  min-width: 350px;
+  color: #fafafa;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4); }
   .mainHeader-illustration .illustrationText .github-badges {
     margin-top: 15px;
     text-align: center; }

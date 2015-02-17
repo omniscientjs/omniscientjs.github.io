@@ -10,8 +10,8 @@ $color-darkGray-background: $color-white-bg;
 $color-white-fontColor: #2d2d2d;
 
 $color-header-border: $color-blue-light;
-$color-header-background: $color-blue-light;
-$color-header-background--bottom: $color-blue-normal;
+$color-header-background: $color-blue-dark;
+$color-header-background--bottom: lighten($color-blue-darkest, 10%);
 $color-header-background--small: $color-blue-dark;
 
 $color-header-linkColor: $color-white-bg;
@@ -20,7 +20,6 @@ $color-header-linkColor: $color-white-bg;
 // Graph colors:
 
 $color-topNode: $color-blue-darkest;
-
 
 $color-infoBoxes: $color-white-bg;
 

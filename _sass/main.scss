@@ -6,20 +6,12 @@
 
 @import url(http://fonts.googleapis.com/css?family=Khula:400,700,600,300);
 
-body, html {
-  min-height: 100;
-}
-
 body {
   font-family: 'Khula', sans-serif;
   min-width: $min-width;
 
   background: $color-darkGray-background;
   color: $color-white-fontColor;
-}
-
-.withSmallHeader {
-  padding-top: 100px;
 }
 
 * {
@@ -76,3 +68,8 @@ ul, ol {
 @import "columns";
 @import "next-nav";
 @import "forms";
+
+// Fonts
+@import "font/animation";
+@import "font/fontello";
+

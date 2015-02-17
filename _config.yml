@@ -9,6 +9,9 @@ url: "http://omniscientjs.github.io/" # the base hostname & protocol for your si
 # Build settings
 markdown: kramdown
 
+exclude:
+ - node_modules
+
 collections:
   guides:
     output: true

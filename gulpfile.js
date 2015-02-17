@@ -22,11 +22,9 @@ gulp.task('sass', function () {
 gulp.task('watch', ['default'], function () {
     gulp.watch('_sass/**/*.scss', ['sass']);
     gulp.watch([
-      '!_site/**',
-      'scripts/*.js',
       'scripts/**/*.js',
-      '*.html',
       '**/*.html',
+      '!_site/**/*',
        '**/*.md'], ['jekyll-build']);
 });
 

@@ -3,6 +3,8 @@
 
 .mainContent {
   @include width-constraint;
+
+  margin-top: 30px;
 }
 
 .mainContent h1,

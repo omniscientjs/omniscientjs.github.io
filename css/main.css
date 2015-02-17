@@ -121,7 +121,7 @@ ul, ol {
   min-height: initial;
   top: 0;
   width: 100%;
-  background: #0EC2DB; }
+  background: #2980B9; }
 
 .mainHeader-illustration {
   width: 90%;
@@ -259,6 +259,16 @@ ul, ol {
   .mainNavigation-inner h1 a:hover svg path {
     fill: #080b0e;
     text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.2); }
+
+.mainHeader.mainHeader--small .mainNavigation-inner h1 a svg path {
+  fill: #fafafa; }
+.mainHeader.mainHeader--small .mainNavigation-inner h1 a:hover svg path {
+  -webkit-filter: drop-shadow(1px 1px 3px rgba(0, 0, 0, 0.7));
+          filter: drop-shadow(1px 1px 3px rgba(0, 0, 0, 0.7)); }
+.mainHeader.mainHeader--small .mainNavigation-inner li a {
+  color: #fafafa; }
+  .mainHeader.mainHeader--small .mainNavigation-inner li a:hover {
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); }
 
 .chevronDown {
   height: 25px;

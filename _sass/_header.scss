@@ -21,7 +21,7 @@
   min-height: initial;
   top: 0;
   width: 100%;
-  background: $color-header-background;
+  background: $color-header-background--small;
 }
 .mainHeader-illustration {
   @include width-constraint;
@@ -122,7 +122,6 @@
   }
 }
 
-
 @media (max-width: $remove-graphics-width) {
   .mainNavigation-inner ul {
     li:nth-last-child(1),
@@ -151,6 +150,28 @@
   }
 }
 
+
+.mainHeader.mainHeader--small .mainNavigation-inner {
+  h1 a {
+    svg path {
+      fill: $color-header-linkColor--small;
+    }
+    &:hover svg path {
+      filter: drop-shadow(1px 1px 3px rgba(0,0,0, .7));
+    }
+  }
+
+
+
+  li a {
+    color: $color-header-linkColor--small;
+
+    &:hover {
+      // color: darken($color-header-linkColor--small, 20%);
+      text-shadow: 1px 1px 3px rgba(0,0,0, .7);
+    }
+  }
+}
 
 .chevronDown {
   height: 25px;

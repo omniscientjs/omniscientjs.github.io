@@ -9,7 +9,8 @@ var data = immstruct({
   ]
 });
 
-// check your console to see omniscient's debug info for what needs to render as the immstruct structure change!
+// check your console to see omniscient's debug info for what needs
+// to render as the immstruct structure change!
 component.debug();
 
 var Item = component('Item', function ({item}) {
@@ -20,7 +21,9 @@ var Item = component('Item', function ({item}) {
   };
   return (
     <label style={style}>
-      <input type="checkbox" onChange={onChecked} checked={item.get('checked')} />
+      <input type="checkbox"
+             onChange={onChecked}
+             checked={item.get('checked')} />
        {item.get('text')}
     </label>
   );

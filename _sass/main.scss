@@ -12,12 +12,6 @@ body {
   color: $color-white-fontColor;
 }
 
-@media (max-width: $min-width + 50px) {
-  .mainContent, .mainHeader {
-    padding: 0 10px;
-  }
-}
-
 * {
   box-sizing: border-box;
 }

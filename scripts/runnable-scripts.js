@@ -20,7 +20,7 @@
     var isLarge = runnable.dataset['large'];
     var options = {
       lineNumbers: isLarge,
-      lineWrapping: true,
+      lineWrapping: false,
       viewportMargin: Infinity,
       theme: 'kimbie-dark',
       tabSize: 2,

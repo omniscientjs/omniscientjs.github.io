@@ -6,20 +6,19 @@
     </header>
 
     <main class="mainContent playground" id="content">
+      <div class='window'>
+        <div class='inner inner--code'>
+          <textarea class='editor' data-large=true>{% if (!content) %}{% include _playground-default.html %}{% else %}{{ content }}{% endif %}</textarea>
+        </div>
+        <div id='result' class='inner inner--result'></div>
+      </div>
 
-<div class='window'>
-  <div class='inner inner--code'>
-    <textarea class='editor' data-large=true>{% if (!content) %}{% include _playground-default.html %}{% else %}{{ content }}{% endif %}</textarea>
-  </div>
-  <div id='result' class='inner inner--result'></div>
-</div>
-
-<span><b>Hint</b>: Use <code>document.getElementById('result')</code> to get to an element you can render to with your Omniscient components!</span>
-
+      <p><strong>Hint</strong>: Use <code>document.getElementById('result')</code> to get to an element you can render to with your Omniscient components!</p>
     </main>
 
-    <a href="https://github.com/omniscientjs/" class="link--github">Fork on Github</a>
     <script src="../../scripts/vendor/script.min.js"></script>
     <script src="../../scripts/runnable-scripts.js"></script>
+
+    {% include footer.html %}
   </body>
 </html>

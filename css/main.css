@@ -437,18 +437,17 @@ ul, ol {
 .window .inner--code {
   padding: 0; }
 
-pre code {
-  padding: 0 10px; }
-
 .inner--result {
   color: #474747;
   font-weight: 300; }
 
 pre code {
+  padding: 0 10px;
   background: #141414;
   display: block;
   padding: 10px;
-  border-radius: 3px; }
+  border-radius: 3px;
+  overflow: auto; }
 
 p code {
   background: rgba(20, 20, 20, 0.5);

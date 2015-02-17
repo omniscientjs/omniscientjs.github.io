@@ -404,6 +404,7 @@ p code {
   font-size: 2rem;
   font-weight: 100;
   position: relative;
+  word-wrap: break-word;
   color: #E74C3C; }
 
 .mainContent h1 {

@@ -360,7 +360,9 @@ ul, ol {
 
 .CodeMirror {
   z-index: 0;
-  padding-bottom: 0.5rem; }
+  padding-bottom: 0.5rem;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px; }
 
 .CodeMirror, .inner--result {
   font-size: 1rem; }
@@ -372,6 +374,8 @@ ul, ol {
 .playground .window .CodeMirror-lines {
   padding: 0; }
 .playground .CodeMirror {
+  border-top-left-radius: 3px;
+  border-top-right-radius: 0;
   border-bottom-left-radius: 3px; }
 .playground .CodeMirror-line-numbers {
   font-size: 0.2rem; }
@@ -420,11 +424,11 @@ ul, ol {
     /* Internet Explorer 5.5+ */ }
 
 .window {
-  background: #eee8ea;
+  background: #fafafa;
   width: 100%;
   border-radius: 3px;
   margin: 20px auto;
-  box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2); }
+  box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.2); }
 
 .window .inner {
   padding: 0.5rem 0.75rem 0.1rem 0.75rem; }
@@ -444,8 +448,7 @@ ul, ol {
   padding: 0; }
 
 pre code {
-  padding: 0 10px;
-  background: #141414; }
+  padding: 0 10px; }
 
 .inner--result {
   color: #474747;
@@ -462,9 +465,6 @@ p code {
   padding: 2px 5px;
   color: #ECF0F1;
   display: inline-block; }
-
-.hljs {
-  background: #141414; }
 
 .mainContent {
   width: 90%;

@@ -22,7 +22,7 @@
       lineNumbers: isLarge,
       lineWrapping: false,
       viewportMargin: Infinity,
-      theme: 'kimbie-dark',
+      theme: 'base16-mocha-dark',
       tabSize: 2,
       extraKeys: {
         Tab: betterTab

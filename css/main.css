@@ -50,21 +50,15 @@ a img {
 
 body {
   font-family: 'Khula', sans-serif;
-  min-width: 350px;
   background: #fafafa;
   color: #2d2d2d; }
 
+@media (max-width: 400px) {
+  .mainContent, .mainHeader {
+    padding: 0 10px; } }
+
 * {
   box-sizing: border-box; }
-
-.link--github {
-  background: url('/assets/github.png') center center no-repeat;
-  text-indent: -9999px;
-  background-size: contain;
-  position: absolute;
-  display: block;
-  top: 10px;
-  right: 10px; }
 
 @media (max-width: 650px) {
   .link--github {
@@ -73,7 +67,7 @@ body {
 .anchor-link {
   display: block;
   position: relative;
-  top: -30px;
+  top: -63px;
   visibility: hidden; }
 
 a:link, a:visited {
@@ -91,7 +85,6 @@ ul, ol {
   padding-left: 20px; }
 
 .mainHeader {
-  min-width: 350px;
   background: -webkit-linear-gradient(top, #2980B9 0%, #3e5771 100%);
   background: linear-gradient(to bottom, #2980B9 0%, #3e5771 100%); }
 
@@ -102,7 +95,6 @@ body {
   width: 90%;
   max-width: 1100px;
   margin: 0 auto;
-  min-width: 350px;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -127,7 +119,6 @@ body {
   -webkit-flex: 1 1 30%;
       -ms-flex: 1 1 30%;
           flex: 1 1 30%;
-  min-width: 350px;
   color: #fafafa;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4); }
   .mainHeader-illustration .illustrationText .github-badges {
@@ -136,16 +127,17 @@ body {
   .mainHeader-illustration .illustrationText h1 {
     font-size: 2.5rem; }
 
-@media (max-width: 550px) {
+@media (max-width: 870px) {
   .mainHeader-illustration svg {
     display: none; } }
 
 .mainNavigation {
   z-index: 3;
-  height: auto;
+  height: 63px;
   position: fixed;
   min-height: initial;
   top: 0;
+  left: 0;
   width: 100%;
   background: #2980B9; }
 
@@ -153,7 +145,6 @@ body {
   width: 90%;
   max-width: 1100px;
   margin: 0 auto;
-  min-width: 350px;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -167,16 +158,17 @@ body {
   -webkit-justify-content: space-between;
       -ms-flex-pack: justify;
           justify-content: space-between; }
-  .mainNavigation-inner a {
-    display: block;
-    margin-right: 20px; }
   .mainNavigation-inner ul {
     list-style-type: none;
     margin-top: 5px;
     font-size: 1.2rem; }
     .mainNavigation-inner ul li {
       float: left; }
+      .mainNavigation-inner ul li:last-child a {
+        margin-right: 0; }
     .mainNavigation-inner ul li a {
+      display: block;
+      margin-left: 20px;
       color: #fafafa;
       -webkit-transition: all 300ms;
               transition: all 300ms;
@@ -185,8 +177,10 @@ body {
       font-weight: 300; }
       .mainNavigation-inner ul li a:hover {
         text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); }
+    .mainNavigation-inner ul li:first-child a {
+      margin-left: 0; }
 
-@media (max-width: 550px) {
+@media (max-width: 630px) {
   .mainNavigation-inner ul li:nth-last-child(1), .mainNavigation-inner ul li:nth-last-child(2) {
     display: none; } }
 
@@ -403,7 +397,6 @@ p code {
   width: 90%;
   max-width: 1100px;
   margin: 0 auto;
-  min-width: 350px;
   margin-top: 30px; }
 
 .mainContent h1, .mainContent h2, .mainContent h3 {

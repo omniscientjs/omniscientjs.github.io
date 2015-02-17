@@ -1,0 +1,90 @@
+---
+layout: playground
+collection: playground
+title: List with inline edit
+name: 01-inline-edit
+prev: 00-all-playgrounds
+---
+
+// Shortcut for DOM-creation
+var d = React.DOM;
+
+var FocusOnRender = {
+  componentDidMount: function () {
+    this.getDOMNode().select();
+  }
+};
+
+// Auto-focusable component.
+var FocusingInput = component(FocusOnRender, function ({cursor}, statics) {
+  var onChange = statics.onChange || function () {};
+  return d.input({ value: cursor.get('text'), onChange: onChange });
+});
+
+
+// Regular React mixins
+var EditMixin = {
+
+  getInitialState: function () {
+    return {};
+  },
+
+  onEdit: function onEdit () {
+    this.setState({ editing: true });
+  },
+
+  onSubmit: function onSubmit (e) {
+    e.preventDefault();
+    this.setState({ editing: false });
+  },
+
+  onChange: function onChange (e) {
+    this.props.cursor.update(function (state) {
+      return state.merge({ text: e.currentTarget.value });
+    });
+  }
+};
+
+// Add multiple mixins for handling editing
+var Editable = component(EditMixin, function ({cursor}) {
+  if (this.state.editing) {
+    // Pass on statics (not effecting shouldComponentUpdate)
+    return d.form({ onSubmit: this.onSubmit },
+                  FocusingInput({ cursor: cursor, statics: { onChange: this.onChange } }),
+                  d.button({}, 'Save'));
+  }
+  return d.span({ onClick: this.onEdit }, cursor.get('text'));
+});
+
+var Item = component(function ({cursor}) {
+  // Compose Item and Editable components
+  return d.li({}, Editable(cursor));
+});
+
+// Outer list with multiple items
+var List = component(function ({cursor}) {
+  // Create Items for every element in list cursor is pointing to
+  return d.ul({}, cursor.toArray().map(function (item, key) {
+    // Create item as sub-component based on cursor `item`
+    return Item('item-' + key, item);
+  }));
+});
+
+// Create a immutable data structure
+var data = immstruct({
+  items: [
+    { text: 'one'   },
+    { text: 'two'   },
+    { text: 'three' }
+  ]
+});
+
+// Render every time immutable data swaps.
+data.on('swap', render);
+
+// Initial render
+render();
+
+function render () {
+  React.render(List(data.cursor('items')), document.getElementById('result'));
+}

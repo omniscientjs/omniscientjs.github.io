@@ -90,9 +90,16 @@
       if (isLarge) {
         throttledReplaceState(src);
       }
+
+      var errorElement = document.querySelector('.editor-error');
+      if (errorElement) {
+        errorElement.parentElement.removeChild(errorElement);
+      }
     }
     catch (e) {
+      console.error(e);
       var msg = e.message;
+
       if (resultEl) {
         var error = document.createElement('pre');
         error.innerHTML = msg;
@@ -103,9 +110,6 @@
 
         resultEl.innerHTML = '';
         resultEl.appendChild(errorEl);
-      }
-      else {
-        console.error(msg);
       }
     }
   }

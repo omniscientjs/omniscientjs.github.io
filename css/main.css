@@ -383,7 +383,7 @@ pre code {
   border-radius: 3px;
   overflow: auto; }
 
-p code {
+p code, ul code, li code {
   background: rgba(20, 20, 20, 0.5);
   padding: 2px 5px;
   color: #ECF0F1;

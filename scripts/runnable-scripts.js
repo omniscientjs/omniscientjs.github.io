@@ -1,8 +1,8 @@
 (function () {
 
   $script(['/scripts/vendor/codemirror-min.js',
-          '//cdnjs.cloudflare.com/ajax/libs/chai/2.0.0/chai.js',
-          '//cdnjs.cloudflare.com/ajax/libs/mocha/2.1.0/mocha.js',
+          '//cdnjs.cloudflare.com/ajax/libs/chai/2.0.0/chai.min.js',
+          '//cdnjs.cloudflare.com/ajax/libs/mocha/2.1.0/mocha.min.js',
           '//cdnjs.cloudflare.com/ajax/libs/immutable/3.6.2/immutable.min.js',
           '//cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react.min.js'], function () {
     $script(['//cdnjs.cloudflare.com/ajax/libs/immstruct/1.4.0/immstruct.min.js',
@@ -56,8 +56,8 @@
   var throttledReplaceState = throttle(replaceStateValue, 2000);
 
   function run (isLarge, src, timers) {
+    var mocha = new Mocha({ reporter: 'html' });
     var context = {};
-    var mocha = new Mocha({ ui: 'bdd' });
     mocha.suite.emit('pre-require', context, null, mocha);
 
     var match = src.match(/['"](result(-[0-9]+)?)['"]/);
@@ -66,9 +66,8 @@
       resultEl = document.getElementById(match[1]);
     }
 
-    var matchDescribe = src.match(/describe\(/);
-    if (!!matchDescribe && matchDescribe[0]) {
-      document.getElementById('mocha').innerHTML = '';
+    document.getElementById('mocha').innerHTML = '';
+    if (/describe\(/.test(src)) {
       hasTest = true;
     }
 
@@ -101,8 +100,8 @@
 
       fn(newSetTimeout,
          newSetInterval,
-         context.describe,
-         context.it);
+         context.describe.bind(context),
+         context.it.bind(context));
 
       if (isLarge) {
         throttledReplaceState(src);
@@ -114,7 +113,7 @@
       }
 
       if (hasTest) {
-        mocha.run();
+        mocha.run(function () { /* this is needed, wtf? */ });
       }
     }
     catch (e) {

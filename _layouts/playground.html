@@ -28,7 +28,10 @@
           {% assign codeContent = content | strip_newlines %}
           <textarea class='editor' data-large=true>{% if (codeContent == "") %}{% include _playground-default.html %}{% else %}{{ content }}{% endif %}</textarea>
         </div>
-        <div id='result' class='inner inner--result'></div>
+        <div class='inner inner--result'>
+          <div id='result' ></div>
+          <div id="mocha"></div>
+        </div>
       </div>
 
       <h3>Help</h3>

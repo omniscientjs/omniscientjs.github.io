@@ -1,6 +1,8 @@
 (function () {
 
   $script(['/scripts/vendor/codemirror-min.js',
+          '//cdnjs.cloudflare.com/ajax/libs/chai/2.0.0/chai.min.js',
+          '//cdnjs.cloudflare.com/ajax/libs/mocha/2.1.0/mocha.min.js',
           '//cdnjs.cloudflare.com/ajax/libs/immutable/3.6.2/immutable.min.js',
           '//cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react.min.js'], function () {
     $script(['//cdnjs.cloudflare.com/ajax/libs/immstruct/1.4.0/immstruct.min.js',
@@ -9,6 +11,12 @@
   });
 
   function runnableScriptsLoad () {
+    context = {};
+    expect = chai.expect;
+
+    mocha = new Mocha({ ui: 'bdd' });
+    mocha.suite.emit('pre-require', context, null, mocha);
+
     component = omniscient;
     var runnables = document.querySelectorAll('.editor');
     for (var i=0; i < runnables.length; i++) {
@@ -55,10 +63,17 @@
 
   function run (isLarge, src, timers) {
     var match = src.match(/['"](result(-[0-9]+)?)['"]/);
-    var resultEl;
+    var resultEl, hasTest;
     if (match && match[1]) {
       resultEl = document.getElementById(match[1]);
     }
+
+    var matchDescribe = src.match(/describe\(/);
+    if (!!matchDescribe && matchDescribe[0]) {
+      document.getElementById('mocha').innerHTML = '';
+      hasTest = true;
+    }
+
     try {
 
       timers.timeouts.forEach(clearTimeout);
@@ -94,6 +109,11 @@
       var errorElement = document.querySelector('.editor-error');
       if (errorElement) {
         errorElement.parentElement.removeChild(errorElement);
+      }
+
+      if (hasTest) {
+        // TODO: This will accumulate tests from previous builds
+        mocha.run();
       }
     }
     catch (e) {

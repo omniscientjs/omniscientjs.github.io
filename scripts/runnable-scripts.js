@@ -1,8 +1,8 @@
 (function () {
 
   $script(['/scripts/vendor/codemirror-min.js',
-          '//cdnjs.cloudflare.com/ajax/libs/chai/2.0.0/chai.min.js',
-          '//cdnjs.cloudflare.com/ajax/libs/mocha/2.1.0/mocha.min.js',
+          '//cdnjs.cloudflare.com/ajax/libs/chai/2.0.0/chai.js',
+          '//cdnjs.cloudflare.com/ajax/libs/mocha/2.1.0/mocha.js',
           '//cdnjs.cloudflare.com/ajax/libs/immutable/3.6.2/immutable.min.js',
           '//cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react.min.js'], function () {
     $script(['//cdnjs.cloudflare.com/ajax/libs/immstruct/1.4.0/immstruct.min.js',
@@ -11,12 +11,6 @@
   });
 
   function runnableScriptsLoad () {
-    context = {};
-    expect = chai.expect;
-
-    mocha = new Mocha({ ui: 'bdd' });
-    mocha.suite.emit('pre-require', context, null, mocha);
-
     component = omniscient;
     var runnables = document.querySelectorAll('.editor');
     for (var i=0; i < runnables.length; i++) {
@@ -62,6 +56,10 @@
   var throttledReplaceState = throttle(replaceStateValue, 2000);
 
   function run (isLarge, src, timers) {
+    var context = {};
+    var mocha = new Mocha({ ui: 'bdd' });
+    mocha.suite.emit('pre-require', context, null, mocha);
+
     var match = src.match(/['"](result(-[0-9]+)?)['"]/);
     var resultEl, hasTest;
     if (match && match[1]) {
@@ -97,10 +95,14 @@
       var fn = Function.apply(null, [
         'setTimeout',
         'setInterval',
+        'describe',
+        'it',
         compiledCode]);
 
       fn(newSetTimeout,
-         newSetInterval);
+         newSetInterval,
+         context.describe,
+         context.it);
 
       if (isLarge) {
         throttledReplaceState(src);
@@ -112,7 +114,6 @@
       }
 
       if (hasTest) {
-        // TODO: This will accumulate tests from previous builds
         mocha.run();
       }
     }

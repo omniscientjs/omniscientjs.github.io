@@ -1,6 +1,7 @@
 (function () {
 
   $script(['/scripts/vendor/codemirror-min.js',
+          '/scripts/playground-reporter.js',
           '//cdnjs.cloudflare.com/ajax/libs/chai/2.0.0/chai.min.js',
           '//cdnjs.cloudflare.com/ajax/libs/mocha/2.1.0/mocha.min.js',
           '//cdnjs.cloudflare.com/ajax/libs/immutable/3.6.2/immutable.min.js',
@@ -56,7 +57,7 @@
   var throttledReplaceState = throttle(replaceStateValue, 2000);
 
   function run (isLarge, src, timers) {
-    var mocha = new Mocha({ reporter: 'html' });
+    var mocha = new Mocha({ reporter: PlaygroundReporter });
     var context = {};
     mocha.suite.emit('pre-require', context, null, mocha);
 

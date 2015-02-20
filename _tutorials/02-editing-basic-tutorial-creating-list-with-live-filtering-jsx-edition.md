@@ -12,7 +12,7 @@ If you haven't read the Omniscient introduction article yet, you should probably
 
 For this example, we're creating a small application where we can search for different javascript libraries and frameworks from a list. We should start by requiring the modules we want to use. A basic stack with Omniscient consists of React, immstruct (which wraps Immutable.js) and of course Omniscient itself.
 
-```js
+```jsx
 var React     = require('react'),
     immstruct = require('immstruct'), // wrapped Immutable.js
     component = require('omniscient');
@@ -20,7 +20,7 @@ var React     = require('react'),
 
 To show a list of different javascript projects, we should have a top structure with our data defined as a immutable structure. We need a list of different projects and their URLs, but also a string which will be the current search query, that will behave as an active filter. The entire application state is defined in that structure alone. If we wanted, we could have started the application with a predefined search instead of an empty string – making it easier to test and demo.
 
-```js
+```jsx
 var structure = immstruct({
   search: '',
   libs: [
@@ -45,7 +45,7 @@ var structure = immstruct({
 
 We could also load the data lazily. This is an operation that shouldn't be a part of our UI, but rather of a separate module handling models and collections. We could send a cursor to where we want the data populated, using Immutable.js. For instance:
 
-```js
+```jsx
 var storage = require('./storage');
 
 var structure = immstruct({
@@ -62,7 +62,7 @@ There would't be any need for doing anything else: if our `fetchLibraries` metho
 
 The code for rendering the application starts like this:
 
-```js
+```jsx
 function render () {
   React.render(
     <Search.jsx cursor={structure.cursor()} />,
@@ -78,7 +78,7 @@ Remember, `structure` is the immutable structure we created to hold the applicat
 
 You may have noticed the `.jsx` suffix to `Search` in the render-function. This is different than [using non-JSX](https://github.com/omniscientjs/omniscient/wiki/Basic-Tutorial:-Creating-List-with-Live-Filtering). This is to get the actual component, and not the returned element. JSX compiles this file and converts the Component to an element, but when you use Omniscient with JSX, you need to retrieve the actual React component, hence the suffix. You could also do something like:
 
-```js
+```jsx
 Search = Search.jsx;
 ```
 
@@ -86,7 +86,7 @@ And after this point, `Search` would always be JSX-compatible component.
 
 Now, let us start implementing `Search`, which will consist of a `SearchBox` and a set of `Matches`. This is pretty straightforward: we are simply making HTML elements and describing our view in a declarative way, using components. Much like doing… HTML markup:
 
-```js
+```jsx
 var Search = component('Search', function (props) {
   return (
     <div>
@@ -105,7 +105,7 @@ The next natural step is to list out all the matches based on the search query, 
 
 A list of matches consist in a list of `Match` components. `Match` will be a component that merely presents a javascript library as a list item, with an anchor-element to open the library's homepage, like so:
 
-```js
+```jsx
 var Match = component('Match', function (props) {
   var cursor = props.cursor;
   return (
@@ -118,7 +118,7 @@ var Match = component('Match', function (props) {
 
 The `Matches` component (the list of matches) is far more interesting, and is the heart of the application. To do its work, it needs: the search query, the list of projects, and a way to filter the projects based on the search query. The matches should be presented to the browser as an un-ordered list of elements.
 
-```js
+```jsx
 var Matches = component('Matches', function (props) {
   // get our cursor from the properties.
   var cursor = props.cursor;
@@ -150,7 +150,7 @@ var Matches = component('Matches', function (props) {
 
 Even this, the main part of our application, shouldn't do anything that is not related to the presentation. We only want to present the items that match our search query, so we filter the list of libraries to select those that contains our search query (either in the name or the URL) and present them in the returned element. If we try to change our initial search query, like so:
 
-```js
+```jsx
 var structure = immstruct({
   search: 'Omniscient',
   // ...
@@ -161,7 +161,7 @@ var structure = immstruct({
 
 Ok, but altering the source code and refreshing the browser isn't really user friendly - nor fast. We should create a separate component for updating the search query, the infamous search box:
 
-```js
+```jsx
 var SearchBox = component('SearchBox', function (props) {
   return (
     <div>
@@ -177,7 +177,7 @@ The `SearchBox` component should be an easy one, but we can see two things here 
 
 Let's create a small mixin that can handle this kind of change for us. As this is javascript and we have lexical scoping, we can easily share a context with the component through `this` when using the mixin from within the component. The passed cursor will be available through the property `this.props.cursor` inside the mixin, as expected, and in that case, the cursor points directly to the search query in the structure, so we can update it right away:
 
-```js
+```jsx
 var mixins = {
   changeHandler: function (e) {
     this.props.cursor.update(function (currentSearch) {
@@ -203,7 +203,7 @@ To wrap it up, let's review what is *happening* here. What does *happen* when we
 
 The re-render process is interesting. We will go through it, top-down, to see if the components have changed and how the react. So, when a new input is registered in our text field, the `onChange` handler kicks in and we swap out the search query value in our immutable structure, which causes a "swap" event to be emitted. As we are listening for such events, it triggers a re-render of the root component. Let's check whether the cursor passed to `Search` has changed:
 
-```js
+```jsx
 React.render(
   <Search.jsx cursor={structure.cursor()} />,
   document.body
@@ -214,7 +214,7 @@ It has changed indeed, because the object has changed somehow and this is a curs
 
 We can activate the Omniscient debugger to better see what happens next:
 
-```js
+```jsx
 // Activate debug-mode
 component.debug();
 ```

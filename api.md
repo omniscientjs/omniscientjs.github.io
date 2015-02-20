@@ -4,7 +4,7 @@ layout: guides
 
 Given that:
 
-```js
+```jsx
 var component = require('omniscient');
 ```
 
@@ -14,14 +14,14 @@ The API of Omniscient is pretty simple, you create a component with a render fun
 
 ### Parameter Setup
 
-```js
+```jsx
 var MyComponent = component([displayName, ][mixins, ]function (props, statics) { });
 MyComponent([key: String, ](Object: data | Cursor));
 ```
 
 ### Examples
 
-```js
+```jsx
 // Create component with display name MyComponentName
 var MyComponent = component(function MyComponentName (props) {
   return (<div>Hello {props.cursor.get('name')}</div>);
@@ -31,7 +31,7 @@ React.render(MyComponent(myCursor), document.body);
 
 Without cursor
 
-```js
+```jsx
 var MyComponent = component(function MyComponentName (props) {
   return (<div>Hello {props.name}</div>);
 });
@@ -40,7 +40,7 @@ React.render(MyComponent({ name: 'Omniscient'), document.body);
 
 As JSX
 
-```js
+```jsx
 var MyComponent = component(function MyComponentName (props) {
   return (<div>Hello {props.name}</div>);
 }).jsx; // notice jsx
@@ -49,7 +49,7 @@ React.render(<MyComponent name={'Omniscient'} />, document.body);
 
 With mixins:
 
-```js
+```jsx
 var myMixins = {
   componentDidMount: function () {
      // do something
@@ -66,7 +66,7 @@ React.render(<MyComponent name={'Omniscient'} />, document.body);
 
 With multiple mixins (compositions):
 
-```js
+```jsx
 var someMixins = {
   componentDidMount: function () {
      // do something
@@ -91,7 +91,7 @@ React.render(<MyComponent name={'Omniscient'} />, document.body);
 
 #### With ES2015 syntax
 
-```js
+```jsx
 // Create component with display name MyComponentName
 var MyComponent = component('MyComponentName', ({name}) => (<div>Hello {name}</div>));
 React.render(<MyComponent name={'Omniscient'} />, document.body);
@@ -112,7 +112,7 @@ Activate debugging. Pattern is a Regular Expression. Only log messages which mat
 
 Only show debug statements for components with key or name `MyComponent`.
 
-```js
+```jsx
 component.debug(/MyComponent/i)
 ```
 
@@ -121,7 +121,7 @@ Activate debug, and define how to log messages. Log all messages (do not filter 
 
 ### Example
 
-```js
+```jsx
 component.debug(function (debugMessage) {
   saveMessageToFile(debugMessage);
 });
@@ -133,7 +133,7 @@ Activate debug, for messages matching passed regex pattern and pass log message 
 
 ### Example
 
-```js
+```jsx
 component.debug(/MyComponent/i, function (debugMessage) {
   saveMessageToFile(debugMessage);
 });
@@ -145,7 +145,7 @@ This is the mixin used to determine if a component should update or not. If you 
 
 You can also directly require the mixin, to save bytes in your source code:
 
-```js
+```jsx
 var shouldComponentUpdate = require('omniscient/shouldupdate');
 ```
 
@@ -153,7 +153,7 @@ var shouldComponentUpdate = require('omniscient/shouldupdate');
 
 Through omniscient:
 
-```js
+```jsx
 var shouldComponentUpdate = require('omniscient').shouldComponentUpdate;
 
 var MyComponent = React.createClass({
@@ -163,7 +163,7 @@ var MyComponent = React.createClass({
 
 Requiring directly
 
-```js
+```jsx
 var shouldComponentUpdate = require('omniscient/shouldupdate');
 
 var MyComponent = React.createClass({
@@ -178,7 +178,7 @@ You can create a "local" instance of the Omniscient component creator by using t
 
 ### "Sandboxed" component Example
 
-```js
+```jsx
 var component = require('omniscient');
 
 // Create a local component factory with "normal" defaults
@@ -195,7 +195,7 @@ assert(localComponent.foo !== component.foo);
 
 This is an overview of all properties that can be overridden in Omniscient. All properties are functions that have default implementations, and can be overwritten (just for the local component which is returned).
 
-```js
+```jsx
 var component = require('omniscient');
 
 var localComponent = component.withDefaults({
@@ -217,7 +217,7 @@ var localComponent = component.withDefaults({
 `cursorField` defines if a cursor should be unwrapped before sending it into
 the render function. Example:
 
-```js
+```jsx
 var localComponent = component.withDefaults({
   cursorField: 'foobar'
 });
@@ -235,7 +235,7 @@ As with the component creator, you can create local instances of `shouldComponen
 
 This is a complete overview of the defaults you can override on `shouldComponentUpdate`:
 
-```js
+```jsx
 var shouldComponentUpdate = require('omniscient/shouldupdate');
 
 var localShouldUpdate = shouldComponentUpdate.withDefaults({

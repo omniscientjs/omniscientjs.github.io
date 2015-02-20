@@ -22,7 +22,7 @@ In web development we are constantly working in a stateful and side-effectful en
 
 A component is a small piece of the user interface of our application, a view, that can be composed with other components to make more advanced components. Components can have components as parents and/or components as children, much like the HTML-elements we know and love. A component-producing function is pure and referentially transparent. Given input to a component-function, it will always produce the same output component. Take for instance a component with a header element with some text-content. This component can be produced by calling a component-function with some input. This input becomes the text content of the header. The component-function will produce the exact same component given the same input. If we want to make a change to the resulting component we will need to swap it out with a component produced by calling the component-function with some other input. This might look something like this:
 
-```js
+```jsx
 var Header = component(function (data) {
   // First argument is h1 metadata
   return h1(null, data.text);
@@ -42,14 +42,14 @@ We can see, by the pseudocode above, that we have a h1-element with a given text
 
 Another thing we can more easily achieve with this component system, is single responsibility. We can easily create small components, which are easily composed because they are stateless and side-effect free, and through that achieve reusable code. We could easily have two different headers using the header component-function defined above:
 
-```js
+```jsx
 var hello = Header({ text: 'Hello' });
 var bye   = Header({ text: 'Good Bye' });
 ```
 
 We can compose `Header` with another component, `Welcome`, by using `Header` as a child-component of `Welcome`.
 
-```js
+```jsx
 var Welcome = component(function (data) {
   return div(null, Header({ 'Hello, ' + data.user }));
 });
@@ -61,7 +61,7 @@ The component `Welcome`, now consists of another component. We've composed them.
 
 But, being without side-effects, what good is our interface if the users can't effect it? They want to do operations like clicking buttons and enter text. We need some way to execute operations and functions and have them reflected in our components. Take for instance some action occuring in case a button is clicked, we could handle this internally in the component like so:
 
-```js
+```jsx
 var Button = component(function () {
   var clickHandler = function () {
     console.log('Clicked!');
@@ -77,7 +77,7 @@ This works for the simple case where all the state that needs to change can be k
 
 Immutability is another concept the functional paradigm relies on. When a new value is set, the previous value isn't mutated, it still exist. Immutable objects always returns new objects with updated values, instead of the original object with a different value. This is truly useful in changing environments where we have async code, or even threads. If we have a reference to an object, this cannot change by a side-effect by some other part of the system.
 
-```js
+```jsx
 let arr  = Object.freeze([1, 2, 3]);
 let arr2 = arr.map(x => x * 2);
 
@@ -89,7 +89,7 @@ As another major gain, using immutable objects, we can have easier checks if val
 
 By introducing our components to immutable data structures we can have one top all-knowing structure holding the entire application or module data information, and have our components reflect this information – declaratively. We can pass a part of the immutable structure to a specific component, so that component only have information about it's relevant information, not information it doesn't need to know. Separation of concern, divide and conquer.
 
-```js
+```jsx
 // Create a immutable object
 var info = deepFreeze({
   site: { title: 'Biff\'s Spare Parts - Online' },
@@ -119,7 +119,7 @@ We see that the two sub-components, `User` and `Header`, don't have any knowledg
 
 As we have pure functions, we can swap out the entire immutable structure on the top, and do a re-render.
 
-```js
+```jsx
 // Create a new top structure
 info = deepFreeze({
   site: { title: 'Biff\'s Spare Parts - Online' },
@@ -132,7 +132,7 @@ render(App(info), document.body);
 
 But that would cause our entire app to re-render, but we would have to do much data repetition and it would be fairly slow. There is however, a concept called **cursors**. Cursors are simply pointers to a subset of data in a immutable structure. So if we update the data a cursor is pointing to, we get a new immutable structure where only the changed data is different, all other parts of the structure is the same, with the same reference. For instance:
 
-```js
+```jsx
 var structure = immutable({
   site: { title: 'Biff\'s Spare Parts - Online' },
   user: { name: 'Dr. Brown' }
@@ -151,7 +151,7 @@ newStructure.user //=> 'Doc'
 
 We can use this to be smarter about what we want to re-render. Instead of passing the actual data into components and sub-components, we pass on cursors to these values. Components have a function deciding whether to re-render, simply based on if the newly passed cursor points to the same value as the previous passed cursor. If the data hasn't change, there shouldn't be any need of re-rendering. Remember, as this is a simple object reference check, it is lightning fast.
 
-```js
+```jsx
 // Create a immutable object
 var structure = immutable({
   site: { title: 'Biff\'s Spare Parts - Online' },
@@ -190,7 +190,7 @@ This would prevent `Header` from re-rendering, as the cursor passed to `Header` 
 
 We can often have a set of operations that different components can rely on. Operations that are generic enough so two different components can have the same implementation, but we wouldn't want to copy this code or having those components share state in any way. To solve this, we can use mixins. Components can have one or more *attached* functions that we can call internally, the so-called mixins. This way, we can compose different sets of mixins and share mixins across components, attaching the "reusable operations" to each component. Same implementation, but not any shared context.
 
-```js
+```jsx
 var clickMixins = {
   clickHandler: function () {
     console.log('Clicked!');
@@ -210,7 +210,7 @@ var Text = component(clickMixins, function () {
 
 A component can get more than one set of mixins, as well.
 
-```js
+```jsx
 var clickMixins = {
   clickHandler: function () {
     this.safeLog('Clicked!');
@@ -240,7 +240,7 @@ What we have seen now isn't necessarily implementation specific but more of a de
 
 React.js is a library maintained and created by developers at Facebook. The key takeaway from React.js: it's just concerned about the UI, it uses a Virtual DOM and smart algorithms for minimising slow DOM operations and manipulations. It only actually changes the DOM if there is a change from the Virtual DOM. On top of React.js, we can use Omniscient.js. Omniscient is a small library that builds on the ideas from this article, having small composable components with top-down rendering. Combine this with the cursors and immutable data structures of Immutable.js, and we can achieve a really good implementation of the architectural concepts we've discussed.
 
-```js
+```jsx
 var React     = require('react'),
     immutable = require('immutable'),
     component = require('omniscient');
@@ -287,7 +287,7 @@ However, this relies on always changing the structure on the top, but this is of
 
 Immstruct is the last piece of the puzzle. It is a minimized wrapper for [Immutable.js](https://github.com/facebook/immutable-js), which allows us to get an event when a value has been swapped in the immutable structure. In addition, we can easily create and re-retrieve a structure through keys - allowing us to access a structure from different modules. Let's see how we would update the username by clicking it, following our previous example.
 
-```js
+```jsx
 var React     = require('react'),
     // Swap out Immutable.js with immstruct
     immstruct = require('immstruct'),

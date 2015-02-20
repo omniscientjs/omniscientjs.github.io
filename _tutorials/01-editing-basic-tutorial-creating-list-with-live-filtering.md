@@ -14,7 +14,7 @@ If you haven't read the Omniscient introduction article yet, you should probably
 
 For this example, we're creating a small application where we can search for different javascript libraries and frameworks. We should start by requiring the modules we want to use. A basic stack with Omniscient is React, immstruct and of course Omniscient (amd Immutable.js wrapped through immstruct).
 
-```js
+```jsx
 var React     = require('react'),
     immstruct = require('immstruct'),
     component = require('omniscient');
@@ -22,7 +22,7 @@ var React     = require('react'),
 
 To show a list of different javascript projects, we should have a top structure with our data defined as a immutable structure. We are creating a list of different project and their URLs, but also a empty string with `search`. This will be the current search query, that we want as an active filter. The entire application state is defined in that structure alone. If we wanted, we could have started the application with a predefined search – making it easier to test and demo.
 
-```js
+```jsx
 var structure = immstruct({
   search: '',
   libs: [
@@ -47,7 +47,7 @@ var structure = immstruct({
 
 We could also load the data lazily. This is a operation that shouldn't be a part of our UI, but a separate module handling models and collections. We could send a cursor to where we want the data populated using Immutable.js. For instance:
 
-```js
+```jsx
 var storage = require('./storage');
 
 var structure = immstruct({
@@ -62,7 +62,7 @@ storage.fetchLibraries(structure.cursor('libs'));
 
 There would't be any need for doing anything else. If our `fetchLibraries` method swapped the value in our structure, we would get an event from `immstruct` telling us that a value has been swapped in the data structure. We should re-render if this happens.
 
-```js
+```jsx
 render();
 structure.on('swap', render);
 
@@ -78,7 +78,7 @@ Remember, `structure` is the immutable structure we created, and it emits event,
 
 Now we us start implementing `Search`, which will consist of a `SearchBox` and a set of `Matches`. This is pretty straight forward, we are simply making HTML elements and describing our view in a declarative way using components. Much like doing markup, but in Javascript.
 
-```js
+```jsx
 var Search = component('Search', function (props) {
   return React.DOM.div({ },
               SearchBox(props.cursor.cursor('search')),
@@ -94,7 +94,7 @@ The next natural step is to list out all the matches based on the search query -
 
 A list of matches in turn consist of a single `Match`. This will be a component that merely presents a javascript library as a list item with an anchor-element, like so:
 
-```js
+```jsx
 var Match = component('Match', function (props) {
   var cursor = props.cursor;
   return d.li({}, d.a({ href: cursor.get('url') }, cursor.get('title')));
@@ -103,7 +103,7 @@ var Match = component('Match', function (props) {
 
 The `Matches` component is far more interesting, and is the heart of the application. We have to get the search query and all projects, and we have to filter the projects based on that query. The matches should be presented to the browser in a un-ordered list of elements.
 
-```js
+```jsx
 var Matches = component('Matches', function (props) {
   // get our cursor from the properties.
   var cursor = props.cursor;
@@ -128,7 +128,7 @@ var Matches = component('Matches', function (props) {
 
 Even this, the main part of our application, shouldn't do anything that is not related to the presentation. We only want to present the items that match our search query, so we filter the list of libraries and only select those that contains our search query, either in the name or the URL. Now we actually have a working filterable list of javascript projects, we just don't have a way of filtering. But if we try to change our initial search query like so:
 
-```js
+```jsx
 var structure = immstruct({
   search: 'Omniscient',
   // ...
@@ -137,7 +137,7 @@ var structure = immstruct({
 
 ... and refresh the browser, we would see only Omniscient being presented in the list. And every time we refresh the browser, this is what we see. Pure, predictable components. But altering the source code and refreshing the browser isn't really user friendly - or fast. We should create a own separate component for updating the search query.
 
-```js
+```jsx
 var SearchBox = component('SearchBox', function (props) {
   return React.DOM.div({}, d.input({
     placeholder: "Search..",
@@ -151,7 +151,7 @@ The `SearchBox` is easy, but we see two things here that might be new. The curso
 
 We create a small mixin that can handle the change for us. As this is javascript and we can share a context with the component through `this`. The passed cursor is available through the property `this.props.cursor` inside the mixin, and the cursor points directly to the search query in the structure.
 
-```js
+```jsx
 var mixins = {
   changeHandler: function (e) {
     this.props.cursor.update(function (currentSearch) {
@@ -173,7 +173,7 @@ Check out the [complete source code on Github](https://github.com/omniscientjs/o
 
 The re-render is interesting here. We will go through, top-down, see if the components have changed. So when a new input is registered in our text field, we swap out the search query value in our structure and trigger a re-render. When the re-render happens, we see if the cursor passed to `Search` has changed, where we do:
 
-```js
+```jsx
 React.render(
   Search(structure.cursor()),
   document.body
@@ -184,7 +184,7 @@ It has changed, as a part of the object has changed. So we do a re-render. The c
 
 If we activate the Omniscient debugger, we can see what happens next:
 
-```js
+```jsx
 // Activate debug-modus
 component.debug();
 ```

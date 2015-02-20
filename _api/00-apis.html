@@ -1,0 +1,35 @@
+---
+layout: guides
+collection: api
+title: APIs
+name: 00-apis
+hide: true
+next: 01-omniscient-api-reference
+permalink: /api/
+---
+
+<p>The Omniscient project consists of several smaller libraries which can work
+independent of each other. You have the main project <code>Omniscient</code>
+which provides a smart <code>shouldComponentUpdate</code> and a syntactic
+sugar for components which encourages to functional paradigms and immutable,
+unidirectional, architecture - but you also have <code>Immstruct</code>.
+<code>Immstruct</code> is a small wrapper on top of
+<a href="https://github.com/facebook/immutable-js">Immutable.js</a>, helping
+to create a re-render loop in Omniscient contexts, but also in "vanilla" React.</p>
+
+<p>Here you can see API reference for both Omniscient and Immstruct. There more libraries
+and projects in the Omniscient organization as well, but not with API reference docs as
+of yet. You can see all projects on the <a href="https://github.com/omniscientjs">Github organization page</a></p>
+
+<ol>
+{% for item in site.api %}
+{% if item.hide != true %}
+  {% assign pageID = @context.registers[:page]["id"] %}
+  {% assign itemID = item["name"]%}
+  {% assign className = pageID == itemID ? ' class="active"' : '' %}
+    <li>
+      <a href="/{{item["collection"]}}/{{itemID}}"{{className}}>{{item["title"]}}</a>
+    </li>
+{% endif %}
+{% endfor %}
+</ol>

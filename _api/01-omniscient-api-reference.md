@@ -1,6 +1,15 @@
 ---
 layout: guides
+collection: api
+title: Omniscient API Reference
+name: 01-omniscient-api-reference
+prev: 00-apis
+next: 02-immstruct-api-reference
 ---
+
+*API Reference for `Omniscient v3.0.1`*
+
+More information can be found on the [Omniscient repo](https://github.com/omniscientjs/omniscient).
 
 Given that:
 

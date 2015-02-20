@@ -13,7 +13,7 @@ Changelog with fixes and additions between each release.
 can include the mixin into your code base without including unused code from
 the Omniscient core. #33
 
-```js
+```jsx
 var shouldupdate = require('omniscient/shouldupdate');
 
 var mixins = [{ shouldComponentUpdate: shouldupdate }];
@@ -25,19 +25,20 @@ var MyComponent = React.createClass({
 ```
 
 * Following 2. from Changes (changes to use `lodash.isEqual`), cursors can now be anywhere in the props three. See #39
-```js
+
+```jsx
 React.render(MyComponent({ some: { path: { to: cursor }}}), document.body);
 ```
 
 * You can now have immutable structures as a part of your props/state #55
 
-```js
+```jsx
 React.render(MyComponent({ obj: Immutable.List.of(1, 2, 3) }), document.body);
 ```
 
 * You can now pass on cursors directly to non-JSX components #43
 
-```js
+```jsx
 var MyComponent = component(function (cursor) {
   // do something with cursor
 });
@@ -47,7 +48,7 @@ React.render(MyComponent(myCursor), document.body);
 
 * You can now pass on immutable structure as single argument (as with cursor) #58
 
-```js
+```jsx
 React.render(MyComponent(Immutable.List.of(1, 2, 3)), document.body);
 ```
 
@@ -86,7 +87,7 @@ React.render(<Component />, document.body);
 
 * You can now pass on statics as argument to non-JSX a523e595a0b34807ce6b0d068287362267bfc476
 
-```js
+```jsx
 var MyComponent = component(function (cursor, statics) {
   // do something with statics
 });
@@ -101,7 +102,7 @@ which doesn't alter global state. #36
 
 Overview of all overridables:
 
-```js
+```jsx
 var component = require('omniscient');
 
 var localComponent = component.withDefaults({
@@ -121,7 +122,7 @@ var localComponent = component.withDefaults({
 
 You can also override directly on `shouldComponentUpdate`
 
-```js
+```jsx
 var shouldUpdate = require('omniscient/shouldUpdate');
 
 var localShouldUpdate = shouldUpdate.withDefaults({
@@ -142,7 +143,7 @@ Additions:
 
 E.g.
 
-```js
+```jsx
 var mixins = [{ statics: { foo: noop } }, { statics: { bar: noop } }];
 
 var Component = component(mixins, function () {
@@ -173,13 +174,13 @@ Statics still doesn't effect whether or not the component should update.
 
 Before you could do:
 
-```js
+```jsx
 OmniscientComponent('someKey', cursor, statics);
 ```
 
 But now you have to do:
 
-```js
+```jsx
 OmniscientComponent('someKey', { cursor: cursor, statics: statics });
 ```
 
@@ -187,7 +188,7 @@ As a result of this, you now always get passed props to your render function.
 
 Before you could do:
 
-```js
+```jsx
 var OmniscientComponent = component(function (cursor) {
   return React.DOM.text({}, cursor.deref());
 });
@@ -195,7 +196,7 @@ var OmniscientComponent = component(function (cursor) {
 
 Now you have to do:
 
-```js
+```jsx
 var OmniscientComponent = component(function (props) {
   return React.DOM.text({}, props.cursor.deref());
 });
@@ -204,19 +205,19 @@ var OmniscientComponent = component(function (props) {
 
 This:
 
-```js
+```jsx
 OmniscientComponent(cursor);
 ```
 
 Is translated to:
 
-```js
+```jsx
 OmniscientComponent({ cursor: cursor });
 ```
 
 You could also name your cursor:
 
-```js
+```jsx
 var OmniscientComponent = component(function (props) {
   return React.DOM.text({}, props.name.deref());
 });
@@ -231,13 +232,13 @@ Also, with the way React now requires elements instead of components, there have
 
 Before you could do:
 
-```js
+```jsx
 <OmniscientComponent cursor={someCursor} />
 ```
 
 But now you have to do:
 
-```js
+```jsx
 <OmniscientComponent.jsx cursor={someCursor} />
 
 // or
@@ -263,7 +264,7 @@ var OmniscientComponent = require('someComponent').jsx;
 
 1. Custom Omniscient Components can now have children:
 
-```js
+```jsx
 var Comp = component(function (cursor) {
    // this.props.children[0] === h1 element
 });
@@ -298,7 +299,7 @@ var App = component(function (cursor) {
 
 1. Added component name support for debugging
 
-```js
+```jsx
 var Component = component(debugName, function () {});
 ```
 

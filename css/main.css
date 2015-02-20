@@ -384,10 +384,12 @@ pre code {
   overflow: auto; }
 
 p code, ul code, li code {
-  background: rgba(20, 20, 20, 0.5);
-  padding: 2px 5px;
-  color: #ECF0F1;
-  display: inline-block; }
+  background: #fdefed;
+  border: 1px solid #f8c9c4;
+  line-height: 1.4rem;
+  padding: 0 5px;
+  display: inline-block;
+  border-radius: 2px; }
 
 .mainContent {
   width: 93%;
@@ -398,6 +400,7 @@ p code, ul code, li code {
 
 .mainContent h1, .mainContent h2, .mainContent h3 {
   font-size: 2rem;
+  margin-bottom: 10px;
   font-weight: 100;
   position: relative;
   word-wrap: break-word;
@@ -412,6 +415,9 @@ p code, ul code, li code {
 
 .mainContent h3 {
   font-size: 1.4rem; }
+
+.mainContent p {
+  line-height: 1.7rem; }
 
 .mainContent table {
   width: 100%;

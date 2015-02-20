@@ -199,13 +199,34 @@ This is an overview of all properties that can be overridden in Omniscient. All 
 var component = require('omniscient');
 
 var localComponent = component.withDefaults({
+  // Goes directly to component
   shouldComponentUpdate: function(nextProps, nextState), // check update
+  jsx: false, // whether or not to default to jsx components
+  cursorField: '__singleCursor', // cursor property name to "unwrap" before passing in to render (see note)
+
+  // Is passed on to `shouldComponentUpdate`
   isCursor: function(cursor), // check if is props
   isEqualCursor: function (oneCursor, otherCursor), // check cursor
   isEqualState: function (currentState, nextState), // check state
+  isImmutable: function (currentState, nextState), // check if object is immutable
   isEqualProps: function (currentProps, nextProps), // check props
   unCursor: function (cursor) // convert from cursor to object
 });
+```
+
+`cursorField` defines if a cursor should be unwrapped before sending it into
+the render function. Example:
+
+```js
+var localComponent = component.withDefaults({
+  cursorField: 'foobar'
+});
+
+var Component = component(function(myPassedCursor) {
+  // Now you have myPassedCursor instead of having to do props.foobar
+});
+
+React.render(<Component foobar={myCursor} />, document.body)
 ```
 
 ## `shouldComponentUpdate.withDefaults([Object: defaults])`
@@ -221,7 +242,9 @@ var localShouldUpdate = shouldComponentUpdate.withDefaults({
   isCursor: function(cursor), // check if is props
   isEqualCursor: function (oneCursor, otherCursor), // check cursor
   isEqualState: function (currentState, nextState), // check state
+  isImmutable: function (currentState, nextState), // check if object is immutable
   isEqualProps: function (currentProps, nextProps), // check props
   unCursor: function (cursor) // convert from cursor to object
 });
+
 ```

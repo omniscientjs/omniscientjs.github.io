@@ -107,8 +107,10 @@ pre code {
 }
 
 p code, ul code, li code {
-  background: rgba(#141414, 0.5);
-  padding: 2px 5px;
-  color: #ECF0F1;
+  background: darken($color-table-zebra, 1%);
+  border: 1px solid darken($color-table-zebra, 10%);
+  line-height: 1.4rem;
+  padding: 0 5px;
   display: inline-block;
+  border-radius: 2px;
 }

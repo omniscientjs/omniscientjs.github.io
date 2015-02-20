@@ -10,7 +10,6 @@
 .mainContent h1,
 .mainContent h2,
 .mainContent h3 {
-  margin-top: 50px;
   font-size: 2rem;
   font-weight: 100;
   position: relative;
@@ -19,14 +18,30 @@
   color: $color-organge-normal;
 }
 .mainContent h1 {
+  margin-top: 50px;
   margin-top: 0;
 }
 .mainContent h2 {
   font-size: 1.5rem;
 }
 .mainContent h3 {
-  font-size: 1.2rem;
+  font-size: 1.4rem;
 }
+
+.mainContent table {
+  width: 100%;
+  margin: 10px 0;
+  background: $color-table-white;
+
+  td, th {
+    padding: 5px;
+  }
+
+  tr:nth-child(odd) td {
+    background: $color-table-zebra;
+  }
+}
+
 
 .playground h1,
 .playground h2,

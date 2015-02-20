@@ -15,6 +15,10 @@ exclude:
  - node_modules
 
 collections:
+  api:
+    output: true
+    collection: API
+    permalink: /api/:path/
   guides:
     output: true
     collection: Guides

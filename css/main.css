@@ -397,7 +397,6 @@ p code, ul code, li code {
   display: block; }
 
 .mainContent h1, .mainContent h2, .mainContent h3 {
-  margin-top: 50px;
   font-size: 2rem;
   font-weight: 100;
   position: relative;
@@ -405,13 +404,23 @@ p code, ul code, li code {
   color: #E74C3C; }
 
 .mainContent h1 {
+  margin-top: 50px;
   margin-top: 0; }
 
 .mainContent h2 {
   font-size: 1.5rem; }
 
 .mainContent h3 {
-  font-size: 1.2rem; }
+  font-size: 1.4rem; }
+
+.mainContent table {
+  width: 100%;
+  margin: 10px 0;
+  background: #fff; }
+  .mainContent table td, .mainContent table th {
+    padding: 5px; }
+  .mainContent table tr:nth-child(odd) td {
+    background: #fdf3f2; }
 
 .playground h1, .playground h2, .playground h3 {
   margin-top: 0; }

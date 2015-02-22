@@ -449,7 +449,7 @@ p code, ul code, li code {
 p img {
   background: #fff; }
 
-.fromMarkdown ul, .fromMarkdown ol {
+.column ul, .column ol {
   margin: 20px 0; }
 
 .column {

@@ -12,7 +12,9 @@
   });
 
   function runnableScriptsLoad () {
+    chai.should();
     component = omniscient;
+
     var runnables = document.querySelectorAll('.editor');
     for (var i=0; i < runnables.length; i++) {
       createEditors(runnables[i]);
@@ -31,8 +33,8 @@
         Tab: betterTab
       }
     };
-
-    var editor = CodeMirror.fromTextArea(runnable, options);
+    
+    var editor = CodeMirror.fromTextArea(runnable.querySelector('textarea'), options);
     var src = editor.doc.getValue();
 
     var urlCode;
@@ -49,31 +51,36 @@
 
     var timers = { timeouts: [], intervals: [] };
     editor.on('change', function () {
-      run(isLarge, editor.doc.getValue(), timers);
+      run(runnable, isLarge, editor.doc.getValue(), timers);
     });
-    run(isLarge, src, timers);
+    run(runnable, isLarge, src, timers);
   }
 
   var throttledReplaceState = throttle(replaceStateValue, 2000);
 
-  function run (isLarge, src, timers) {
-    var mocha = new Mocha({ reporter: PlaygroundReporter });
+  function run (runnable, isLarge, src, timers) {
     var context = {};
+    var mocha = new Mocha({ reporter: PlaygroundReporter });
     mocha.suite.emit('pre-require', context, null, mocha);
 
-    var match = src.match(/['"](result(-[0-9]+)?)['"]/);
-    var resultEl, hasTest;
-    if (match && match[1]) {
-      resultEl = document.getElementById(match[1]);
-    }
+    var resultEl = runnable.querySelector('.result');
 
-    document.getElementById('mocha').innerHTML = '';
+    var testResultEl = runnable.querySelector('.test-result');
+    if (testResultEl) {
+      testResultEl.innerHTML = '';
+    }
+    
+    var testSummaryEl = runnable.querySelector('.test-summary');
+    if (testSummaryEl) {
+      testSummaryEl.innerHTML = '';
+    }
+    
+    var hasTest;
     if (/describe\(/.test(src)) {
       hasTest = true;
     }
 
     try {
-
       timers.timeouts.forEach(clearTimeout);
       timers.intervals.forEach(clearInterval);
 
@@ -93,16 +100,25 @@
 
       var compiledCode = to5.transform(src).code;
       var fn = Function.apply(null, [
+        'el',
         'setTimeout',
         'setInterval',
         'describe',
         'it',
+        'xdescribe',
+        'xit',
         compiledCode]);
 
-      fn(newSetTimeout,
+      var it = context.it.bind(context);
+      it.only = context.it.only.bind(context);
+
+      fn(resultEl,
+         newSetTimeout,
          newSetInterval,
          context.describe.bind(context),
-         context.it.bind(context));
+         it,
+         context.xdescribe.bind(context),
+         context.xit.bind(context));
 
       if (isLarge) {
         throttledReplaceState(src);
@@ -114,7 +130,9 @@
       }
 
       if (hasTest) {
-        mocha.run(function () { /* this is needed, wtf? */ });
+        mocha.run(function (reporter) {
+          testsDone(testResultEl, testSummaryEl, reporter);
+        });
       }
     }
     catch (e) {
@@ -159,5 +177,45 @@
         fn.apply(self, args);
       }, ms);
     };
+  }
+
+  function testsDone (testResultEl, testSummaryEl, reporter) {
+    var stats = reporter.stats;
+    var tests = stats.tests;
+    var failures = stats.failures;
+    var passes = stats.passes;
+    var pending = stats.pending;
+
+    var summary = '';
+    if (passes) {
+      summary += '<span class="editor-success">' + passes + ' of ' + tests + ' test' + (tests > 1 ? 's' : '') + ' passed</span>';
+    }
+
+    if (pending) {
+      summary += (passes ? ', ' : '') + '<span class="editor-pending">' + pending + ' pending</span>'
+    }
+
+    var details;
+    if (failures) {
+      summary += (passes || pending)
+        ? ', <span class="editor-error">' + failures + ' failed!</span>'
+        : '<span class="editor-error">' + failures + ' of ' + tests + ' test' + (tests > 1 ? 's' : '') + ' failed!</span>';
+
+      details = reporter.failures.map(function (failure) {
+        var err = failure.err;
+        return '✘ ' + failure.title + '<br>- ' + err.message + '<pre>' + err.stack + '</pre>';
+      }).join('<br>');
+    }
+    else {
+      summary += '.';
+    }
+
+    if (testSummaryEl) {
+      testSummaryEl.innerHTML = summary;
+    }
+
+    if (testResultEl && details) {
+      testResultEl.innerHTML = '<div class="editor-error">' + details + '</div>';
+    }
   }
 })();

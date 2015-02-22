@@ -23,14 +23,15 @@
       </ol>
 
 
-      <div class='window'>
+      <div class='window editor' data-large=true>
         <div class='inner inner--code'>
           {% assign codeContent = content | strip_newlines %}
-          <textarea class='editor' data-large=true>{% if (codeContent == "") %}{% include _playground-default.html %}{% else %}{{ content }}{% endif %}</textarea>
+          <textarea>{% if (codeContent == "") %}{% include _playground-default.html %}{% else %}{{ content }}{% endif %}</textarea>
         </div>
         <div class='inner inner--result'>
-          <div id='result'></div>
-          <div id="mocha"></div>
+          <div class='test-summary'></div>
+          <div class='result'></div>
+          <div class='test-result'></div>
         </div>
       </div>
 

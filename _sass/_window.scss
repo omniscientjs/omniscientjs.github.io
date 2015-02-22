@@ -50,11 +50,27 @@
   }
 }
 
-.editor {
+$color-error: #f25156;
+$color-success: #4ca73c;
+$color-pending: #f7ac3c;
+
+.test-summary {
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.editor-pending {
+  color: $color-pending;
+}
+.editor-success {
+  color: $color-success;
+}
+
+.editor > .inner > textarea {
   display: none;
 }
 .editor-error {
-  color: #f25156;
+  color: $color-error;
   pre {
     font-size: 12px;
     white-space: pre-wrap;       /* CSS 3 */

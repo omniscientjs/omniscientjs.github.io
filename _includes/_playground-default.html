@@ -46,6 +46,5 @@ data.on('swap', render);
 function render () {
   React.render(
     List({ items: data.cursor('items') }),
-    document.getElementById('result')
-  );
+    el);
 }

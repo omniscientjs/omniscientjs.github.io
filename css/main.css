@@ -329,7 +329,17 @@ body {
       -ms-flex: 1 35%;
           flex: 1 35%; }
 
-.editor {
+.test-summary {
+  font-size: 0.9rem;
+  text-align: center; }
+
+.editor-pending {
+  color: #f7ac3c; }
+
+.editor-success {
+  color: #4ca73c; }
+
+.editor > .inner > textarea {
   display: none; }
 
 .editor-error {

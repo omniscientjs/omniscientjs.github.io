@@ -11,249 +11,363 @@ next: 02-immstruct-api-reference
 
 More information can be found on the [Omniscient repo](https://github.com/omniscientjs/omniscient).
 
-Given that:
 
-```jsx
-var component = require('omniscient');
-```
+### `omniscient(displayName, mixins, render)`
 
-## `component([displayName, ][mixins, ]function (props, statics) { })`
+Create components for functional views.
 
-The API of Omniscient is pretty simple, you create a component with a render function, and mixins if you need them. When using the created component, you can pass a cursor or an object as data to the component. If you simply pass a cursor, the cursor will be accessible on the `props.cursor` accessor. This data will be accessible in the render function of the component (as props). In the passed data object, if it's within the `statics` property, the changes won't get tracker (see below).
+The API of Omniscient is pretty simple, you create a component
+with a render function and the mixins you need.
 
-### Parameter Setup
+When using the created component, you can pass a cursor or an object
+as data to it. This data will be the render function's first argument,
+and it will also be available on `this.props`.
 
-```jsx
-var MyComponent = component([displayName, ][mixins, ]function (props, statics) { });
-MyComponent([key: String, ](Object: data | Cursor));
-```
-
-### Examples
-
-```jsx
-// Create component with display name MyComponentName
-var MyComponent = component(function MyComponentName (props) {
-  return (<div>Hello {props.cursor.get('name')}</div>);
-});
-React.render(MyComponent(myCursor), document.body);
-```
-
-Without cursor
-
-```jsx
-var MyComponent = component(function MyComponentName (props) {
-  return (<div>Hello {props.name}</div>);
-});
-React.render(MyComponent({ name: 'Omniscient'), document.body);
-```
-
-As JSX
-
-```jsx
-var MyComponent = component(function MyComponentName (props) {
-  return (<div>Hello {props.name}</div>);
-}).jsx; // notice jsx
-React.render(<MyComponent name={'Omniscient'} />, document.body);
-```
-
-With mixins:
-
-```jsx
-var myMixins = {
-  componentDidMount: function () {
-     // do something
-  },
-  componentDidUnmount: function () {
-     // do something else
-  }
-};
-var MyComponent = component(myMixins, function MyComponentName (props) {
-  return (<div>Hello {props.name}</div>);
-}).jsx; // notice jsx
-React.render(<MyComponent name={'Omniscient'} />, document.body);
-```
-
-With multiple mixins (compositions):
-
-```jsx
-var someMixins = {
-  componentDidMount: function () {
-     // do something
-  },
-  componentDidUnmount: function () {
-     // do something else
-  }
-};
-var otherMixins = {
-  doSomething: function (input) {
-     // do something with input foo
-  }
-};
-
-var mixins = [someMixins].concat(otherMixins);
-var MyComponent = component(mixins, function MyComponentName (props) {
-  this.doSomething('foo');
-  return (<div>Hello {props.name}</div>);
-}).jsx; // notice jsx
-React.render(<MyComponent name={'Omniscient'} />, document.body);
-```
-
-#### With ES2015 syntax
-
-```jsx
-// Create component with display name MyComponentName
-var MyComponent = component('MyComponentName', ({name}) => (<div>Hello {name}</div>));
-React.render(<MyComponent name={'Omniscient'} />, document.body);
-```
-
-*Notice: As we can't use a named function, we can define component name as first argument.*
-
-## `component.debug()`
-
-Activate debugging. Debug when a component is rendered, and the decision of `shouldComponentUpdate`.
+If you simply pass one cursor, the cursor will be accessible on the
+`props.cursor` accessor. Data placed on the property `statics` of the
+component's arguments will not be tracked for changes.
 
 
-## `component.debug(pattern)`
+### Parameters
 
-Activate debugging. Pattern is a Regular Expression. Only log messages which matches passed regex.
-
-### Example
-
-Only show debug statements for components with key or name `MyComponent`.
-
-```jsx
-component.debug(/MyComponent/i)
-```
-
-## `component.debug(logFunction)`
-Activate debug, and define how to log messages. Log all messages (do not filter on any regex.)
-
-### Example
-
-```jsx
-component.debug(function (debugMessage) {
-  saveMessageToFile(debugMessage);
-});
-```
+| param         | type         | description                                                                                          |
+| ------------- | ------------ | ---------------------------------------------------------------------------------------------------- |
+| `displayName` | String       | Component's display name. Used when debug()'ing and by React                                         |
+| `mixins`      | Array,Object | React mixins. Object literals with functions, or array of object literals with functions.            |
+| `render`      | Function     | Properties that do not trigger update when changed. Can be cursors, object and immutable structures  |
 
 
-## `component.debug(pattern, logFunction)`
-Activate debug, for messages matching passed regex pattern and pass log message to `logFunction` instead of logging to `console.debug`.
+### Properties
 
-### Example
-
-```jsx
-component.debug(/MyComponent/i, function (debugMessage) {
-  saveMessageToFile(debugMessage);
-});
-```
-
-## `component.shouldComponentUpdate`
-
-This is the mixin used to determine if a component should update or not. If you like the architectural concept of Omniscient, but not the syntactic sugar, you can override the `shouldComponentUpdate` of your vanilla React component with this mixin, and you can use cursors!
-
-You can also directly require the mixin, to save bytes in your source code:
-
-```jsx
-var shouldComponentUpdate = require('omniscient/shouldupdate');
-```
-
-### Example
-
-Through omniscient:
-
-```jsx
-var shouldComponentUpdate = require('omniscient').shouldComponentUpdate;
-
-var MyComponent = React.createClass({
-   mixins: [{ shouldComponentUpdate: shouldComponentUpdate }],
-  render: function () { /* your render function */ }
-```
-
-Requiring directly
-
-```jsx
-var shouldComponentUpdate = require('omniscient/shouldupdate');
-
-var MyComponent = React.createClass({
-   mixins: [{ shouldComponentUpdate: shouldComponentUpdate }],
-  render: function () { /* your render function */ }
-```
+| property                | type     | description                        |
+| ----------------------- | -------- | ---------------------------------- |
+| `shouldComponentUpdate` | Function | Get default shouldComponentUpdate  |
 
 
-## `component.withDefaults([Object: defaults])`
 
-You can create a "local" instance of the Omniscient component creator by using the `.withDefaults` methods. This also allows you to override any defaults that Omniscient uses to check equality of objects, unwrap cursors, etc. See below on section about defaults for what to override.
-
-### "Sandboxed" component Example
-
-```jsx
-var component = require('omniscient');
-
-// Create a local component factory with "normal" defaults
-var localComponent = component.withDefaults();
-localComponent.foo = 'foo';
-
-assert(localComponent.foo !== component.foo);
-```
-
-**You can use all the functions on local `omniscient` instances as you can on regular instances**
+**Returns** `Component`,
 
 
-### Omniscient Defaults
+### `omniscient.withDefaults(Options)`
 
-This is an overview of all properties that can be overridden in Omniscient. All properties are functions that have default implementations, and can be overwritten (just for the local component which is returned).
+Create a “local” instance of the Omniscient component creator by using the `.withDefaults` method.
+This also allows you to override any defaults that Omniscient use to check equality of objects,
+unwrap cursors, etc.
 
-```jsx
-var component = require('omniscient');
-
-var localComponent = component.withDefaults({
+### Options
+```js
+{
   // Goes directly to component
   shouldComponentUpdate: function(nextProps, nextState), // check update
   jsx: false, // whether or not to default to jsx components
-  cursorField: '__singleCursor', // cursor property name to "unwrap" before passing in to render (see note)
+  cursorField: '__singleCursor', // cursor property name to "unwrap" before passing in to render
 
-  // Is passed on to `shouldComponentUpdate`
-  isCursor: function(cursor), // check if is props
-  isEqualCursor: function (oneCursor, otherCursor), // check cursor
-  isEqualState: function (currentState, nextState), // check state
-  isImmutable: function (currentState, nextState), // check if object is immutable
-  isEqualProps: function (currentProps, nextProps), // check props
-  unCursor: function (cursor) // convert from cursor to object
-});
+  // Passed on to `shouldComponentUpdate`
+  isCursor: function(cursor), // check if prop is cursor
+  unCursor: function (cursor), // convert cursor to object
+  isEqualCursor: function (oneCursor, otherCursor), // compares cursor
+  isEqualState: function (currentState, nextState), // compares state
+  isEqualProps: function (currentProps, nextProps), // compares props
+  isImmutable: function (maybeImmutable) // check if object is immutable
+}
 ```
 
-`cursorField` defines if a cursor should be unwrapped before sending it into
-the render function. Example:
+### Examples
+#### Always use JSX
+```js
+var component = require('omniscient');
+var jsxComponent = component.withDefaults({
+  jsx: true
+});
 
+var Greeting = jsxComponent(function () {
+  return Hello!
+});
+React.render(, document.body);
+```
+
+#### Un-wrapping curors
 ```jsx
 var localComponent = component.withDefaults({
   cursorField: 'foobar'
 });
 
-var Component = component(function(myPassedCursor) {
-  // Now you have myPassedCursor instead of having to do props.foobar
+var Component = localComponent(function (myCursor) {
+  // Now you have myCursor directly instead of having to do props.foobar
 });
 
-React.render(<Component foobar={myCursor} />, document.body)
+React.render(, document.body);
 ```
 
-## `shouldComponentUpdate.withDefaults([Object: defaults])`
 
-As with the component creator, you can create local instances of `shouldComponentUpdate` with overwritten defaults. Actually, most functions you can override on `component` object, is just passed on to `shouldComponentUpdate`.
+### Parameters
 
-This is a complete overview of the defaults you can override on `shouldComponentUpdate`:
+| param     | type   | description                        |
+| --------- | ------ | ---------------------------------- |
+| `Options` | Object | Options with defaults to override  |
 
-```jsx
-var shouldComponentUpdate = require('omniscient/shouldupdate');
 
-var localShouldUpdate = shouldComponentUpdate.withDefaults({
+### Properties
+
+| property                | type     | description                        |
+| ----------------------- | -------- | ---------------------------------- |
+| `shouldComponentUpdate` | Function | Get default shouldComponentUpdate  |
+
+
+
+**Returns** `Component`,
+
+
+### `omniscient.debug(pattern)`
+
+Activate debugging for components. Will log when a component renders,
+the outcome of `shouldComponentUpdate`, and why the component re-renders.
+
+### Example
+```js
+Search>: shouldComponentUpdate => true (cursors have changed)
+Search>: render
+SearchBox>: shouldComponentUpdate => true (cursors have changed)
+SearchBox>: render
+```
+
+
+### Parameters
+
+| param     | type   | description                                          |
+| --------- | ------ | ---------------------------------------------------- |
+| `pattern` | RegExp | Filter pattern. Only show messages matching pattern  |
+
+
+### Properties
+
+| property | type   | description                   |
+| -------- | ------ | ----------------------------- |
+| `jsx`    | Object | Get component for use in JSX  |
+
+
+### Example
+
+```js
+omniscient.debug(/Search/i);
+```
+
+
+**Returns** `Immstruct`,
+
+
+### `Component(displayName, props, statics, ..rest)`
+
+Invoke component (rendering it)
+
+
+### Parameters
+
+| param         | type   | description                                                                                          |
+| ------------- | ------ | ---------------------------------------------------------------------------------------------------- |
+| `displayName` | String | Component display name. Used in debug and by React                                                   |
+| `props`       | Object | Properties that **do** trigger update when changed. Can be cursors, object and immutable structures  |
+| `statics`     | Object | Properties that do not trigger update when changed. Can be cursors, object and immutable structuress |
+| `..rest`      | Object | Child components (React elements, scalar values)                                                     |
+
+
+### Properties
+
+| property | type   | description                   |
+| -------- | ------ | ----------------------------- |
+| `jsx`    | Object | Get component for use in JSX  |
+
+
+
+**Returns** `ReactElement`,
+
+
+### `shouldComponentUpdate(nextProps, nextState)`
+
+Directly fetch `shouldComponentUpdate` mixin to use outside of Omniscient.
+You can do this if you don't want to use Omniscients syntactic sugar.
+
+
+### Parameters
+
+| param       | type   | description                                                           |
+| ----------- | ------ | --------------------------------------------------------------------- |
+| `nextProps` | Object | Next props. Can be objects of cursors, values or immutable structures |
+| `nextState` | Object | Next state. Can be objects of values or immutable structures          |
+
+
+### Properties
+
+| property        | type     | description               |
+| --------------- | -------- | ------------------------- |
+| `isCursor`      | Function | Get default isCursor      |
+| `isEqualState`  | Function | Get default isEqualState  |
+| `isEqualProps`  | Function | Get default isEqualProps  |
+| `isEqualCursor` | Function | Get default isEqualCursor |
+| `isImmutable`   | Function | Get default isImmutable   |
+| `debug`         | Function | Get default debug         |
+
+
+
+**Returns** `Component`,
+
+
+### `shouldComponentUpdate.withDefaults([Options])`
+
+Create a “local” instance of the shouldComponentUpdate with overriden defaults.
+
+### Options
+```js
+{
   isCursor: function(cursor), // check if is props
   isEqualCursor: function (oneCursor, otherCursor), // check cursor
   isEqualState: function (currentState, nextState), // check state
   isImmutable: function (currentState, nextState), // check if object is immutable
   isEqualProps: function (currentProps, nextProps), // check props
   unCursor: function (cursor) // convert from cursor to object
-});
-
+}
 ```
+
+
+### Parameters
+
+| param       | type   | description                                    |
+| ----------- | ------ | ---------------------------------------------- |
+| `[Options]` | Object | _optional:_ Options with defaults to override  |
+
+
+
+**Returns** `Function`, shouldComponentUpdate with overriden defaults
+
+
+### `shouldComponentUpdate.isEqualState(value, other)`
+
+Predicate to check if state is equal. Checks in the tree for immutable structures
+and if it is, check by reference. Does not support cursors.
+
+Override through `shouldComponentUpdate.withDefaults`.
+
+
+### Parameters
+
+| param   | type   | description |
+| ------- | ------ | ----------- |
+| `value` | Object |             |
+| `other` | Object |             |
+
+
+
+**Returns** `Boolean`,
+
+
+### `shouldComponentUpdate.isEqualProps(value, other)`
+
+Predicate to check if props are equal. Checks in the tree for cursors and immutable structures
+and if it is, check by reference.
+
+Override through `shouldComponentUpdate.withDefaults`.
+
+
+### Parameters
+
+| param   | type   | description |
+| ------- | ------ | ----------- |
+| `value` | Object |             |
+| `other` | Object |             |
+
+
+
+**Returns** `Boolean`,
+
+
+### `shouldComponentUpdate.isEqualCursor(a, b)`
+
+Predicate to check if cursors are equal through reference checks. Uses `unCursor`.
+Override through `shouldComponentUpdate.withDefaults` to support different cursor
+implementations.
+
+
+### Parameters
+
+| param | type   | description |
+| ----- | ------ | ----------- |
+| `a`   | Cursor |             |
+| `b`   | Cursor |             |
+
+
+
+**Returns** `Boolean`,
+
+
+### `shouldComponentUpdate.isImmutable(value)`
+
+Predicate to check if a potential is an immutable structure or not.
+Override through `shouldComponentUpdate.withDefaults` to support different cursor
+implementations.
+
+
+### Parameters
+
+| param   | type           | description                   |
+| ------- | -------------- | ----------------------------- |
+| `value` | maybeImmutable | to check if it is immutable.  |
+
+
+
+**Returns** `Object,Number,String,Boolean`,
+
+
+### `shouldComponentUpdate.unCursor(cursor)`
+
+Transforming function to take in cursor and return a non-cursor.
+Override through `shouldComponentUpdate.withDefaults` to support different cursor
+implementations.
+
+
+### Parameters
+
+| param    | type   | description   |
+| -------- | ------ | ------------- |
+| `cursor` | cursor | to transform  |
+
+
+
+**Returns** `Object,Number,String,Boolean`,
+
+
+### `shouldComponentUpdate.isCursor(potential)`
+
+Predicate to check if `potential` is Immutable cursor or not (defaults to duck testing
+Immutable.js cursors). Can override through `.withDefaults()`.
+
+
+### Parameters
+
+| param       | type      | description            |
+| ----------- | --------- | ---------------------- |
+| `potential` | potential | to check if is cursor  |
+
+
+
+**Returns** `Boolean`,
+
+## Private members
+
+
+### `isNode(propValue)`
+
+Predicate showing whether or not the argument is a valid React Node
+or not. Can be numbers, strings, bools, and React Elements.
+
+React's isNode check from ReactPropTypes validator
+
+
+### Parameters
+
+| param       | type   | description                                     |
+| ----------- | ------ | ----------------------------------------------- |
+| `propValue` | String | Property value to check if is valid React Node  |
+
+
+
+**Returns** `Boolean`,

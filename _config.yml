@@ -27,6 +27,10 @@ collections:
     output: true
     collection: Playground
     permalink: /playground/:path/
+  workshop:
+    output: true
+    collection: Workshop
+    permalink: /workshop/:path/
   tutorials:
     output: true
     collection: Tutorials

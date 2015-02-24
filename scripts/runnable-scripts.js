@@ -33,7 +33,7 @@
         Tab: betterTab
       }
     };
-    
+
     var editor = CodeMirror.fromTextArea(runnable.querySelector('textarea'), options);
     var src = editor.doc.getValue();
 
@@ -69,12 +69,12 @@
     if (testResultEl) {
       testResultEl.innerHTML = '';
     }
-    
+
     var testSummaryEl = runnable.querySelector('.test-summary');
     if (testSummaryEl) {
       testSummaryEl.innerHTML = '';
     }
-    
+
     var hasTest;
     if (/describe\(/.test(src)) {
       hasTest = true;
@@ -203,7 +203,7 @@
 
       details = reporter.failures.map(function (failure) {
         var err = failure.err;
-        return '✘ ' + failure.title + '<br>- ' + err.message + '<pre>' + err.stack + '</pre>';
+        return '✘ ' + failure.title + '<br>- ' + escapeHtml(err.message); // + '<pre>' + err.stack + '</pre>';
       }).join('<br>');
     }
     else {
@@ -218,4 +218,11 @@
       testResultEl.innerHTML = '<div class="editor-error">' + details + '</div>';
     }
   }
+
+  function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
+  }
+
 })();

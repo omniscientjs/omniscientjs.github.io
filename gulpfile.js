@@ -30,14 +30,16 @@ gulp.task('watch', ['default'], function () {
   gulp.watch([
     '!scripts/*.build.js',
     'scripts/**.js',
-    'scripts/**/*.js'
+    'scripts/**/*.js',
+
   ], ['js-watch']);
   gulp.watch('_sass/**/*.scss', ['sass']);
   gulp.watch([
     // 'scripts/**/*.js',
+    '_workshop/*.js',
     '**/*.html',
     '!_site/**/*',
-    '**/*.md'], ['jekyll-build']);
+     '**/*.md'], ['jekyll-build']);
 });
 
 gulp.task('default', ['sass', 'jekyll-build', 'js']);

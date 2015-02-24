@@ -1,0 +1,92 @@
+<html>
+  {% include head.html %}
+  <body class="withSmallHeader">
+    <header class="mainHeader mainHeader--small">
+      {% include nav.html %}
+    </header>
+
+    <a class="anchor-link" id="content"></a>
+    <main class="mainContent playground" >
+      <h1>Workshop: {{page.title}}</h1>
+
+      {% if page.slides %}
+        <p>See related slides for this part: <a href="{{page.slides}}">{{page.slides}}</a></p>
+      {% endif %}
+
+      <div class="docs-prevnext">
+        {% if page.prev %}
+          <a class="docs-prev" href="/{{ page.collection }}/{{ page.prev }}">&larr; Previous task</a>
+        {% endif %}
+        {% if page.next %}
+          <a class="docs-next" href="/{{ page.collection }}/{{ page.next }}">Next task &rarr;</a>
+        {% endif %}
+      </div>
+
+      <div class='window editor' data-large=true>
+        <div class='inner inner--code'>
+          {% assign codeContent = content | strip_newlines %}
+          <textarea>{% if (codeContent == "") %}{% include _playground-default.html %}{% else %}{{ content }}{% endif %}</textarea>
+        </div>
+        <div class='inner inner--result'>
+          <div class='test-summary'></div>
+          <div class='result' id="result"></div>
+          <div class='test-result'></div>
+        </div>
+      </div>
+
+      <h2>Tasks</h2>
+      <ol>
+      {% for item in site.workshop %}
+      {% if item.hide != true %}
+        {% assign pageID = page.name %}
+        {% assign itemID = item.name %}
+        {% assign className = pageID == itemID ? ' class="active"' : '' %}
+          <li>
+            {% if item.start == true %}
+            <a href="/{{item["collection"]}}/"{{className}}>
+            {% else %}
+            <a href="/{{item["collection"]}}/{{itemID}}"{{className}}>
+            {% endif %}
+              {% if item["section"] %}<strong>Part {{item["section"]}}</strong>: {% endif %}
+              {{item["title"]}}
+            </a>
+            {% if pageID == itemID %}<em>[Active]</em>{% endif %}
+          </li>
+      {% endif %}
+      {% endfor %}
+      </ol>
+
+      <div class="docs-prevnext">
+        {% if page.prev %}
+          <a class="docs-prev" href="/{{ page.collection }}/{{ page.prev }}">&larr; Previous task</a>
+        {% endif %}
+        {% if page.next %}
+          <a class="docs-next" href="/{{ page.collection }}/{{ page.next }}">Next task &rarr;</a>
+        {% endif %}
+      </div>
+
+      <h2>Help</h2>
+      <p>Use <code>document.getElementById('result')</code> to get to an element you can render to with your Omniscient components!</p>
+
+      <h3>Available globals</h3>
+      <ul>
+        <li><code>React</code>: React instance</li>
+        <li><code>omniscient</code>/<code>component</code>: Omniscient instance</li>
+        <li><code>immstruct</code>: Immstruct instance</li>
+        <li><code>Immutable</code>: Immutable.js instance</li>
+      </ul>
+
+      <h3>Testing</h3>
+      <ul>
+        <li><code>describe</code>: New test group (mocha)</li>
+        <li><code>it</code>: make a new test (mocha)</li>
+        <li><code>chai</code>: chai.js assertion library</li>
+      </ul>
+    </main>
+
+    <script src="../../scripts/vendor/script.min.js"></script>
+    <script src="../../scripts/runnable-scripts.js"></script>
+
+    {% include footer.html %}
+  </body>
+</html>

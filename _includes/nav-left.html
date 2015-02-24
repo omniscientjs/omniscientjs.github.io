@@ -5,8 +5,8 @@
       <ol>
         {% for item in collection[1].docs %}
         {% if item.hide != true %}
-        {% assign pageID = @context.registers[:page]["id"] %}
-        {% assign itemID = item["name"]%}
+        {% assign pageID = page.name %}
+        {% assign itemID = item.name %}
         {% assign className = pageID == itemID ? ' class="active"' : '' %}
           <li>
             <a href="/{{item["collection"]}}/{{itemID}}"{{className}}>{{item["title"]}}</a>

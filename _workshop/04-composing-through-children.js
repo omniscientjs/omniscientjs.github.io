@@ -52,12 +52,15 @@ React.render(<App list={list} />, el);
 var expect = chai.expect;
 describe('workshop part 1', function () {
   it('should have class named App, List and Item', function () {
-    expect(React.isValidClass(App)).to.equal(true);
-    expect(React.isValidClass(List)).to.equal(true);
-    expect(React.isValidClass(Item)).to.equal(true);
+    expect(React.isValidClass(App)).to.equal(true,
+      'App must be a valid React class');
+    expect(React.isValidClass(List)).to.equal(true,
+      'List must be a valid React class');
+    expect(React.isValidClass(Item)).to.equal(true,
+      'Item must be a valid React class');
   });
 
-  it('should have render List with input items', function () {
+  it('should have component List and props with list', function () {
     var testList = [{ text: 'Custom Item' }];
     var output = React.renderComponentToString(App({ list: testList }));
     expect(output).to.contain('Custom Item');
@@ -65,7 +68,7 @@ describe('workshop part 1', function () {
     expect(output).to.contain('<ul');
   });
 
-  it('should have rendered component', function () {
+  it('should have rendered components to DOM', function () {
     var html = document.querySelector('#result').innerText;
     expect(html).to.contain('React');
     expect(html).to.contain('Omniscient');

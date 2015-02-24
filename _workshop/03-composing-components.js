@@ -32,32 +32,39 @@ var WelcomeBox = React.createClass({
 });
 
 // 3) Render on document.getElementById('result')
-React.render(<WelcomeBox name="Username" />, el);
+React.render(<WelcomeBox name="The Doctor" />, el);
 
 // Tests should turn green
 var expect = chai.expect;
 describe('workshop part 1', function () {
   it('should have class named User and WelcomeBox', function () {
-    expect(React.isValidClass(User)).to.equal(true);
-    expect(React.isValidClass(WelcomeBox)).to.equal(true);
+    expect(React.isValidClass(User)).to.equal(true,
+      'User must be a valid React class');
+    expect(React.isValidClass(WelcomeBox)).to.equal(true,
+      'WelcomeBox must be a valid React class');
   });
 
-  it('should have WelcomeBox component', function () {
+  it('should have WelcomeBox component taking a name as props', function () {
     var output = React.renderComponentToString(WelcomeBox({ name: 'Foobar'}));
-    expect(output).to.contain('<div');
-    expect(output).to.contain('<strong');
-    expect(output).to.contain('Foobar');
-    expect(output).to.contain('<h1');
+    expect(output).to.contain('<div', 'must be wrapped in a div');
+    expect(output).to.contain('<strong', 'name should be wrapped in strong');
+    expect(output).to.contain('Foobar', 'must render passed name');
+    expect(output).to.contain('<h1', 'title should be h1');
   });
 
-  it('should have User component', function () {
+  it('should have User component taking name as props', function () {
     var output = React.renderComponentToString(User({ name: 'Foobar' }));
-    expect(output).to.contain('Foobar');
+    expect(output).to.contain('Foobar', 'name should be overridable');
     expect(output).to.contain('<strong');
   });
 
-  it('should have rendered component', function () {
+  it('should have User component with default name John Smith', function () {
+    var output = React.renderComponentToString(User());
+    expect(output).to.contain('John Smith');
+  });
+
+  it('should have rendered components to DOM', function () {
     var html = document.querySelector('#result').innerText;
-    expect(html).to.contain('Hello, Username!');
+    expect(html).to.contain('Hello, The Doctor!');
   });
 });

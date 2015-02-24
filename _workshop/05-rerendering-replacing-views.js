@@ -41,11 +41,12 @@ setTimeout(function () {
 // Tests should turn green
 var expect = chai.expect;
 describe('workshop part 1', function () {
-  it('should have class named App, List and Item', function () {
-    expect(React.isValidClass(List)).to.equal(true);
+  it('should have class named List', function () {
+    expect(React.isValidClass(List)).to.equal(true,
+      'List must be a valid React class');
   });
 
-  it('should have render List with input items', function () {
+  it('should have component with list of input props', function () {
     var testList = [{ text: 'Custom Item' }];
     var output = React.renderComponentToString(List({ list: testList }));
     expect(output).to.contain('Custom Item');
@@ -53,7 +54,7 @@ describe('workshop part 1', function () {
     expect(output).to.contain('<ul');
   });
 
-  it('should have rendered component', function (done) {
+  it('should have rendered components to DOM and change over time', function (done) {
     var content = document.querySelector('#result');
     var html = content.innerText;
     expect(html).to.contain('React');

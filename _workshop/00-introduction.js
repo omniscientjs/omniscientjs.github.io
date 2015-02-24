@@ -10,10 +10,10 @@ next: 01-basic-components
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 
-// Drawing components
+// Creating components
 var HelloWorld = component(_ => <h1>Hello World</h1>);
 
-// Draw on correct wrapper
+// Render inside correct wrapper
 React.render(HelloWorld(),
   document.getElementById('result'));
 
@@ -23,5 +23,8 @@ var expect = chai.expect;
 describe('mocha inside the workshop', function () {
   it('shows tests', function () {
     expect(2).to.equal(2);
+  });
+  it('shows failing tests', function () {
+    expect(2).to.equal(1, 'numbers should be equal');
   });
 });

@@ -22,7 +22,6 @@ var HelloWorld = React.createClass({
 React.render(<HelloWorld />, el);
 
 // Tests should turn green
-var expect = chai.expect;
 describe('workshop part 1', function () {
   it('should have class named HelloWorld', function () {
     expect(React.isValidClass(HelloWorld)).to.equal(true,

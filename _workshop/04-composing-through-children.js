@@ -49,7 +49,6 @@ var App = React.createClass({
 React.render(<App list={list} />, el);
 
 // Tests should turn green
-var expect = chai.expect;
 describe('workshop part 1', function () {
   it('should have class named App, List and Item', function () {
     expect(React.isValidClass(App)).to.equal(true,

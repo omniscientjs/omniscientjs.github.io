@@ -17,9 +17,6 @@ var HelloWorld = component(_ => <h1>Hello World</h1>);
 React.render(HelloWorld(),
   document.getElementById('result'));
 
-// Run tests
-var expect = chai.expect;
-
 describe('mocha inside the workshop', function () {
   it('shows tests', function () {
     expect(2).to.equal(2);

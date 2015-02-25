@@ -35,7 +35,6 @@ var WelcomeBox = React.createClass({
 React.render(<WelcomeBox name="The Doctor" />, el);
 
 // Tests should turn green
-var expect = chai.expect;
 describe('workshop part 1', function () {
   it('should have class named User and WelcomeBox', function () {
     expect(React.isValidClass(User)).to.equal(true,

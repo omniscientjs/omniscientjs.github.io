@@ -2,6 +2,8 @@ var gulp        = require('gulp');
 var sass        = require('gulp-sass');
 var prefix      = require('gulp-autoprefixer');
 var cp          = require('child_process');
+var webpack     = require('gulp-webpack');
+var named       = require('vinyl-named');
 
 gulp.task('jekyll-build', function (done) {
   return cp.spawn('jekyll', ['build'], {stdio: 'inherit'})
@@ -19,13 +21,30 @@ gulp.task('sass', function () {
   .pipe(gulp.dest('css'));
 });
 
+gulp.task('js', js({}));
+
 gulp.task('watch', ['default'], function () {
+  gulp.watch([
+    'scripts/**.js',
+    'scripts/**/*.js'
+  ], ['js']);
   gulp.watch('_sass/**/*.scss', ['sass']);
   gulp.watch([
-    'scripts/**/*.js',
+    // 'scripts/**/*.js',
     '**/*.html',
     '!_site/**/*',
     '**/*.md'], ['jekyll-build']);
 });
 
-gulp.task('default', ['sass', 'jekyll-build']);
+gulp.task('default', ['sass', 'jekyll-build', 'js']);
+
+function js (options) {
+  return function () {
+    return gulp.src('scripts/entry.js')
+      .pipe(named())
+      .pipe(webpack({
+        module: require('./webpack')
+      }))
+      .pipe(gulp.dest('_site/scripts/'));
+  }
+}

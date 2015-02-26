@@ -50,15 +50,15 @@ export default component(
         source={source}
         statics={{timers}}
         />
-      /*
-      <div className='test-summary'>{testResult.deref()}</div>
-      <ErrorResult errorResult={errorResult} />
-      <div className='test-result'>{testResult.deref()}</div>
-      */
     </div>
   </div>;
 });
 
+/*
+<div className='test-summary'>{testResult.deref()}</div>
+<ErrorResult errorResult={errorResult} />
+<div className='test-result'>{testResult.deref()}</div>
+*/
 
 
 function runCode (source, timers, resultEl) {

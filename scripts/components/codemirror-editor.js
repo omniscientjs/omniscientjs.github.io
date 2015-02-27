@@ -7,16 +7,14 @@ import 'codemirror/mode/javascript/javascript';
 import 'codemirror/addon/edit/closebrackets';
 import 'codemirror/addon/edit/matchbrackets';
 
-var throttledReplaceState = throttle(replaceStateValue, 2000);
+const throttledReplaceState = throttle(replaceStateValue, 2000);
 
 export default component([{
 
   componentDidMount: function () {
-    var self = this;
-
     const isLarge = this.props.statics.isLarge;
 
-    var options = {
+    const options = {
       autoCloseBrackets: true,
       matchBrackets: true,
       lineNumbers: isLarge,
@@ -27,9 +25,9 @@ export default component([{
       extraKeys: { Tab }
     };
 
-    var onCodeMirrorChange = function (editor) {
-      var source = editor.doc.getValue();
-      self.props.source.update(_ => source);
+    const onCodeMirrorChange = editor => {
+      const source = editor.doc.getValue();
+      this.props.source.update(_ => source);
 
       if (isLarge) {
         throttledReplaceState(source);
@@ -45,7 +43,7 @@ export default component([{
         initialCode = decodeURIComponent(initialCode);
       }
       catch (ignore) { }
-      let source = initialCode || this.props.source.deref();
+      const source = initialCode || this.props.source.deref();
       this.editor.setValue(source);
     }
   },
@@ -71,9 +69,9 @@ function replaceStateValue (value) {
 }
 
 function throttle (fn, ms) {
-  var timeout;
+  let timeout;
   return function () {
-    var self = this, args = [].slice.call(arguments);
+    const self = this, args = [].slice.call(arguments);
     if (timeout) {
       clearTimeout(timeout);
       timeout = undefined;

@@ -3,15 +3,15 @@ import immstruct from 'immstruct';
 
 import Editor from './components/editor';
 
-let runnables = document.querySelectorAll('.editor');
+const runnables = document.querySelectorAll('.editor');
 for (let i = 0; i < runnables.length; i++) {
-  let runnable = runnables[i];
+  const runnable = runnables[i];
 
-  let textarea = runnable.querySelector('textarea');
-  let source = textarea.value;
+  const textarea = runnable.querySelector('textarea');
+  const source = textarea.value;
   runnable.removeChild(textarea);
 
-  let isLarge = runnable.dataset.isLarge;
+  const isLarge = runnable.dataset.isLarge;
   createEditorRenderLoop(runnable, source, isLarge);
 }
 

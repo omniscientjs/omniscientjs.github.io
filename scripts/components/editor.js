@@ -5,8 +5,7 @@ import component from './component';
 import CodeMirrorEditor from './codemirror-editor';
 import RunCode from './run-code';
 
-export default component(
-  function Editor ({ source }, { isLarge, timers }) {
+export default component(function Editor ({ source }, { isLarge, timers }) {
 
   return <div className='window editor'>
     <div className='inner inner--code'>

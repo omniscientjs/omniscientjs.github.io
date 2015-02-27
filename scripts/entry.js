@@ -17,19 +17,13 @@ for (let i = 0; i < runnables.length; i++) {
 
 function createEditorRenderLoop (container, source, isLarge) {
 
-  let data = immstruct({
-    source
-  });
-
-  let render = () =>
+  const data = immstruct({ source });
+  const timers = { intervals: [], timeouts: [] };
+  const render = () =>
     React.render(
       <Editor
         source={data.cursor('source')}
-        statics={{
-          timers: { intervals: [], timeouts: [] },
-          isLarge: isLarge
-        }}
-      />,
+        statics={{ timers, isLarge }} />,
       container);
 
   data.on('swap', () => render());

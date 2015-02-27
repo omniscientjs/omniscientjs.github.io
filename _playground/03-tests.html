@@ -9,12 +9,15 @@ prev: 02-search
 var d = React.DOM;
 
 describe('mocha inside playground', function () {
+
   it('shows tests', function () {
     (2).should.equal(2);
   });
+
   xit('shows pending tests', function () {
     (2).should.equal(2);
   });
+
   it('shows failed tests', function () {
     (2).should.equal(1);
   });

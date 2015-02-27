@@ -12,56 +12,64 @@ import PlaygroundReporter from '../playground-reporter';
 import omniscient from 'omniscient';
 import component from './component';
 
-let runCodeOnUpdate = function () {
-  let { source, statics } = this.props;
-
-  var container = this.getDOMNode();
-  let resultEl = container.querySelector('.result');
-  resultEl.innerHTML = '';
-
-  var data = this.data;
-  var cursors = { results: data.cursor('results') };
-  runCode(source, statics.timers, cursors, resultEl);
-};
-
-let Result = component(function Result ({result}) {
+let Result = component(function Result ({ testSummary, testResult, errorResult }) {
   return <div>
-    Runs: {result.deref()}
+    <div className='test-summary' dangerouslySetInnerHTML={{__html: testSummary.deref()}}></div>
+    <div className='editor-error' dangerouslySetInnerHTML={{__html: errorResult.deref()}}></div>
+    <div className='test-result' dangerouslySetInnerHTML={{__html: testResult.deref()}}></div>
   </div>;
 });
 
 export default component(
   {
-    renderResults: function () {
+    renderResults: function (data) {
       React.render(
-        <Result result={this.data.cursor('results')}/>,
+        <Result
+          testSummary={data.cursor('testSummary')}
+          testResult={data.cursor('testResult')}
+          errorResult={data.cursor('errorResult')}
+        />,
         this.getDOMNode().querySelector('.results'));
     },
 
     componentDidMount: function () {
-      this.data = immstruct({ results: 1 });
-      this.data.on('swap', () => this.renderResults());
-      runCodeOnUpdate.call(this, this.data.cursor('results'));
+      this.data = immstruct({ testSummary: '', testResult: '', errorResult: '' });
+      this.data.on('swap', () => this.renderResults(this.data.cursor()));
+      runCodeOnUpdate.call(this, this.data.cursor());
     },
 
     componentDidUpdate: function () {
       if (!this.data) return;
-      runCodeOnUpdate.call(this, this.data.cursor('results'));
+      runCodeOnUpdate.call(this, this.data.cursor());
     }
   },
   function RunCode () {
     return <div>
-      <div className='result'></div>
       <div className='results'></div>
+      <div className='result'></div>
     </div>
   });
 
-function runCode (source, timers, cursors, resultEl) {
+let runCodeOnUpdate = function () {
+  let { source, statics } = this.props;
+
+  var container = this.getDOMNode();
+  let resultEl = container.querySelector('.result');
+
+  runCode(source, statics.timers, this.data.cursor(), resultEl);
+};
+
+function runCode (source, timers, cursor, resultEl) {
   var context = {};
   var mocha = new Mocha({ reporter: PlaygroundReporter });
   mocha.suite.emit('pre-require', context, null, mocha);
 
-  cursors.results.update(v =>  v + 1);
+  cursor.update(data => {
+    data = data.updateIn(['testSummary'], _ => '');
+    data = data.updateIn(['errorResult'], _ => '');
+    data = data.updateIn(['testResult'],  _ => '');
+    return data;
+  });
 
   var src = source.deref();
 
@@ -107,56 +115,53 @@ function runCode (source, timers, cursors, resultEl) {
        );
 
     if (hasTest) {
-      mocha.run(testsDone);
+      mocha.run(testsDone(cursor));
     }
-    // errorResult.update(_ => '');
   }
   catch (e) {
-    console.error(e);
-    // errorResult.update(_ => e.message);
+    // console.error(e);
+    cursor.updateIn(['errorResult'], _ => e.message);
   }
 }
 
-function testsDone (reporter) {
-  var stats = reporter.stats;
-  var tests = stats.tests;
-  var failures = stats.failures;
-  var passes = stats.passes;
-  var pending = stats.pending;
+function testsDone (cursor) {
+  return (reporter) => {
+    var stats = reporter.stats;
+    var tests = stats.tests;
+    var failures = stats.failures;
+    var passes = stats.passes;
+    var pending = stats.pending;
 
-  var summary = '';
-  if (passes) {
-    summary += '<span class="editor-success">' + passes + ' of ' + tests + ' test' + (tests > 1 ? 's' : '') + ' passed</span>';
+    var summary = '';
+    if (passes) {
+      summary += '<span class="editor-success">' + passes + ' of ' + tests + ' test' + (tests > 1 ? 's' : '') + ' passed</span>';
+    }
+
+    if (pending) {
+      summary += (passes ? ', ' : '') + '<span class="editor-pending">' + pending + ' pending</span>'
+    }
+
+    var details;
+    if (failures) {
+      summary += (passes || pending)
+        ? ', <span class="editor-error">' + failures + ' failed!</span>'
+        : '<span class="editor-error">' + failures + ' of ' + tests + ' test' + (tests > 1 ? 's' : '') + ' failed!</span>';
+
+      details = reporter.failures.map(function (failure) {
+        var err = failure.err;
+        return '✘ ' + failure.title + '<br>- ' + err.message + '<pre>' + err.stack + '</pre>';
+      }).join('<br>');
+    }
+    else {
+      summary += '.';
+    }
+
+    cursor.update(data => {
+      data = data.updateIn(['errorResult'], _ => '');
+      data = data.updateIn(['testSummary'], _ => summary);
+      data = data.updateIn(['testResult'],  _ => details);
+      return data;
+    });
+
   }
-
-  if (pending) {
-    summary += (passes ? ', ' : '') + '<span class="editor-pending">' + pending + ' pending</span>'
-  }
-
-  var details;
-  if (failures) {
-    summary += (passes || pending)
-      ? ', <span class="editor-error">' + failures + ' failed!</span>'
-      : '<span class="editor-error">' + failures + ' of ' + tests + ' test' + (tests > 1 ? 's' : '') + ' failed!</span>';
-
-    details = reporter.failures.map(function (failure) {
-      var err = failure.err;
-      return '✘ ' + failure.title + '<br>- ' + err.message + '<pre>' + err.stack + '</pre>';
-    }).join('<br>');
-  }
-  else {
-    summary += '.';
-  }
-
-  console.log(summary);
-  console.log(details);
-
-  // if (testSummaryEl) {
-  //   testSummaryEl.innerHTML = summary;
-  // }
-
-//   if (testResultEl && details) {
-//     testResultEl.innerHTML = '<div class="editor-error">' + details + '</div>';
-//   }
-
 }

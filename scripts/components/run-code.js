@@ -48,6 +48,7 @@ const runCode = function () {
 
   const container = this.getDOMNode();
   const resultEl = container.querySelector('.react-result');
+  resultEl.innerHTML = ''; // clear previous results when compilation fails
 
   const cursor = this.data.cursor();
 

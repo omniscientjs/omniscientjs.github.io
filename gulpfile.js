@@ -42,9 +42,7 @@ function js (options) {
   return function () {
     return gulp.src('scripts/entry.js')
       .pipe(named())
-      .pipe(webpack({
-        module: require('./webpack')
-      }))
+      .pipe(webpack(require('./webpack')))
       .pipe(gulp.dest('_site/scripts/'));
   }
 }

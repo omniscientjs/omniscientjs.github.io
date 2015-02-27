@@ -8,10 +8,6 @@ prev: 02-search
 
 var d = React.DOM;
 
-// component.debug();
-
-chai.should();
-
 describe('mocha inside playground', function () {
   it('shows tests', function () {
     (2).should.equal(2);
@@ -19,7 +15,7 @@ describe('mocha inside playground', function () {
   xit('shows pending tests', function () {
     (2).should.equal(2);
   });
-  it('shows failed tests with stack trace', function () {
+  it('shows failed tests', function () {
     (2).should.equal(1);
   });
 });

@@ -45,7 +45,7 @@ var App = React.createClass({
   }
 });
 
-// 4) Render on document.getElementById('result')
+// 4) Render on el
 React.render(<App list={list} />, el);
 
 // Tests should turn green
@@ -68,7 +68,7 @@ describe('workshop part 1', function () {
   });
 
   it('should have rendered components to DOM', function () {
-    var html = document.querySelector('#result').innerText;
+    var html = el.innerText;
     expect(html).to.contain('React');
     expect(html).to.contain('Omniscient');
     expect(html).to.contain('Virtual-DOM');

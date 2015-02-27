@@ -14,8 +14,7 @@ slides: http://omniscientjs.github.io/workshop-talk
 var HelloWorld = component(_ => <h1>Hello World</h1>);
 
 // Render inside correct wrapper
-React.render(HelloWorld(),
-  document.getElementById('result'));
+React.render(HelloWorld(), el);
 
 describe('mocha inside the workshop', function () {
   it('shows tests', function () {

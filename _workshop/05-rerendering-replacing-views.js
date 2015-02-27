@@ -26,7 +26,7 @@ var List = React.createClass({
   }
 });
 
-// 2) Render on document.getElementById('result')
+// 2) Render on el
 React.render(<List list={list} />, el);
 
 list = [
@@ -54,15 +54,14 @@ describe('workshop part 1', function () {
   });
 
   it('should have rendered components to DOM and change over time', function (done) {
-    var content = document.querySelector('#result');
-    var html = content.innerText;
+    var html = el.innerText;
     expect(html).to.contain('React');
     expect(html).to.contain('Omniscient');
     expect(html).to.contain('Virtual-DOM');
 
     // Ugly hack :(
     setTimeout(function () {
-      html = content.innerText;
+      html = el.innerText;
       expect(html).not.to.contain('React');
       expect(html).to.contain('Omniscient');
       done();

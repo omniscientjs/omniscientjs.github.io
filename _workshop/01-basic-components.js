@@ -18,7 +18,7 @@ var HelloWorld = React.createClass({
   }
 });
 
-// 2) Render on document.getElementById('result')
+// 2) Render on el
 React.render(<HelloWorld />, el);
 
 // Tests should turn green
@@ -36,7 +36,7 @@ describe('workshop part 1', function () {
   });
 
   it('should have rendered components to DOM', function () {
-    var html = document.querySelector('#result').innerText;
+    var html = el.innerText;
     expect(html).to.contain('Hello, World!',
       'HelloWorld should be rendered to result div');
   });

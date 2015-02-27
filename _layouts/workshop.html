@@ -22,17 +22,8 @@
         {% endif %}
       </div>
 
-      <div class='window editor' data-large=true>
-        <div class='inner inner--code'>
-          {% assign codeContent = content | strip_newlines %}
-          <textarea>{% if (codeContent == "") %}{% include _playground-default.html %}{% else %}{{ content }}{% endif %}</textarea>
-        </div>
-        <div class='inner inner--result'>
-          <div class='test-summary'></div>
-          <div class='result' id="result"></div>
-          <div class='test-result'></div>
-        </div>
-      </div>
+      {% assign codeContent = content | strip_newlines %}
+      <div class="editor" data-is-large=true><textarea>{% if (codeContent == "") %}{% include _playground-default.html %}{% else %}{{ content }}{% endif %}</textarea>
 
       <h2>Tasks</h2>
       <ol>
@@ -83,9 +74,6 @@
         <li><code>chai</code>: chai.js assertion library</li>
       </ul>
     </main>
-
-    <script src="../../scripts/vendor/script.min.js"></script>
-    <script src="../../scripts/runnable-scripts.js"></script>
 
     {% include footer.html %}
   </body>

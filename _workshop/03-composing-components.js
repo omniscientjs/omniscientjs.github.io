@@ -31,7 +31,7 @@ var WelcomeBox = React.createClass({
   }
 });
 
-// 3) Render on document.getElementById('result')
+// 3) Render on el
 React.render(<WelcomeBox name="The Doctor" />, el);
 
 // Tests should turn green
@@ -63,7 +63,7 @@ describe('workshop part 1', function () {
   });
 
   it('should have rendered components to DOM', function () {
-    var html = document.querySelector('#result').innerText;
+    var html = el.innerText;
     expect(html).to.contain('Hello, The Doctor!');
   });
 });

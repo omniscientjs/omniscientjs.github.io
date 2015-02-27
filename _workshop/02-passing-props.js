@@ -22,7 +22,7 @@ var Hello = React.createClass({
   }
 });
 
-// 2) Render on document.getElementById('result')
+// 2) Render on el
 // Render component with name "React"
 React.render(<Hello name="React" />, el);
 
@@ -48,7 +48,7 @@ describe('workshop part 1', function () {
   });
 
   it('should have rendered components to DOM', function () {
-    var html = document.querySelector('#result').innerText;
+    var html = el.innerText;
     expect(html).to.contain('Hello, React!');
   });
 });

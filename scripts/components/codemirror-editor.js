@@ -48,6 +48,10 @@ export default component([{
       let source = initialCode || this.props.source.deref();
       this.editor.setValue(source);
     }
+  },
+
+  shouldComponentUpdate: function () {
+    return false;
   }
 
 }], function CodeMirrorEditor ({source}) {

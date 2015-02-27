@@ -12,28 +12,61 @@ import PlaygroundReporter from '../playground-reporter';
 import omniscient from 'omniscient';
 import component from './component';
 
-let Result = component(function Result ({ testSummary, testResult, errorResult }) {
+let Result = component(function Result ({ stats, failures, errorResult }) {
+
+    console.log(failures);
+
+    const passes  = stats.get('passes'),
+          tests   = stats.get('tests'),
+          pending = stats.get('pending'),
+          failed = stats.get('failures');
+
+    const passesSummary = passes
+      ? <span className="editor-success">{passes} of {tests} test{tests > 1 ? 's' : ''} passed</span>
+      : null;
+
+    const pendingPrefix = (passes && pending) ? ', ' : '';
+
+    const pendingSummary = pending
+      ? <span className="editor-pending">{pending} pending</span>
+      : null;
+
+
+    const failedPrefix = failed
+      ? (passes || pending) ? ', ' : ''
+      : null;
+
+    const failedSummary = failed
+      ? (passes || pending)
+        ? <span className="editor-error">{failed} failed!</span>
+        : <span className="editor-error">{failed} of {tests} test{tests > 1 ? 's' : ''} failed!</span>
+      : null;
+
+    const testResults = failures.toArray().map(failure => {
+      return <div>✘ {failure.title}<br/>- {failure.err.message} <pre>{failure.err.stack}</pre></div>
+    });
+
   return <div>
-    <div className='test-summary' dangerouslySetInnerHTML={{__html: testSummary.deref()}}></div>
-    <div className='editor-error' dangerouslySetInnerHTML={{__html: errorResult.deref()}}></div>
-    <div className='test-result' dangerouslySetInnerHTML={{__html: testResult.deref()}}></div>
+    <div className='test-summary'>{passesSummary}{pendingPrefix}{pendingSummary}{failedPrefix}{failedSummary}</div>
+    <div className='editor-error'>{errorResult.deref()}</div>
+    <div className='test-result'>{testResults}</div>
   </div>;
 });
+//<div className='test-result' dangerouslySetInnerHTML={{__html: testResult.deref()}}></div>
 
 export default component(
   {
     renderResults: function (data) {
       React.render(
         <Result
-          testSummary={data.cursor('testSummary')}
-          testResult={data.cursor('testResult')}
-          errorResult={data.cursor('errorResult')}
-        />,
+          stats={data.cursor('stats')}
+          failures={data.cursor('failures')}
+          errorResult={data.cursor('errorResult')} />,
         this.getDOMNode().querySelector('.results'));
     },
 
     componentDidMount: function () {
-      this.data = immstruct({ testSummary: '', testResult: '', errorResult: '' });
+      this.data = immstruct({  });
       this.data.on('swap', () => this.renderResults(this.data.cursor()));
       runCodeOnUpdate.call(this, this.data.cursor());
     },
@@ -55,6 +88,7 @@ let runCodeOnUpdate = function () {
 
   var container = this.getDOMNode();
   let resultEl = container.querySelector('.result');
+  resultEl.innerHTML = '';
 
   runCode(source, statics.timers, this.data.cursor(), resultEl);
 };
@@ -65,9 +99,8 @@ function runCode (source, timers, cursor, resultEl) {
   mocha.suite.emit('pre-require', context, null, mocha);
 
   cursor.update(data => {
-    data = data.updateIn(['testSummary'], _ => '');
-    data = data.updateIn(['errorResult'], _ => '');
-    data = data.updateIn(['testResult'],  _ => '');
+    data = data.removeIn(['stats']);
+    data = data.removeIn(['errorResult']);
     return data;
   });
 
@@ -102,7 +135,7 @@ function runCode (source, timers, cursor, resultEl) {
       'el',
       'setTimeout', 'setInterval',
       'chai', 'expect', 'describe', 'it', 'xdescribe', 'xit',
-      compiledCode]);
+        compiledCode]);
 
     var it = context.it.bind(context);
     it.only = context.it.only.bind(context);
@@ -119,49 +152,17 @@ function runCode (source, timers, cursor, resultEl) {
     }
   }
   catch (e) {
-    // console.error(e);
+    console.error(e);
     cursor.updateIn(['errorResult'], _ => e.message);
   }
 }
 
 function testsDone (cursor) {
-  return (reporter) => {
-    var stats = reporter.stats;
-    var tests = stats.tests;
-    var failures = stats.failures;
-    var passes = stats.passes;
-    var pending = stats.pending;
-
-    var summary = '';
-    if (passes) {
-      summary += '<span class="editor-success">' + passes + ' of ' + tests + ' test' + (tests > 1 ? 's' : '') + ' passed</span>';
-    }
-
-    if (pending) {
-      summary += (passes ? ', ' : '') + '<span class="editor-pending">' + pending + ' pending</span>'
-    }
-
-    var details;
-    if (failures) {
-      summary += (passes || pending)
-        ? ', <span class="editor-error">' + failures + ' failed!</span>'
-        : '<span class="editor-error">' + failures + ' of ' + tests + ' test' + (tests > 1 ? 's' : '') + ' failed!</span>';
-
-      details = reporter.failures.map(function (failure) {
-        var err = failure.err;
-        return '✘ ' + failure.title + '<br>- ' + err.message + '<pre>' + err.stack + '</pre>';
-      }).join('<br>');
-    }
-    else {
-      summary += '.';
-    }
-
+  return (reporter) =>
     cursor.update(data => {
       data = data.updateIn(['errorResult'], _ => '');
-      data = data.updateIn(['testSummary'], _ => summary);
-      data = data.updateIn(['testResult'],  _ => details);
+      data = data.updateIn(['stats'], _ => Immutable.fromJS(reporter.stats));
+      data = data.updateIn(['failures'], _ => Immutable.fromJS(reporter.failures));
       return data;
     });
-
-  }
 }

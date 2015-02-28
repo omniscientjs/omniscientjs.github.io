@@ -1,5 +1,7 @@
 var gulp        = require('gulp');
+var gulpif      = require('gulp-if');
 var sass        = require('gulp-sass');
+var path        = require('path');
 var prefix      = require('gulp-autoprefixer');
 var cp          = require('child_process');
 var webpack     = require('gulp-webpack');
@@ -22,12 +24,14 @@ gulp.task('sass', function () {
 });
 
 gulp.task('js', js({}));
+gulp.task('js-watch', js({ watch: true }));
 
 gulp.task('watch', ['default'], function () {
   gulp.watch([
+    '!scripts/*.build.js',
     'scripts/**.js',
     'scripts/**/*.js'
-  ], ['js']);
+  ], ['js-watch']);
   gulp.watch('_sass/**/*.scss', ['sass']);
   gulp.watch([
     // 'scripts/**/*.js',
@@ -41,8 +45,10 @@ gulp.task('default', ['sass', 'jekyll-build', 'js']);
 function js (options) {
   return function () {
     return gulp.src('scripts/entry.js')
-      .pipe(named())
-      .pipe(webpack(require('./webpack')))
-      .pipe(gulp.dest('_site/scripts/'));
+      .pipe(named(function (file) {
+        return path.basename(file.path, path.extname(file.path)) + '.build';
+      }))
+      .pipe(webpack(require('./webpack')(options)))
+      .pipe(gulpif(options.watch, gulp.dest('_site/scripts/'), gulp.dest('scripts/')));
   }
 }

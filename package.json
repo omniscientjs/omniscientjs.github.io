@@ -20,6 +20,7 @@
     "chai": "^2.0.0",
     "codemirror": "^5.0.0",
     "css-loader": "^0.9.1",
+    "gulp-if": "^1.2.5",
     "immstruct": "^1.4.0",
     "immutable": "^3.6.2",
     "less": "^2.4.0",

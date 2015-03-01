@@ -16,12 +16,12 @@ var App = component(function (props) {
       props.cursor.update(function () { return 'Hello'; });
    };
    return <button onClick={change}>{props.cursor.deref()}</button>
-});
+}).jsx;
 
 var structure = immstruct({ message: 'Foo' });
 
 function render () {
-   React.render(<App.jsx cursor={structure.cursor('message')} />, document.body);
+   React.render(<App cursor={structure.cursor('message')} />, document.body);
 }
 
 structure.on('swap', render);
@@ -40,7 +40,7 @@ A `swap` event is triggered in immstruct, and with Omniscient and React you rend
 
 ```jsx
 function render () {
-   React.render(<App.jsx cursor={structure.cursor('message')} />, document.body);
+   React.render(<App cursor={structure.cursor('message')} />, document.body);
 }
 
 structure.on('swap', render);
@@ -70,9 +70,23 @@ var App = component(function (props) {
 });
 ```
 
-This will give the expected result `FooHelloBye`.
+This will give the expected result `FooHelloBye`. But it will trigger a swap event (re-rendering two times).
 
-Updating the structure twice will cause multiple renders, but you wouldn't loose data - as long as you take into consideration that both the underlying structure and the cursors are immutable.
+Updating the structure twice will cause multiple renders, but you wouldn't loose data - as long as you take into consideration that both the underlying structure and the cursors are immutable. In most cases this wouldn't be a problem, but if you'd like to avoid double re-render, you have a couple of options. If you use the event `on-animation-frame` instead of `swap`, it might be batched, but also you can group change sets:
+
+```jsx
+var App = component(function (props) {
+   var change = function () {
+      props.parentCursor.update(function (current) {
+         current = current.set('message', current.get('message') + 'Hello');
+         return current.set('message', current.get('message') + 'Bye');
+      });
+   };
+   return <button onClick={change}>{props.cursor.deref()}</button>
+});
+```
+
+Note, when doing `update` on a cursor to a scalar value (string, int, bools etc) the current you get in `.update` is the actual scalar, not a cursor. So batching these changes we use the parent cursor instead.
 
 ## A note on the structure
 

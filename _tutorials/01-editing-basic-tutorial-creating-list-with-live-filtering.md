@@ -8,8 +8,6 @@ next: 02-editing-basic-tutorial-creating-list-with-live-filtering-jsx-edition
 
 ---
 
-**Disclaimer: This tutorial is currently for Omniscient <code>v2.0.0</code> and is in the process of being updated to match the new syntax of Immutable.js 3.0.0 and Omniscient 3.0.0. See the [changelog](http://omniscientjs.github.io/changelog/)**
-
 If you haven't read the Omniscient introduction article yet, you should probably [read it before you get started](/guides/01-simpler-ui-reasoning-with-unidirectional) on this tutorial. The previous article in this series introduces the concepts and architecture. In this example we will see how we can use [React](https://github.com/facebook/react), [Omniscient.js](https://github.com/omniscientjs/omniscient), and [Immutable.js](https://github.com/facebook/immutable-js) a rudimentary search filtering of javascript libraries and frameworks. You can see a [running demo on the playground](http://omniscientjs.github.io/playground/02-search/). After we've implemented the example, we'll look into how we can debug an Omniscient application, and see what components get re-rendered.
 
 For this example, we're creating a small application where we can search for different javascript libraries and frameworks. We should start by requiring the modules we want to use. A basic stack with Omniscient is React, immstruct and of course Omniscient (amd Immutable.js wrapped through immstruct).
@@ -79,10 +77,10 @@ Remember, `structure` is the immutable structure we created, and it emits event,
 Now we us start implementing `Search`, which will consist of a `SearchBox` and a set of `Matches`. This is pretty straight forward, we are simply making HTML elements and describing our view in a declarative way using components. Much like doing markup, but in Javascript.
 
 ```jsx
-var Search = component('Search', function (props) {
+var Search = component('Search', function (cursor) {
   return React.DOM.div({ },
-              SearchBox(props.cursor.cursor('search')),
-              Matches(props.cursor));
+              SearchBox(cursor.cursor('search')),
+              Matches(cursor));
 });
 ```
 
@@ -95,8 +93,7 @@ The next natural step is to list out all the matches based on the search query -
 A list of matches in turn consist of a single `Match`. This will be a component that merely presents a javascript library as a list item with an anchor-element, like so:
 
 ```jsx
-var Match = component('Match', function (props) {
-  var cursor = props.cursor;
+var Match = component('Match', function (cursor) {
   return d.li({}, d.a({ href: cursor.get('url') }, cursor.get('title')));
 });
 ```
@@ -104,10 +101,7 @@ var Match = component('Match', function (props) {
 The `Matches` component is far more interesting, and is the heart of the application. We have to get the search query and all projects, and we have to filter the projects based on that query. The matches should be presented to the browser in a un-ordered list of elements.
 
 ```jsx
-var Matches = component('Matches', function (props) {
-  // get our cursor from the properties.
-  var cursor = props.cursor;
-
+var Matches = component('Matches', function (cursor) {
   // Get the value from search query
   var q = cursor.get('search');
 
@@ -121,6 +115,7 @@ var Matches = component('Matches', function (props) {
 
   // Present the matches
   return React.DOM.ul({}, matches.toArray().map(function (lib, i) {
+    // Add key through first argument
     return Match('match-' + lib.get('title'), lib);
   }));
 });
@@ -138,16 +133,16 @@ var structure = immstruct({
 ... and refresh the browser, we would see only Omniscient being presented in the list. And every time we refresh the browser, this is what we see. Pure, predictable components. But altering the source code and refreshing the browser isn't really user friendly - or fast. We should create a own separate component for updating the search query.
 
 ```jsx
-var SearchBox = component('SearchBox', function (props) {
+var SearchBox = component('SearchBox', function (cursor) {
   return React.DOM.div({}, d.input({
     placeholder: "Search..",
-    value: props.cursor.deref(),
+    value: cursor.deref(),
     onChange: this.changeHandler
   }));
 });
 ```
 
-The `SearchBox` is easy, but we see two things here that might be new. The cursor we get passed is a cursor directly to the search string. This means that to get the string we need to de-reference the cursor by calling `props.cursor.deref()`. By having the value as the de-referenced cursor we have a input box with the search query text. Another thing here is the `changeHandler`. We have seen a event handler previously, but not the `onChange`. `onChange` is triggered every time the input is changed (not blurred as one might expect).
+The `SearchBox` is easy, but we see two things here that might be new. The cursor we get passed is a cursor directly to the search string. This means that to get the string we need to de-reference the cursor by calling `cursor.deref()`. By having the value as the de-referenced cursor we have a input box with the search query text. Another thing here is the `changeHandler`. We have seen a event handler previously, but not the `onChange`. `onChange` is triggered every time the input is changed (not blurred as one might expect).
 
 We create a small mixin that can handle the change for us. As this is javascript and we can share a context with the component through `this`. The passed cursor is available through the property `this.props.cursor` inside the mixin, and the cursor points directly to the search query in the structure.
 
@@ -161,13 +156,13 @@ var mixins = {
 };
 
 // Change our SearchBox from above to add the mixins
-var SearchBox = component('SearchBox', mixins, function (props) { /* same as before */ });
+var SearchBox = component('SearchBox', mixins, function (cursor) { /* same as before */ });
 
 ```
 
 The `changeHandler` has one small job: update the cursor with the new value of the input box. This will swap the search query in the immutable structure and through immstruct tell the application the do the re-render, as immstruct emits an event and we listen to that event and trigger render. That is it. That is our entire live filter application. It is pretty awesome and really easy to reason about - almost as simple as HTML it self. But let's think a bit about what is happening here. What happens when we re-render, and how do we debug.
 
-Check out the [complete source code on Github](https://github.com/omniscientjs/omniscientjs.github.io/blob/master/examples/search/index.js).
+Check out the [complete source code in the Playground](http://omniscientjs.github.io/playground/02-search/).
 
 ### Analysing Re-renders
 
@@ -192,11 +187,11 @@ component.debug();
 While having the debug-mode activated, we try to go from `e` to `en` in the input box. We should get 4 results. The debug output is
 
 ```
-<Search>: shouldComponentUpdate => true (cursors have changed)
+<Search>: shouldComponentUpdate => true (props have changed)
 <Search>: render
-<SearchBox>: shouldComponentUpdate => true (cursors have changed)
+<SearchBox>: shouldComponentUpdate => true (props have changed)
 <SearchBox>: render
-<Matches>: shouldComponentUpdate => true (cursors have changed)
+<Matches>: shouldComponentUpdate => true (props have changed)
 <Matches>: render
 <Match key=match-Backbone.js>: shouldComponentUpdate => false
 <Match key=match-Omniscient>: shouldComponentUpdate => false
@@ -225,6 +220,4 @@ We can see that all the components that matched the previous query are still unc
 
 ## Summary
 
-This has been a introductory tutorial for how we can use Omniscient and React to make applications. The application we created in this tutorial, was fairly naïve and doesn't face the problems of real life. It is very rare we can have code as clean and small as this, but this shows, at the most basic level, how we can reason about a component based, top-down rendered, UI. It can be challenging at first, to switch out our "normal" way of designing Javascript software, and having a loop that iterates everytime we make a small change. It also might seem like this would be slow and un-optimized, but the smart implementation of React and the reference checks of Omniscient and Immutable.js will actually allow us to create fast, responsive, applications. You can see more [example source codes on Github](https://github.com/omniscientjs/omniscientjs.github.io/tree/master/examples) or [try them out on the Omniscient homepage](http://omniscientjs.github.io/examples). On the Omniscient homepage, you can also see how the immutable structure state is changing over the course of the application life time.
-
-If you have any comments on this architecture, think this is a horrible idea, or simply have questions about Omniscient, you can reach out on [Github issues](https://github.com/omniscientjs/omniscient/issues) or ping us at Twitter: [@mikaelbrevik](https://twitter.com/mikaelbrevik) and [@torgeir](https://twitter.com/torgeir).
+This has been a introductory tutorial for how we can use Omniscient and React to make applications. The application we created in this tutorial, was fairly naïve and doesn't face the problems of real life. It is very rare we can have code as clean and small as this, but this shows, at the most basic level, how we can reason about a component based, top-down rendered, UI. It can be challenging at first, to switch out our "normal" way of designing Javascript software, and having a loop that iterates everytime we make a small change. It also might seem like this would be slow and un-optimized, but the smart implementation of React and the reference checks of Omniscient and Immutable.js will actually allow us to create fast, responsive, applications. You can see more examples and try them out live [in the Playground](http://omniscientjs.github.io/playground/).

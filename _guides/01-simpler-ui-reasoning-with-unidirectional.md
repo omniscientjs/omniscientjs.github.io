@@ -133,6 +133,9 @@ render(App(info), document.body);
 But that would cause our entire app to re-render, but we would have to do much data repetition and it would be fairly slow. There is however, a concept called **cursors**. Cursors are simply pointers to a subset of data in a immutable structure. So if we update the data a cursor is pointing to, we get a new immutable structure where only the changed data is different, all other parts of the structure is the same, with the same reference. For instance:
 
 ```jsx
+// Note: This is not a real implementation, but a conceptual
+// idea.
+
 var structure = immutable({
   site: { title: 'Biff\'s Spare Parts - Online' },
   user: { name: 'Dr. Brown' }
@@ -152,6 +155,9 @@ newStructure.user //=> 'Doc'
 We can use this to be smarter about what we want to re-render. Instead of passing the actual data into components and sub-components, we pass on cursors to these values. Components have a function deciding whether to re-render, simply based on if the newly passed cursor points to the same value as the previous passed cursor. If the data hasn't change, there shouldn't be any need of re-rendering. Remember, as this is a simple object reference check, it is lightning fast.
 
 ```jsx
+// Note: This is not a real implementation, but a conceptual
+// idea.
+
 // Create a immutable object
 var structure = immutable({
   site: { title: 'Biff\'s Spare Parts - Online' },
@@ -242,39 +248,40 @@ React.js is a library maintained and created by developers at Facebook. The key 
 
 ```jsx
 var React     = require('react'),
-    immutable = require('immutable'),
+    Immutable = require('immutable'),
+    Cursor = require('immutable/contrib/cursor'),
     component = require('omniscient');
 
-var structure = immutable.fromJS({
+var structure = Immutable.fromJS({
   site: { title: 'Biff\'s Spare Parts - Online' },
   user: { name: 'Dr. Brown' }
 });
 
 // Minor change in syntax, we get cursors through properties.
-var User = component(function (props) {
-  return React.DOM.text(null, 'Username: ' + props.cursor.get('name'));
+var User = component(function (cursor) {
+  return React.DOM.text(null, 'Username: ' + cursor.get('name'));
 });
 
-var Header = component(function (props) {
-  return React.DOM.h1(null, props.cursor.get('title'));
+var Header = component(function (cursor) {
+  return React.DOM.h1(null, cursor.get('title'));
 });
 
-var App = component(function (props) {
+var App = component(function (cursor) {
   return React.DOM.div(null,
-    Header(props.cursor.cursor('site')),
-    User(props.cursor.cursor('user'));
+    Header(cursor.cursor('site')),
+    User(cursor.cursor('user'));
 });
 
 // Pass on a cursor to the entire structure
-React.render(App(structure.cursor()), document.body);
+React.render(App(Cursor.from(structure, [])), document.body);
 
 // Swap the user.name value
-structure = structure.cursor(['user', 'name']).update(function () {
+structure = Cursor.from(structure, ['user', 'name']).update(function () {
   return 'Doc';
 });
 
 // Pass on a cursor to the entire structure again (new cursor)
-React.render(App(structure.cursor()), document.body);
+React.render(App(Cursor.from(structure, [])), document.body);
 ```
 
 If we combine the Virtual DOM diff-ing of React, the object reference checks of immutable data and the thought pattern of Omniscient, we get a really fast top-down rendering with only representing state in the top of our modules or application.
@@ -348,6 +355,6 @@ We see this even clearer if we try to change a specific item as a part of the li
 
 ## Closing Notes
 
-This article has introduces some general concepts of web architecture and introduced a new way of doing UI using React and Omniscient with immutable data structures. The next part of this article-series is a basic example on how to [get started developing applications using Omniscient](https://github.com/omniscientjs/omniscient/wiki/Basic-Tutorial:-Creating-List-with-Live-Filtering).
+This article has introduces some general concepts of web architecture and introduced a new way of doing UI using React and Omniscient with immutable data structures. The next part of this article-series is a basic example on how to [get started developing applications using Omniscient](http://omniscientjs.github.io/tutorials/01-editing-basic-tutorial-creating-list-with-live-filtering/). See more examples in the [Omniscient Playground](http://omniscientjs.github.io/playground/).
 
 We've seen an architecture that is really easy to reason about. It has few building blocks and encourages small components to share between a project or event projects. This is only concerned with the UI and Views, and we should strive to have our components as focused as possible; not with logic and domain related code. By using tools from the functional paradigm, like pure functions and immutable structures, we can have a truly fast, consistant and testable front end architecture. More over, we don't have to be unsure how a component will render – given the same structure input we know it renders the same. And we don't have to handle the DOM manually and continually update it. We have declarative views in code, that is much faster and flexible to work with.

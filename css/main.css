@@ -407,6 +407,10 @@ p code, ul code, li code {
   margin: 0 auto;
   margin-top: 30px;
   display: block; }
+  .mainContent.playground {
+    width: auto;
+    max-width: none;
+    margin: 63px; }
 
 .mainContent h1, .mainContent h2, .mainContent h3 {
   font-size: 2rem;

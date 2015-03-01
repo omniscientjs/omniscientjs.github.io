@@ -410,7 +410,7 @@ p code, ul code, li code {
   .mainContent.playground {
     width: auto;
     max-width: none;
-    margin: 63px; }
+    margin: 3rem 63px; }
 
 .mainContent h1, .mainContent h2, .mainContent h3 {
   font-size: 2rem;
@@ -443,7 +443,7 @@ p code, ul code, li code {
     background: #fdf3f2; }
 
 .playground h1, .playground h2, .playground h3 {
-  margin-top: 0; }
+  margin-top: 1rem; }
 
 .mainContent p {
   margin-bottom: 20px; }

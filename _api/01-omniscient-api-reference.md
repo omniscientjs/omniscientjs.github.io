@@ -7,10 +7,9 @@ prev: 00-apis
 next: 02-immstruct-api-reference
 ---
 
-*API Reference for `Omniscient v3.0.1`*
+*API Reference for `Omniscient v3.1.0`*
 
 More information can be found on the [Omniscient repo](https://github.com/omniscientjs/omniscient).
-
 
 ### `omniscient(displayName, mixins, render)`
 
@@ -61,6 +60,7 @@ unwrap cursors, etc.
   shouldComponentUpdate: function(nextProps, nextState), // check update
   jsx: false, // whether or not to default to jsx components
   cursorField: '__singleCursor', // cursor property name to "unwrap" before passing in to render
+  isNode: function(propValue), // determines if propValue is a valid React node
 
   // Passed on to `shouldComponentUpdate`
   isCursor: function(cursor), // check if prop is cursor
@@ -314,7 +314,7 @@ implementations.
 
 
 
-**Returns** `Object,Number,String,Boolean`,
+**Returns** `Boolean`,
 
 
 ### `shouldComponentUpdate.unCursor(cursor)`
@@ -351,6 +351,55 @@ Immutable.js cursors). Can override through `.withDefaults()`.
 
 **Returns** `Boolean`,
 
+
+### `cached(Function)`
+
+Directly fetch `cache` to use outside of Omniscient.
+You can do this if you want to define functions that caches computed
+result to avoid recomputing if invoked with equal arguments as last time.
+
+Returns optimized version of given `f` function for repeated
+calls with an equal inputs. Returned function caches last input
+and a result of the computation for it, which is handy for
+optimizing `render` when computations are run on unchanged parts
+of state. Although note that only last result is cached so it is
+not practical to call it mulitple times with in the same `render`
+call.
+
+
+### Parameters
+
+| param      | type     | description               |
+| ---------- | -------- | ------------------------- |
+| `Function` | Function | that does a computation.  |
+
+
+
+**Returns** `Function`, Optimized function
+
+
+### `cached.withDefaults([Options])`
+
+Create a “local” instance of the `cache` with overriden defaults.
+
+### Options
+```js
+{
+  isEqualProps: function (currentProps, nextProps), // check props
+}
+```
+
+
+### Parameters
+
+| param       | type   | description                                    |
+| ----------- | ------ | ---------------------------------------------- |
+| `[Options]` | Object | _optional:_ Options with defaults to override  |
+
+
+
+**Returns** `Function`, cached with overriden defaults
+
 ## Private members
 
 
@@ -360,6 +409,7 @@ Predicate showing whether or not the argument is a valid React Node
 or not. Can be numbers, strings, bools, and React Elements.
 
 React's isNode check from ReactPropTypes validator
+but adjusted to not accept objects to avoid collision with props & statics.
 
 
 ### Parameters

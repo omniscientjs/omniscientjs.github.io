@@ -1,7 +1,7 @@
 ---
 layout: workshop
 collection: workshop
-title: Immstruct Counter
+title: Immstruct - counter
 section: 3
 name: 31-immstruct-counter
 next: 32-

@@ -1,10 +1,10 @@
 ---
 layout: workshop
 collection: workshop
-title: Immstruct Clock
+title: Immstruct - clock
 section: 3
 name: 32-immstruct-clock
-next: 33-
+next: 33-mixins-never-rerender
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 

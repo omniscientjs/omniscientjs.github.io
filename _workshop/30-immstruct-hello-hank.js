@@ -1,7 +1,7 @@
 ---
 layout: workshop
 collection: workshop
-title: Immstruct Hello, Hank
+title: Immstruct - Hello, Hank
 section: 3
 name: 30-immstruct-hello-hank
 next: 31-

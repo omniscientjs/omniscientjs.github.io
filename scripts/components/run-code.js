@@ -44,6 +44,8 @@ export default component(
   });
 
 const runCode = function () {
+  console.clear();
+
   const { source, statics } = this.props;
 
   const container = this.getDOMNode();

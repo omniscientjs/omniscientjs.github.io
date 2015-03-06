@@ -1,5 +1,6 @@
 import React from 'react';
 import Immutable from 'immutable';
+import Cursor from 'immutable/contrib/cursor';
 import immstruct from 'immstruct';
 import chai from 'chai';
 chai.should();
@@ -89,7 +90,7 @@ const runCode = function () {
 
     const compiledCode = to5.transform(src).code;
     const fn = Function.apply(null, [
-      'React', 'Immutable', 'immstruct', 'component',
+      'React', 'Immutable', 'Cursor', 'immstruct', 'component',
       'el',
       'setTimeout', 'setInterval',
       'chai', 'expect', 'describe', 'it', 'xdescribe', 'xit',
@@ -98,7 +99,7 @@ const runCode = function () {
     const it = context.it.bind(context);
     it.only = context.it.only.bind(context);
 
-    fn(React, Immutable, immstruct, omniscient,
+    fn(React, Immutable, Cursor, immstruct, omniscient,
        resultEl,
        newSetTimeout, newSetInterval,
        chai, chai.expect, context.describe.bind(context), it, context.xdescribe.bind(context), context.xit.bind(context)

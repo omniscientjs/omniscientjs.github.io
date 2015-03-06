@@ -14,14 +14,29 @@ var OnlyShowOddNumbers = {
   }
 };
 
+var Numbers = React.createClass({
+  render: function () {
+    return <div>
+      <AllNumbers number={this.props.number} />
+      <OddNumbers number={this.props.number} />
+    </div>;
+  }
+});
+
+var AllNumbers = React.createClass({
+  render: function () {
+    return <div>{this.props.number}</div>;
+  }
+});
+
 var OddNumbers = React.createClass({
   mixins: [OnlyShowOddNumbers],
   render: function () {
-    return <span>{this.props.number}</span>;
+    return <div>{this.props.number}</div>;
   }
 });
 
 var n = 0;
 setInterval(function () {
-  React.render(OddNumbers({ number: n++ }), el);
+  React.render(React.createElement(Numbers, { number: n++ }), el);
 }, 1000);

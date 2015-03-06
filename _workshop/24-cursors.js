@@ -4,7 +4,7 @@ collection: workshop
 title: Cursors
 section: 2
 name: 24-cursors
-next: 25-
+next: 30-immstruct-hello-hank
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 

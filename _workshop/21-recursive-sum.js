@@ -3,8 +3,8 @@ layout: workshop
 collection: workshop
 title: Recursive sum
 section: 2
-name: 20-recursive-sum
-next: 02-passing-props
+name: 21-recursive-sum
+next: 22-immutable-js
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 

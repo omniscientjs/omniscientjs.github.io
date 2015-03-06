@@ -7,8 +7,8 @@ name: 24-cursors
 next: 25-
 slides: http://omniscientjs.github.io/workshop-talk
 ---
+
 var { Map } = Immutable;
-console.clear();
 
 var map = Map({ message: "Look behind you, a Three-Headed Monkey!" });
 

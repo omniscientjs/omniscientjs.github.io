@@ -4,7 +4,7 @@ collection: workshop
 title: Curry
 section: 2
 name: 23-curry
-next: 23-
+next: 24-cursors
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 

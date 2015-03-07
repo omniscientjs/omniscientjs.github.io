@@ -49,15 +49,18 @@ const runCode = function () {
 
   const { source, statics } = this.props;
 
+  const src = source.deref();
+
+  if (/\{this\}/.test(src)) // everything hangs when you do this, so don't run with it
+    return;
+
+  const hasTest = (/it\(/.test(src));
+
   const container = this.getDOMNode();
   const resultEl = container.querySelector('.react-result');
   resultEl.innerHTML = ''; // clear previous results when compilation fails
 
   const cursor = this.data.cursor();
-
-  const context = {};
-  const mocha = new Mocha({ reporter: PlaygroundReporter });
-  mocha.suite.emit('pre-require', context, null, mocha);
 
   cursor.update(data => {
     data = data.removeIn(['stats']);
@@ -65,35 +68,42 @@ const runCode = function () {
     return data;
   });
 
-  const src = source.deref();
-
-  const hasTest = (/it\(/.test(src));
+  const context = {};
+  const mocha = new Mocha({ reporter: PlaygroundReporter });
+  mocha.suite.emit('pre-require', context, null, mocha);
 
   const timers = statics.timers;
+
+  timers.timeouts.forEach(id => clearTimeout(id));
+  timers.intervals.forEach(id => clearInterval(id));
+
+  timers.timeouts = [];
+  timers.intervals = [];
+
+  const newSetTimeout = function () {
+    const id = setTimeout.apply(this, arguments);
+    timers.timeouts.push(id);
+    return id;
+  };
+  const newSetInterval = function () {
+    const id = setInterval.apply(this, arguments);
+    timers.intervals.push(id);
+    return id;
+  };
+
   try {
-    timers.timeouts.forEach(id => clearTimeout(id));
-    timers.intervals.forEach(id => clearInterval(id));
-
-    timers.timeouts = [];
-    timers.intervals = [];
-
-    const newSetTimeout = function () {
-      const id = setTimeout.apply(this, arguments);
-      timers.timeouts.push(id);
-      return id;
-    };
-    const newSetInterval = function () {
-      const id = setInterval.apply(this, arguments);
-      timers.intervals.push(id);
-      return id;
-    };
 
     const compiledCode = to5.transform(src).code;
+
     const fn = Function.apply(null, [
       'React', 'Immutable', 'Cursor', 'immstruct', 'component', 'omniscient',
       'el',
       'setTimeout', 'setInterval',
-      'chai', 'expect', 'describe', 'it', 'xdescribe', 'xit',
+      'chai', 'expect',
+      'describe', 'xdescribe',
+      'it', 'xit',
+      'before', 'beforeEach',
+      'after', 'afterEach',
         compiledCode]);
 
     const it = context.it.bind(context);
@@ -102,9 +112,11 @@ const runCode = function () {
     fn(React, Immutable, Cursor, immstruct, omniscient, omniscient,
        resultEl,
        newSetTimeout, newSetInterval,
-       chai, chai.expect, context.describe.bind(context), it, context.xdescribe.bind(context), context.xit.bind(context)
-       // TODO beforeEach afterEach before after
-       );
+       chai, chai.expect,
+       context.describe.bind(context), context.xdescribe.bind(context),
+       it, context.xit.bind(context),
+       context.before.bind(context), context.beforeEach.bind(context),
+       context.after.bind(context), context.afterEach.bind(context));
 
     if (hasTest) {
       mocha.run(reporter =>

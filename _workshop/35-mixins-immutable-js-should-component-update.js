@@ -34,24 +34,21 @@ var Episode = React.createClass({
 var Show = React.createClass({
   mixins: [ImmutableMixin],
   render: function () {
-    var episodes = this.props.show.get('episodes').map(name =>
-      <Episode key={name} name={name} />).toArray();
+    var episodes = this.props.show.get('episodes').map(function (name) {
+      return <Episode key={name} name={name} />
+    });
 
-    return <div>
-      <h1>{this.props.show.get('name')}</h1>
-      <ul>{episodes}</ul>
-    </div>;
+    return <ul>{episodes.toArray()}</ul>;
   }
 });
 
 var show = Immutable.fromJS({
-  name: 'Soutpark',
   episodes: [ "Cartman Gets an Anal Probe", 'Weight Gain 400' ]
 });
 
-var render = (show) => React.render(React.createElement(Show, { show: show }), el);
-
+var render = show => React.render(React.createElement(Show, { show: show }), el);
 render(show);
 
-var updatedShow = show.updateIn(['episodes'], episodes => episodes.push('Volcano'));
+var updatedShow = show.updateIn(['episodes'],
+                                episodes => episodes.push('Volcano'));
 setTimeout(() => render(updatedShow), 1000);

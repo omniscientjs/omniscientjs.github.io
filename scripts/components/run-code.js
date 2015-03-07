@@ -99,7 +99,7 @@ const runCode = function () {
     const it = context.it.bind(context);
     it.only = context.it.only.bind(context);
 
-    fn(React, Immutable, Cursor, immstruct, omniscient.withDefaults(), omniscient,
+    fn(React, Immutable, Cursor, immstruct, omniscient, omniscient,
        resultEl,
        newSetTimeout, newSetInterval,
        chai, chai.expect, context.describe.bind(context), it, context.xdescribe.bind(context), context.xit.bind(context)

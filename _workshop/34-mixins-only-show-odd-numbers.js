@@ -4,7 +4,7 @@ collection: workshop
 title: Mixins - only show odd numbers
 section: 3
 name: 34-mixins-only-show-odd-numbers
-next: 35-
+next: 35-mixins-immutable-js-should-component-update
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 

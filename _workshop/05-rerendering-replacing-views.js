@@ -40,6 +40,7 @@ setTimeout(function () {
 
 // Tests should turn green
 describe('workshop part 1', function () {
+
   it('should have class named List', function () {
     expect(React.isValidClass(List)).to.equal(true,
       'List must be a valid React class');

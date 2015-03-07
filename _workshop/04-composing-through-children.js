@@ -50,6 +50,7 @@ React.render(<App list={list} />, el);
 
 // Tests should turn green
 describe('workshop part 1', function () {
+
   it('should have class named App, List and Item', function () {
     expect(React.isValidClass(App)).to.equal(true,
       'App must be a valid React class');

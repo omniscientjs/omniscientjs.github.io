@@ -8,7 +8,7 @@ next: 22-immutable-js
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 
-it('sums numbers recursively', () => {
+it('sums numbers recursively', function () {
  sum([1, 2, 3, 4], 0).should.equal(10);
 });
 

@@ -14,26 +14,26 @@ var map = Map({ message: "Look behind you, a Three-Headed Monkey!" });
 
 var message = Cursor.from(map, 'message');
 
-it('creates a cursor from the message', () => {
+it('creates a cursor from the message', function () {
   message.deref().should.equal(
     "Look behind you, a Three-Headed Monkey!");
 });
 
 
-it('updates the value of the cursor', () => {
+it('updates the value of the cursor', function () {
   var updatedMessage = message.update(v => "The ships hung in the sky in much the same way that bricks don't.");
   updatedMessage.deref().should.equal(
     "The ships hung in the sky in much the same way that bricks don't.");
 });
 
 
-it('should not modify the original cursor', () => {
+it('should not modify the original cursor', function () {
   message.deref().should.equal(
     "Look behind you, a Three-Headed Monkey!");
 });
 
 
-it('calls the callback when a cursor is changed', (done) => {
+it('calls the callback when a cursor is changed', function (done) {
   var data = Map({ meaningOfLife: 43 });
 
   var changeHandler = function (newValue, oldValue, path) {
@@ -46,7 +46,7 @@ it('calls the callback when a cursor is changed', (done) => {
 });
 
 
-it('creates a cursor and an accompanying function that when called will always return the most recent value of the cursor', () => {
+it('creates a cursor and an accompanying function that when called will always return the most recent value of the cursor', function () {
   var createUpdatedCursor = function (data) {
     var cursor;
     cursor = Cursor.from(data, function changeHandler (newData, oldData) {

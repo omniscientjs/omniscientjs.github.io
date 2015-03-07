@@ -46,9 +46,7 @@ var show = Immutable.fromJS({
   episodes: [ "Cartman Gets an Anal Probe", 'Weight Gain 400' ]
 });
 
-var render = show => React.render(React.createElement(Show, { show: show }), el);
-render(show);
+React.render(<Show show={show} />, el);
 
-var updatedShow = show.updateIn(['episodes'],
-                                episodes => episodes.push('Volcano'));
-setTimeout(() => render(updatedShow), 1000);
+var updatedShow = show.updateIn(['episodes'], episodes => episodes.push('Volcano'));
+setTimeout(() => React.render(<Show show={updatedShow} />, el), 1000);

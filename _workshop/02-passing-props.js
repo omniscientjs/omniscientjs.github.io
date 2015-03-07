@@ -28,6 +28,7 @@ React.render(<Hello name="React" />, el);
 
 // Tests should turn green
 describe('workshop part 1', function () {
+
   it('should have class named Hello', function () {
     expect(React.isValidClass(Hello)).to.equal(true,
       'Hello must be a valid React class');

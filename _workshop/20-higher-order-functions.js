@@ -61,7 +61,7 @@ function asName (obj) {
 function nth (list, i) {
   return list[i];
 }
-it('maps episodes => name', () => {
+it('maps episodes => name', function () {
   nth(episodes.map(asName), 0).should.equal("Cartman Gets an Anal Probe");
   nth(episodes.map(asName), 1).should.equal("Weight Gain 4000");
 });

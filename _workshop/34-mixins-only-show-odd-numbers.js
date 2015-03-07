@@ -38,5 +38,5 @@ var OddNumbers = React.createClass({
 
 var n = 0;
 setInterval(function () {
-  React.render(React.createElement(Numbers, { number: n++ }), el);
+  React.render(<Numbers number={n++} />, el);
 }, 1000);

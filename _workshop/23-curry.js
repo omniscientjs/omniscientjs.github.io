@@ -34,7 +34,7 @@ var add = curry(function (a, b, c) {
   return a + b + c;
 });
 
-it('curries add', () => {
+it('curries add', function () {
   var add2 = add(2);
   var add4 = add2(2);
 
@@ -55,7 +55,7 @@ var times = curry(function (a, b, c) {
   return a * b * c;
 });
 
-it('curries times', () => {
+it('curries times', function () {
   var times2 = times(2);
   var times4 = times2(2);
 

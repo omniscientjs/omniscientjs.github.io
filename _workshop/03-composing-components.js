@@ -36,6 +36,7 @@ React.render(<WelcomeBox name="The Doctor" />, el);
 
 // Tests should turn green
 describe('workshop part 1', function () {
+
   it('should have class named User and WelcomeBox', function () {
     expect(React.isValidClass(User)).to.equal(true,
       'User must be a valid React class');

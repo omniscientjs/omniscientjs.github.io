@@ -8,27 +8,34 @@ next: 36
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 
-var component = omniscient.withDefaults({
-  jsx: true
-});
-
+var component = omniscient.withDefaults({ jsx: true });
 
 var focusOnRenderMixin = {
+  // create the componentDidMount life cycle method and
+  // select the current dom node to put the mouse cursor inside it
   componentDidMount: function () {
     this.getDOMNode().select();
   }
 };
 
-
-// Auto-focusable component.
+// create a FocusingInput component that makes use of the focusOnRenderMixin
 var FocusingInput = component(focusOnRenderMixin, function ({inputCursor}) {
-  var onChange = (e) => inputCursor.set('text', e.currentTarget.value);
+  var onChange = (e) => {
+    // set the 'text' of the inputCursor to the value of the input from the event
+    inputCursor.set('text', e.currentTarget.value);
+  };
+
+  // create an input element that listens for change as you type
+  // and that shows the 'text' of the inputCursor
   return <input onChange={onChange} value={inputCursor.get('text')} />;
 });
 
 var App = component(({inputCursor}) => (
   <div>
+    // show the 'text' of the inputCursor
     <h1>Input: {inputCursor.get('text')}</h1>
+
+    // render a FocusingInput passing the inputCursor as its prop
     <FocusingInput inputCursor={inputCursor} />
   </div>
 ));

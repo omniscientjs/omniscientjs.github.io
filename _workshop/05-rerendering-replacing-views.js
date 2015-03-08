@@ -10,9 +10,7 @@ slides: http://omniscientjs.github.io/workshop-talk
 
 var list = [
   { text: 'React' },
-  { text: 'Omniscient' },
-  { text: 'Virtual-DOM' },
-  { text: 'Immutable.js' }
+  { text: 'Virtual DOM' }
 ];
 
 // 1)
@@ -20,7 +18,8 @@ var List = React.createClass({
   render: function () {
     return (
       <ul>
-        {this.props.list.map(i => <li>{i.text}</li>)}
+        <li>{this.props.list[0]}</li>
+        <li>{this.props.list[1]}</li>
       </ul>
     );
   }
@@ -29,11 +28,8 @@ var List = React.createClass({
 // 2) Render on el
 React.render(<List list={list} />, el);
 
-list = [
-  { text: 'Omniscient' }
-];
-
 setTimeout(function () {
+  list[1].text = 'Immutable.js';
   React.render(<List list={list} />, el);
 }, 1000);
 
@@ -57,15 +53,15 @@ describe('workshop part 1', function () {
   it('should have rendered components to DOM and change over time', function (done) {
     var html = el.innerText;
     expect(html).to.contain('React');
-    expect(html).to.contain('Omniscient');
-    expect(html).to.contain('Virtual-DOM');
+    expect(html).to.contain('Virtual DOM');
 
     // Ugly hack :(
     setTimeout(function () {
       html = el.innerText;
-      expect(html).not.to.contain('React');
-      expect(html).to.contain('Omniscient');
+      expect(html).to.contain('Immutable.js');
       done();
     }, 1050);
   });
 });
+
+

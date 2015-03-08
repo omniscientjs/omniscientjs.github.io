@@ -3,6 +3,7 @@ var webpack = require('webpack');
 module.exports = function (options) {
   return {
     plugins: options.watch ? [] : [ new webpack.optimize.UglifyJsPlugin() ],
+    watch: options.watch,
     module: {
       loaders: [
         {

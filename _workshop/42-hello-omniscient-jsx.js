@@ -8,23 +8,21 @@ next: 36
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 
-// 1) Make local component creator that defaults
+// make local component creator that defaults
 // to jsx by using omniscient.withDefaults().
-var component = omniscient.withDefaults({
-  jsx: true
-});
+var component = omniscient.withDefaults({ jsx: true });
 
-// 2) Make Omniscient Component named "Hello"
-// This component should show "Hello, World!" if no
-// "name" on props, if else it should show "Hello, «Name»!",
+// make an omniscient component named Hello
+// the component should show "Hello, World!" if no name is given on props,
+// otherwise it should show "Hello, «Name»!",
 // where name is the name passed as prop
 var Hello = component(function (props) {
   var name = props.name || 'World';
   return <h1>Hello, {name}!</h1>;
 });
 
-// 3) Render on el
-// Render component with name "React"
+// render the Hello component to the `el` element
+// with a prop name set to "React"
 React.render(<Hello name='React' />, el);
 
 

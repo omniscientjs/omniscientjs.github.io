@@ -22,8 +22,7 @@ var data = {
 };
 
 // create an Item component to render the item it is passed as a prop,
-// completed items should be striked through by setting the style of the
-// <li> that is returned
+// completed items should be striked through by setting the style of the <li> that is returned
 // the contents of the li should be the text of each item
 var Item = component('Item', function ({item}) {
   var style = {

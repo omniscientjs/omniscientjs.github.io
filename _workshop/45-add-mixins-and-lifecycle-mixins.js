@@ -20,8 +20,10 @@ var focusOnRenderMixin = {
 
 // create a FocusingInput component that makes use of the focusOnRenderMixin
 var FocusingInput = component(focusOnRenderMixin, function ({inputCursor}) {
+
+  // create an onChange function that will set the 'text' of the inputCursor
+  // to the value of the input from the event
   var onChange = (e) => {
-    // set the 'text' of the inputCursor to the value of the input from the event
     inputCursor.set('text', e.currentTarget.value);
   };
 

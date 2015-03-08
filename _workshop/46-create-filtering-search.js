@@ -25,10 +25,11 @@ var SearchBox = component('SearchBox', function ({search}) {
   </div>;
 });
 
+// complete the Match component
+// render an anchor with the url of the library as the href attribute
+// and the title of the library as the content of the anchor tag
 var Match = component('Match', function ({lib}) {
   return <li>
-    // render an anchor with the url of the library as the href attribute
-    // and the title of the library as the content of the anchor tag
     <a href={lib.get('url')}>
       {lib.get('title')}
     </a>

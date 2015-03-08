@@ -42,6 +42,7 @@ var App = React.createClass({
         <Item text={this.props.list[0]} />
         <Item text={this.props.list[1]} />
         <Item text={this.props.list[2]} />
+        <Item text={this.props.list[3]} />
       </List>
     );
   }

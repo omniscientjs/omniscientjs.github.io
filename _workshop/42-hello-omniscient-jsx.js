@@ -18,7 +18,7 @@ var component = omniscient.withDefaults({
 // This component should show "Hello, World!" if no
 // "name" on props, if else it should show "Hello, «Name»!",
 // where name is the name passed as prop
-var Hello = component(function (props) {}
+var Hello = component(function (props) {
   var name = props.name || 'World';
   return <h1>Hello, {name}!</h1>;
 });

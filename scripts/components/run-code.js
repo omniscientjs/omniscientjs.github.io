@@ -93,7 +93,9 @@ const runCode = function () {
 
   try {
 
-    const compiledCode = to5.transform(src).code;
+    const srcWithoutComments = src.replace(/\s+?\/\/.*/g, '');
+
+    const compiledCode = to5.transform(srcWithoutComments).code;
 
     const fn = Function.apply(null, [
       'React', 'Immutable', 'Cursor', 'immstruct', 'component', 'omniscient',

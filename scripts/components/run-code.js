@@ -45,7 +45,7 @@ export default component(
   });
 
 const runCode = function () {
-  console.clear();
+  // console.clear();
 
   const { source, statics } = this.props;
 

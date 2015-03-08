@@ -39,7 +39,9 @@ var App = React.createClass({
   render: function () {
     return (
       <List>
-        {this.props.list.map(i => <Item text={i.text} />)}
+        <Item text={this.props.list[0]} />
+        <Item text={this.props.list[1]} />
+        <Item text={this.props.list[2]} />
       </List>
     );
   }
@@ -75,3 +77,4 @@ describe('workshop part 1', function () {
     expect(html).to.contain('Virtual-DOM');
   });
 });
+

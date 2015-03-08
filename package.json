@@ -26,7 +26,7 @@
     "less": "^2.4.0",
     "less-loader": "^2.0.0",
     "mocha": "^2.1.0",
-    "omniscient": "git://github.com/omniscientjs/omniscient",
+    "omniscient": "^3.1.0",
     "react": "^0.12.2",
     "style-loader": "^0.8.3",
     "vinyl-named": "^1.1.0",

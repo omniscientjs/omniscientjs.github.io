@@ -4,7 +4,7 @@ collection: workshop
 title: Composing Components Through Children
 section: 1
 name: 04-composing-through-children
-next: 05-rerendering-replacing-views
+next: 06-render-two-times
 prev: 03-composing-components
 slides: http://omniscientjs.github.io/workshop-talk
 ---

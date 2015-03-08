@@ -4,7 +4,8 @@ collection: workshop
 title: Render two times and see that only the second will be visible
 section: 1
 name: 06-render-two-times
-prev: 05-rerendering-replacing-views
+prev: 04-composing-through-children
+next: 07-render-twice-using-settimeout
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 

@@ -5,6 +5,7 @@ title: Render a clock using setInterval
 section: 1
 name: 08-render-a-clock-using-setinterval
 prev: 07-render-twice-using-settimeout
+next: 20-higher-order-functions
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 

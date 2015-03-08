@@ -16,7 +16,8 @@ var adder = function (add) {
 
 var add2 = adder(2);
 it('adds 2 to number', () => {
-  add2(4).should.equal(6);
+  var result = add2(4);
+  result.should.equal(6);
 });
 
 
@@ -25,7 +26,8 @@ var square = function (n) {
   return n * n;
 };
 it('squares numbers', () => {
-  list.map(square).should.eql([1, 4, 9])
+  var result = list.map(square);
+  result.should.eql([1, 4, 9])
 });
 
 
@@ -34,7 +36,8 @@ var isFizzOrBuzz = function (n) {
   return n % 5 == 0 || n % 3 == 0;
 };
 it('keeps fizzbuzz numbers', () => {
-  numbers.filter(isFizzOrBuzz).should.eql([3, 5, 6, 9, 10])
+  var result = numbers.filter(isFizzOrBuzz);
+  result.filter(isFizzOrBuzz).should.eql([3, 5, 6, 9, 10])
 });
 
 
@@ -42,7 +45,8 @@ var multiply = function (acc, n) {
   return acc * n;
 }
 it('multiplies numbers', () => {
-  numbers.reduce(multiply, 1).should.equal(3628800);
+  var result = numbers.reduce(multiply, 1);
+  result.should.equal(3628800);
 });
 
 
@@ -62,6 +66,8 @@ function nth (list, i) {
   return list[i];
 }
 it('maps episodes => name', function () {
-  nth(episodes.map(asName), 0).should.equal("Cartman Gets an Anal Probe");
-  nth(episodes.map(asName), 1).should.equal("Weight Gain 4000");
+  var resultOne = nth(episodes.map(asName), 0);
+  var resultTwo = nth(episodes.map(asName), 1);
+  resultOne.should.equal("Cartman Gets an Anal Probe");
+  resultTwo.should.equal("Weight Gain 4000");
 });

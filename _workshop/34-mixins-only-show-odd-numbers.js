@@ -8,7 +8,7 @@ next: 35-mixins-immutable-js-should-component-update
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 
-var OnlyShowOddNumbers = {
+var onlyShowOddNumbers = {
   shouldComponentUpdate: function (nextProps) {
     return nextProps.number % 2 !== 0;
   }
@@ -30,7 +30,7 @@ var AllNumbers = React.createClass({
 });
 
 var OddNumbers = React.createClass({
-  mixins: [OnlyShowOddNumbers],
+  mixins: [onlyShowOddNumbers],
   render: function () {
     return <div>{this.props.number}</div>;
   }

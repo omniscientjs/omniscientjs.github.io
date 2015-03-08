@@ -10,7 +10,7 @@ slides: http://omniscientjs.github.io/workshop-talk
 
 var { Range, List, Map } = Immutable;
 
-var ImmutableMixin = {
+var immutableMixin = {
 
   shouldComponentUpdate: function (nextProps) {
     var hasChanged = (value, key) => {
@@ -25,14 +25,14 @@ var ImmutableMixin = {
 };
 
 var Episode = React.createClass({
-  mixins: [ImmutableMixin],
+  mixins: [immutableMixin],
   render: function () {
     return <li>{this.props.name}</li>;
   }
 });
 
 var Show = React.createClass({
-  mixins: [ImmutableMixin],
+  mixins: [immutableMixin],
   render: function () {
     var episodes = this.props.show.get('episodes').map(function (name) {
       return <Episode key={name} name={name} />

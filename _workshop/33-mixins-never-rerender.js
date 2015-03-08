@@ -8,14 +8,14 @@ next: 34-mixins-only-show-odd-numbers
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 
-var NeverRerender = {
+var neverRerender = {
   shouldComponentUpdate: function () {
     return false;
   }
 };
 
 var Boring = React.createClass({
-  mixins: [NeverRerender],
+  mixins: [neverRerender],
   render: function () {
     return <span>{this.props.name}</span>;
   }

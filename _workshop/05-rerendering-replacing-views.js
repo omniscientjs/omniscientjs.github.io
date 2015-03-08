@@ -13,7 +13,10 @@ var list = [
   { text: 'Virtual DOM' }
 ];
 
-// 1)
+
+// make an React Class named List
+// The component should show an <ul> with two <li>'s as children.
+// The children should get passed list-items passed as child (e.g. `this.props.list[0]`)
 var List = React.createClass({
   render: function () {
     return (
@@ -25,16 +28,37 @@ var List = React.createClass({
   }
 });
 
-// 2) Render on el
+
+// render the List component to the `el` element
+// with a prop list set to the list defined above
 React.render(<List list={list} />, el);
 
+
+// Do a setTimeout with 1 second timer which changes the
+// first list item text to 'Immutable.js' instead of React.
+// Then re-render the list with the new input.
 setTimeout(function () {
   list[1].text = 'Immutable.js';
   React.render(<List list={list} />, el);
 }, 1000);
 
 
-// Tests should turn green
+
+
+
+
+
+
+
+
+
+
+/*  Tests are below here, for guiding you  */
+
+
+
+
+
 describe('workshop part 1', function () {
 
   it('should have class named List', function () {

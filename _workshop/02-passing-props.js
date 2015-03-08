@@ -9,12 +9,10 @@ next: 02-2-passing-props
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 
-// In this exercise you can use JSX
 
-// 1) Make React Class named "Hello"
-// This component should show "Hello, World!" if no
-// "name" on props, if else it should show "Hello, «Name»!",
-// where name is the name passed as prop
+// make an React Class named Hello
+// the component should show "Hello, World!" if no name is given on props,
+// otherwise it should show "Hello, «Name»!",
 var Hello = React.createClass({
   render: function () {
     var name = this.props.name || 'World';
@@ -22,11 +20,26 @@ var Hello = React.createClass({
   }
 });
 
-// 2) Render on el
-// Render component with name "React"
+// render the Hello component to the `el` element
+// with a prop name set to "React"
 React.render(<Hello name="React" />, el);
 
-// Tests should turn green
+
+
+
+
+
+
+
+
+
+/*  Tests are below here, for guiding you  */
+
+
+
+
+
+
 describe('workshop part 1', function () {
 
   it('should have class named Hello', function () {

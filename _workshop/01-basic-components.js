@@ -10,18 +10,35 @@ slides: http://omniscientjs.github.io/workshop-talk
 
 // In this exercise you can use JSX
 
-// 1) Make React Class named "HelloWorld"
-// with a h1 containing "Hello, World!"
+// make an React Class named Hello
+// the component should show a h1 with "Hello, World!"
 var HelloWorld = React.createClass({
   render: function () {
     return <h1>Hello, World!</h1>;
   }
 });
 
-// 2) Render on el
+// render the Hello component to the `el` element
+// with a prop name set to "React"
 React.render(<HelloWorld />, el);
 
-// Tests should turn green
+
+
+
+
+
+
+
+
+/*  Tests are below here, for guiding you  */
+
+
+
+
+
+
+
+
 describe('workshop part 1', function () {
 
   it('should have class named HelloWorld', function () {

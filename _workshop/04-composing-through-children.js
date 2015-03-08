@@ -16,14 +16,16 @@ var list = [
   { text: 'Immutable.js' }
 ];
 
-// 1)
+// make an React Class named Item
+// the component should show a <li> with the text passed as props as child
 var Item = React.createClass({
   render: function () {
     return <li>{this.props.text}</li>;
   }
 });
 
-// 2)
+// make an React Class named List
+// the component should show a <ul> with children passed as props
 var List = React.createClass({
   render: function () {
     return (
@@ -34,7 +36,9 @@ var List = React.createClass({
   }
 });
 
-// 3)
+// make an React Class named App
+// The component should show A <List> with four <Items> as children.
+// The children should get passed list-items passed as props (e.g. `this.props.list[0]`)
 var App = React.createClass({
   render: function () {
     return (
@@ -48,10 +52,27 @@ var App = React.createClass({
   }
 });
 
-// 4) Render on el
+
+// render the App component to the `el` element
+// with a prop list set to the list defined above
 React.render(<App list={list} />, el);
 
-// Tests should turn green
+
+
+
+
+
+
+
+
+
+
+/*  Tests are below here, for guiding you  */
+
+
+
+
+
 describe('workshop part 1', function () {
 
   it('should have class named App, List and Item', function () {

@@ -1,9 +1,9 @@
 ---
 layout: workshop
 collection: workshop
-title: Create search
+title: Create filtering search
 section: 3
-name: 46-create-search
+name: 46-create-filtering-search
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 
@@ -12,17 +12,23 @@ component.debug();
 
 var SearchBox = component('SearchBox', function ({search}) {
   function onChange (e) {
-    search.update('search', function (currentSearch) {
+    // use the search cursor to update the value of 'query' inside the structure
+    // to the value of the input from the event
+    search.update('query', function (currentSearch) {
       return e.currentTarget.value;
     });
   }
   return <div>
-    <input placeholder="Search.." value={search.get('search')} onChange={onChange} />
+    // create an input with the value of 'query' from the cursor
+    // attach a listener to onChange that will update the query as you type
+    <input placeholder="Search.." value={search.get('query')} onChange={onChange} />
   </div>;
 });
 
 var Match = component('Match', function ({lib}) {
   return <li>
+    // render an anchor with the url of the library as the href attribute
+    // and the title of the library as the content of the anchor tag
     <a href={lib.get('url')}>
       {lib.get('title')}
     </a>
@@ -30,12 +36,17 @@ var Match = component('Match', function ({lib}) {
 });
 
 var Matches = component('Matches', function ({search}) {
-  var q = search.get('search');
-  var libs = search.get('libs');
+  var q = search.get('query'),
+      libs = search.get('libs');
+
+  // filter libs to only keep the libs whose title matches the query (hint: use indexOf())
   var matches = libs.filter(function (lib) {
     return lib.get('title').indexOf(q) !== -1 || lib.get('url').indexOf(q) !== -1;
   });
+
   return <ul>
+    // map over matches.toArray() to render one Match component per library
+    // passing a prop lib to the component
     {matches.toArray().map(function (lib) {
       return <Match key={lib.get('title')} lib={lib} />;
     })}
@@ -44,13 +55,16 @@ var Matches = component('Matches', function ({search}) {
 
 var Search = component('Search', function ({search}) {
   return <div>
+    // render a SearchBox component passing the search as a prop to the component
     <SearchBox search={search} />
+
+    // render a Matches component passing the search as a prop to the compomnent
     <Matches search={search} />
   </div>;
 });
 
 var structure = immstruct({
-  search: "",
+  query: "",
   libs: [
     { title: "Backbone.js", url: "http://documentcloud.github.io/backbone/" },
     { title: "AngularJS", url: "https://angularjs.org/" },

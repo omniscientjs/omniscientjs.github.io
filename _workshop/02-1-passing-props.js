@@ -3,7 +3,7 @@ layout: workshop
 collection: workshop
 title: Passing Properties
 section: 1
-name: 02-passing-props
+name: 02-1-passing-props
 prev: 01-basic-components
 next: 02-2-passing-props
 slides: http://omniscientjs.github.io/workshop-talk

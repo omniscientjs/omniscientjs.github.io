@@ -4,7 +4,8 @@ collection: workshop
 title: Mixins - immutable.js shouldComponentUpdate
 section: 3
 name: 35-mixins-immutable-js-should-component-update
-next: 36
+next: 40-omniscients-shouldComponentUpdate-in-react
+prev: 34-mixins-only-show-odd-numbers
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 

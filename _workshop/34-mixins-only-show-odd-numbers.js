@@ -5,6 +5,7 @@ title: Mixins - only show odd numbers
 section: 3
 name: 34-mixins-only-show-odd-numbers
 next: 35-mixins-immutable-js-should-component-update
+prev: 33-mixins-never-rerender
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 

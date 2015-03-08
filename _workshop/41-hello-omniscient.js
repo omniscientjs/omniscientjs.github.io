@@ -4,7 +4,8 @@ collection: workshop
 title: Hello Omniscient
 section: 3
 name: 41-hello-omniscient
-next: 36
+next: 42-hello-omniscient-jsx
+prev: 40-omniscients-shouldComponentUpdate-in-react
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 

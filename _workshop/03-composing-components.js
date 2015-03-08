@@ -4,7 +4,7 @@ collection: workshop
 title: Composing Simple Components
 section: 1
 name: 03-composing-components
-prev: 02-passing-props
+prev: 02-2-passing-props
 next: 04-composing-through-children
 slides: http://omniscientjs.github.io/workshop-talk
 ---

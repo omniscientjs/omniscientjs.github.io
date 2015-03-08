@@ -4,7 +4,7 @@ collection: workshop
 title: Transforming input props
 section: 1
 name: 02-2-passing-props
-prev: 02-passing-props
+prev: 02-1-passing-props
 next: 03-composing-components
 slides: http://omniscientjs.github.io/workshop-talk
 ---

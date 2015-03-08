@@ -5,6 +5,7 @@ title: Immutable.js
 section: 2
 name: 22-immutable-js
 next: 23-curry
+prev: 21-recursive-sum
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 

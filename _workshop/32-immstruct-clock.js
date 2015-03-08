@@ -5,6 +5,7 @@ title: Immstruct - clock
 section: 3
 name: 32-immstruct-clock
 next: 33-mixins-never-rerender
+prev: 31-immstruct-counter
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 

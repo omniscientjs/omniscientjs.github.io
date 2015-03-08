@@ -4,7 +4,8 @@ collection: workshop
 title: Add Mixins and Life Cycle Mixins
 section: 3
 name: 45-add-mixins-and-lifecycle-mixins
-next: 36
+next: 46-create-filtering-search
+prev: 44-omniscient-todo-app-with-cursors
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 

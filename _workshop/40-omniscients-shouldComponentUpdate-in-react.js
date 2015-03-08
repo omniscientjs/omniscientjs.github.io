@@ -4,7 +4,8 @@ collection: workshop
 title: Omniscients shouldComponentUpdate in React
 section: 3
 name: 40-omniscients-shouldComponentUpdate-in-react
-next: 36
+next: 41-hello-omniscient
+prev: 35-mixins-immutable-js-should-component-update
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 

@@ -5,6 +5,7 @@ title: Cursors
 section: 2
 name: 24-cursors
 next: 30-immstruct-hello-hank
+prev: 23-curry
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 

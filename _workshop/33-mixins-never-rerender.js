@@ -5,6 +5,7 @@ title: Mixins - never rerender
 section: 3
 name: 33-mixins-never-rerender
 next: 34-mixins-only-show-odd-numbers
+prev: 32-immstruct-clock
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 

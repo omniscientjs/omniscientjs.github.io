@@ -5,6 +5,7 @@ title: Higher order functions
 section: 2
 name: 20-higher-order-functions
 next: 21-recursive-sum
+prev: 08-render-a-clock-using-setinterval
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 

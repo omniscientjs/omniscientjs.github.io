@@ -4,6 +4,7 @@ collection: workshop
 title: Create filtering search
 section: 3
 name: 46-create-filtering-search
+prev: 45-add-mixins-and-lifecycle-mixins
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 

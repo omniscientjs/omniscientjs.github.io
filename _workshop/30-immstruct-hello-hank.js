@@ -4,7 +4,8 @@ collection: workshop
 title: Immstruct - Hello, Hank
 section: 3
 name: 30-immstruct-hello-hank
-next: 31-
+next: 31-immstruct-counter
+prev: 24-cursors
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 

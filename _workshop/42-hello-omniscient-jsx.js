@@ -4,7 +4,8 @@ collection: workshop
 title: Hello Omniscient JSX
 section: 3
 name: 42-hello-omniscient-jsx
-next: 36
+next: 43-composing-omniscient-components
+prev: 41-hello-omniscient
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 

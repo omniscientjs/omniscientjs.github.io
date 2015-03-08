@@ -4,7 +4,7 @@ collection: workshop
 title: Making Basic Components
 section: 1
 name: 01-basic-components
-next: 02-passing-props
+next: 02-1-passing-props
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 

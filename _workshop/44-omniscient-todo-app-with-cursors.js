@@ -4,7 +4,8 @@ collection: workshop
 title: Make a simple TODO app With Cursors
 section: 3
 name: 44-omniscient-todo-app-with-cursors
-next: 36
+next: 45-add-mixins-and-lifecycle-mixins
+prev: 43-composing-omniscient-components
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 

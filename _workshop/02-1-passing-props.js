@@ -10,7 +10,7 @@ slides: http://omniscientjs.github.io/workshop-talk
 ---
 
 
-// make an React Class named Hello
+// 1) Make a React Class named Hello
 // the component should show "Hello, World!" if no name is given on props,
 // otherwise it should show "Hello, «Name»!",
 var Hello = React.createClass({
@@ -20,7 +20,7 @@ var Hello = React.createClass({
   }
 });
 
-// render the Hello component to the `el` element
+// 2) Render the Hello component to the `el` element
 // with a prop name set to "React"
 React.render(<Hello name="React" />, el);
 
@@ -29,16 +29,7 @@ React.render(<Hello name="React" />, el);
 
 
 
-
-
-
-
-/*  Tests are below here, for guiding you  */
-
-
-
-
-
+// Tests are below here, for guiding you
 
 describe('workshop part 1', function () {
 

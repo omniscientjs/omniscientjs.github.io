@@ -22,9 +22,9 @@ var data = {
   ]
 };
 
-// create an Item component to render the item it is passed as a prop,
-// completed items should be striked through by setting the style of the <li> that is returned
-// the contents of the li should be the text of each item
+// Create an Item component to render the item it is passed as a prop,
+// completed items should be striked through by setting the style of the <li> that is returned.
+// The contents of the li should be the text of each item
 var Item = component('Item', function ({item}) {
   var style = {
     textDecoration: item.checked ? 'line-through' : 'none',
@@ -38,7 +38,7 @@ var List = component('List', ({items}) =>
   <div>
     <h1>Heroes used in slides</h1>
     <ul>
-      // map over items and render an Item component for each
+      // Map over items and render an Item component for each
       // passing a key and an item prop to the component
       {items.map((item, i) =>
         <Item key={item.text} item={item} />
@@ -48,4 +48,3 @@ var List = component('List', ({items}) =>
 
 
 React.render(List(data), el);
-

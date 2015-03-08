@@ -10,7 +10,7 @@ slides: http://omniscientjs.github.io/workshop-talk
 
 // In this exercise you can use JSX
 
-// make an React Class named Hello
+// 1) Make a React Class named Hello
 // the component should show a h1 with "Hello, World!"
 var HelloWorld = React.createClass({
   render: function () {
@@ -18,7 +18,7 @@ var HelloWorld = React.createClass({
   }
 });
 
-// render the Hello component to the `el` element
+// 2) Render the Hello component to the `el` element
 // with a prop name set to "React"
 React.render(<HelloWorld />, el);
 
@@ -28,16 +28,7 @@ React.render(<HelloWorld />, el);
 
 
 
-
-
-/*  Tests are below here, for guiding you  */
-
-
-
-
-
-
-
+// Tests are below here, for guiding you
 
 describe('workshop part 1', function () {
 

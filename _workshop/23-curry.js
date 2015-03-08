@@ -11,7 +11,7 @@ slides: http://omniscientjs.github.io/workshop-talk
 
 // Advanced Task: Making curry
 
-// make function curry which takes a function and returns curried functions.
+// Make function curry which takes a function and returns curried functions.
 // E.g.
 //    var add = function (a, b) { return a + b };
 //    var addCurried = curry(add);
@@ -39,7 +39,9 @@ var curry = function (fn) {
   }
 };
 
-// Tests below here. Testing your implementation of curry()
+
+
+// Tests are below here, for guiding you
 
 var add = curry(function (a, b, c) {
   return a + b + c;

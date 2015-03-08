@@ -9,6 +9,11 @@ prev: 30-immstruct-hello-hank
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 
+
+// Create a Counter component
+// The component should render a button that when clicked
+// will increate the value of the `counter` cursor it is passed
+// This should make the component rerender
 var Counter  = React.createClass({
 
   render: function () {
@@ -21,6 +26,11 @@ var Counter  = React.createClass({
 
 var data = immstruct({ counter: 0 });
 
+// Render the Counter component with a prop `counter` with a cursor
+// of the `counter` property in data
 var render = () => React.render(<Counter counter={data.cursor('counter')} />, el);
-data.on('swap', () => render());
+
 render();
+
+// When data changes, rerender
+data.on('swap', render);

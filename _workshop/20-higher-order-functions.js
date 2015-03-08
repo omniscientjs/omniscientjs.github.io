@@ -11,9 +11,9 @@ slides: http://omniscientjs.github.io/workshop-talk
 
 // 1: Higher Order Functions
 
-// make a function "adder" which takes number argument.
+// Make a function "adder" which takes a number as an argument.
 // "adder" should return a function which takes another number as argument
-// the returned function should give result of adding both arguments
+// the returned function should give result of adding the two arguments
 // e.g. adder(2)(3) === 6
 var adder = function (add) {
   return function (x) {
@@ -21,10 +21,10 @@ var adder = function (add) {
   };
 };
 
-// make a "add2" from "adder" which can double any value
+// Make a "add2" from "adder" which can double any value
 var add2 = adder(2);
-it('adds 2 to number', () => {
-  // Use "add2" to add 2 * 4 and save to "result"
+it('adds 2 to numbers', () => {
+  // Use "add2" to add 2 + 4 and save to "result"
   var result = add2(4);
   result.should.equal(6);
 });

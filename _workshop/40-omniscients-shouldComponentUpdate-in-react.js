@@ -11,18 +11,28 @@ slides: http://omniscientjs.github.io/workshop-talk
 
 var { Range, List, Map } = Immutable;
 
+
+// Create the immutableMixin using  omniscient's shouldComponentUpdate
+// for your shouldComponentUpdate method
 var immutableMixin = {
   shouldComponentUpdate: omniscient.shouldComponentUpdate
 };
 
+// Enable debugging for the omniscient.shouldComponentUpdate mixin
+// and watch the debug output in the console.
+// Does all episodes render every time, or just the ones that
+// changed?
+
 var Episode = React.createClass({
   mixins: [immutableMixin],
+
   render: function () {
     return <li>{this.props.name}</li>;
   }
 });
 
 var Show = React.createClass({
+
   mixins: [immutableMixin],
   render: function () {
     var episodes = this.props.show.get('episodes').map(function (name) {

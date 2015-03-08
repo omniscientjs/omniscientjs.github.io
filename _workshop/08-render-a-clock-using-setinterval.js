@@ -9,7 +9,7 @@ next: 20-higher-order-functions
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 
-// make an React Class named Clock
+// Make a React Class named Clock
 // the component should show a p with time given on props
 var Clock = React.createClass({
   render: function () {
@@ -17,7 +17,7 @@ var Clock = React.createClass({
   }
 });
 
-// render the Clock component to the `el` element
+// Render the Clock component to the `el` element
 // with a prop time set to string of new Date
 React.render(<Clock time={new Date().toString()} />, el);
 
@@ -39,12 +39,8 @@ setInterval(function () {
 
 
 
-/*  Tests are below here, for guiding you  */
 
-
-
-
-
+// Tests are below here, for guiding you
 
 describe('workshop part 1', function () {
 

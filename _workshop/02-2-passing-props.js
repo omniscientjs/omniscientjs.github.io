@@ -11,10 +11,10 @@ slides: http://omniscientjs.github.io/workshop-talk
 
 // In this exercise you can use JSX
 
-// 1) Make React Class named "Hello"
-// This component should show "Hello, World!" if no
-// "name" on props, if else it should show "Hello, «Name»!",
-// where name is the name passed as prop
+// 1) Make a React Class named Hello
+// This component should show "Hello, WORLD!" if no
+// "name" on props, if else it should show "Hello, «NAME»!",
+// where name is the name passed as prop.
 function uppercase (str) {
   return str && str.toUpperCase();
 }
@@ -30,7 +30,13 @@ var Hello = React.createClass({
 // Render component with name "react"
 React.render(<Hello name="react" />, el);
 
+
+
+
+
+
 // Tests should turn green
+
 describe('workshop part 1', function () {
   it('should have class named Hello', function () {
     expect(React.isValidClass(Hello)).to.equal(true,

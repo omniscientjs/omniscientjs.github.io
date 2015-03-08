@@ -32,32 +32,27 @@ React.render(<Hello name='React' />, el);
 
 
 
-// TESTS
-
 // Tests should turn green
-describe('workshop part 1', function () {
+it('should have class named Hello', function () {
+  expect(React.isValidClass(Hello)).to.equal(true,
+    'Hello must be a valid React class');
+});
 
-  it('should have class named Hello', function () {
-    expect(React.isValidClass(Hello)).to.equal(true,
-      'Hello must be a valid React class');
-  });
+it('should have component Hello with name from props', function () {
+  var output = React.renderComponentToString(Hello({ name: 'Foo'}));
+  expect(output).to.contain('Hello,');
+  expect(output).to.contain('Foo');
+  expect(output).to.contain('<h1');
+});
 
-  it('should have component Hello with name from props', function () {
-    var output = React.renderComponentToString(Hello({ name: 'Foo'}));
-    expect(output).to.contain('Hello,');
-    expect(output).to.contain('Foo');
-    expect(output).to.contain('<h1');
-  });
+it('should have component Hello with default name World', function () {
+  var output = React.renderComponentToString(Hello());
+  expect(output).to.contain('Hello,');
+  expect(output).to.contain('World');
+  expect(output).to.contain('<h1');
+});
 
-  it('should have component Hello with default name World', function () {
-    var output = React.renderComponentToString(Hello());
-    expect(output).to.contain('Hello,');
-    expect(output).to.contain('World');
-    expect(output).to.contain('<h1');
-  });
-
-  it('should have rendered components to DOM', function () {
-    var html = el.innerText;
-    expect(html).to.contain('Hello, React!');
-  });
+it('should have rendered components to DOM', function () {
+  var html = el.innerText;
+  expect(html).to.contain('Hello, React!');
 });

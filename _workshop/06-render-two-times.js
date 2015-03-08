@@ -9,7 +9,7 @@ next: 07-render-twice-using-settimeout
 slides: http://omniscientjs.github.io/workshop-talk
 ---
 
-// make an React Class named Heading
+// Make a React Class named Heading
 // the component should show a h1 with name given on props
 var Heading = React.createClass({
   render: function () {
@@ -18,7 +18,7 @@ var Heading = React.createClass({
 });
 
 
-// render the Heading component to the `el` element
+// Render the Heading component to the `el` element
 // with a prop name set to "Janet van Dyne"
 React.render(<Heading name="Janet van Dyne" />, el);
 
@@ -36,12 +36,7 @@ React.render(<Heading name="Wasp" />, el);
 
 
 
-/*  Tests are below here, for guiding you  */
-
-
-
-
-
+// Tests are below here, for guiding you
 
 describe('workshop part 1', function () {
 

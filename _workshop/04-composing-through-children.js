@@ -16,7 +16,7 @@ var list = [
   { text: 'Immutable.js' }
 ];
 
-// make an React Class named Item
+// Make a React Class named Item
 // the component should show a <li> with the text passed as props as child
 var Item = React.createClass({
   render: function () {
@@ -24,7 +24,7 @@ var Item = React.createClass({
   }
 });
 
-// make an React Class named List
+// Make a React Class named List
 // the component should show a <ul> with children passed as props
 var List = React.createClass({
   render: function () {
@@ -36,7 +36,7 @@ var List = React.createClass({
   }
 });
 
-// make an React Class named App
+// Make a React Class named App
 // The component should show A <List> with four <Items> as children.
 // The children should get passed list-items passed as props (e.g. `this.props.list[0]`)
 var App = React.createClass({
@@ -53,7 +53,7 @@ var App = React.createClass({
 });
 
 
-// render the App component to the `el` element
+// Render the App component to the `el` element
 // with a prop list set to the list defined above
 React.render(<App list={list} />, el);
 

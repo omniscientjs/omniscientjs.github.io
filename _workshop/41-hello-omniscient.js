@@ -28,14 +28,6 @@ React.render(Hello({ name: 'React' }), el);
 
 
 
-
-
-
-
-
-
-
-
 // TESTS
 
 // Tests should turn green

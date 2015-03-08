@@ -32,15 +32,7 @@ React.render(<Hello name='React' />, el);
 
 
 
-
-
-
-
-
-
-
-
-/********** TESTS ************/
+// TESTS
 
 // Tests should turn green
 describe('workshop part 1', function () {

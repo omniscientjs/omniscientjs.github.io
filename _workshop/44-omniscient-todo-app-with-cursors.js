@@ -48,7 +48,7 @@ var List = component('List', ({items}) =>
   <form>
     <ul>
       {items.toArray().map((item, i) =>
-          <Item key={item.get('name')} item={item} />
+        <Item key={item.get('name')} item={item} />
       )}
     </ul>
   </form>);

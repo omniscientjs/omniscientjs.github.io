@@ -15,14 +15,10 @@ var SearchBox = component('SearchBox', function ({search}) {
   function onChange (e) {
     // Use the search cursor to update the value of 'query' inside the structure
     // to the value of the input from the event
-    search.update('query', function (currentSearch) {
-      return e.currentTarget.value;
-    });
   }
   return <div>
     // Create an input with the value of 'query' from the cursor
     // attach a listener to onChange that will update the query as you type
-    <input placeholder="Search.." value={search.get('query')} onChange={onChange} />
   </div>;
 });
 
@@ -30,11 +26,7 @@ var SearchBox = component('SearchBox', function ({search}) {
 // Render an anchor with the url of the library as the href attribute
 // and the title of the library as the content of the anchor tag
 var Match = component('Match', function ({lib}) {
-  return <li>
-    <a href={lib.get('url')}>
-      {lib.get('title')}
-    </a>
-  </li>;
+  return <li></li>;
 });
 
 var Matches = component('Matches', function ({search}) {
@@ -42,26 +34,21 @@ var Matches = component('Matches', function ({search}) {
       libs = search.get('libs');
 
   // Filter libs to only keep the libs whose title matches the query (hint: use indexOf())
-  var matches = libs.filter(function (lib) {
-    return lib.get('title').indexOf(q) !== -1 || lib.get('url').indexOf(q) !== -1;
-  });
+  var matches;
 
   return <ul>
     // Map over matches.toArray() to render one Match component per library
     // passing a prop lib to the component
-    {matches.toArray().map(function (lib) {
-      return <Match key={lib.get('title')} lib={lib} />;
-    })}
   </ul>;
 });
 
 var Search = component('Search', function ({search}) {
   return <div>
+    <h1>Search</h1>
     // Render a SearchBox component passing the search as a prop to the component
-    <SearchBox search={search} />
 
     // Render a Matches component passing the search as a prop to the compomnent
-    <Matches search={search} />
+
   </div>;
 });
 

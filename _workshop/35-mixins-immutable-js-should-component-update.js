@@ -25,41 +25,36 @@ var immutableMixin = {
     //
     // When your component receives a data that does not have an .equals()
     // method, compare the data using the === operator
-    var hasChanged = (value, key) => {
-      var arePropsEqual = (typeof value.equals === 'function')
-          ? value.equals(nextProps[key])
-          : value === nextProps[key];
-      console.log("shouldComponentUpdate: " + !arePropsEqual);
-      return !arePropsEqual;
-    };
-    return Map(this.props).some(hasChanged);
+
   }
 };
 
 var Episode = React.createClass({
   // Make use of the immutableMixin so your component only re-renders
   // when its data changes
-  mixins: [immutableMixin],
 
   render: function () {
     // Return an <li> with the name of each episode
-    return <li>{this.props.name}</li>;
+
   }
 });
 
 var Show = React.createClass({
   // Make use of the immutableMixin so your component only re-renders
   // when its data changes
-  mixins: [immutableMixin],
 
   render: function () {
     // Map over the show's episodes to create an Episode component
     // for each episode.
-    var episodes = this.props.show.get('episodes').map(function (name) {
-      return <Episode key={name} name={name} />
-    });
+    //
+    // var episodes = this.props.show.get('episodes').toArray().map(function (name) {
+    //
+    // });
 
-    return <ul>{episodes.toArray()}</ul>;
+    return <div>
+      <h1>Shows</h1>
+      <ul></ul>
+    </div>;
   }
 });
 

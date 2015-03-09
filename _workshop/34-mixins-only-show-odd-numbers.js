@@ -14,15 +14,15 @@ var onlyShowOddNumbers = {
   // it will only return true when the passed number
   // of the props is not divisible by two
   shouldComponentUpdate: function (nextProps) {
-    return nextProps.number % 2 !== 0;
+    return true;
   }
 };
 
 var Numbers = React.createClass({
   render: function () {
     return <div>
-      <AllNumbers number={this.props.number} />
-      <OddNumbers number={this.props.number} />
+      //<AllNumbers number={this.props.number} />
+      //<OddNumbers number={this.props.number} />
     </div>;
   }
 });
@@ -31,16 +31,15 @@ var Numbers = React.createClass({
 // render all numbers it gets passed on its props
 var AllNumbers = React.createClass({
   render: function () {
-    return <div>{this.props.number}</div>;
+
   }
 });
 
 // Implement the OddNumbers component. It should only
 // render odd numbers it gets passed on its props
 var OddNumbers = React.createClass({
-  mixins: [onlyShowOddNumbers],
   render: function () {
-    return <div>{this.props.number}</div>;
+
   }
 });
 

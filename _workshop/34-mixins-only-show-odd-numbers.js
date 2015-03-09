@@ -21,8 +21,10 @@ var onlyShowOddNumbers = {
 var Numbers = React.createClass({
   render: function () {
     return <div>
-      //<AllNumbers number={this.props.number} />
-      //<OddNumbers number={this.props.number} />
+      // Render AllNumbers
+
+      // Render OddNumbers
+
     </div>;
   }
 });

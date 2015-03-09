@@ -33,34 +33,25 @@ component.debug();
 // Implement an onChecked method that will update the checked property of the item cursor to complete tasks.
 // Completed items should be style with textDecoration 'line-through'.
 var Item = component('Item', function ({item}) {
-  var onChecked = () => item.update('checked', state => !state);
-  var style = {
-    textDecoration: item.get('checked') ? 'line-through' : 'none',
-  };
+
   return (
     <li>
       // Create a label with the correct styling.
       // The label should contain a checkbox that will complete the item when checked
       // and show the text of the item
-      <label style={style}>
-        <input type="checkbox"
-               onChange={onChecked}
-               checked={item.get('checked')} />
-         {item.get('text')}
-      </label>
+
     </li>
   );
 });
 
 var List = component('List', ({items}) =>
   <form>
+    <h1>Todos</h1>
     <ul>
       // Map over the items cursor to create an Item component.
       // For each of the items in the cursor, pass item as a prop
       // to the component
-      {items.toArray().map((item, i) =>
-        <Item key={item.get('name')} item={item} />
-      )}
+
     </ul>
   </form>);
 

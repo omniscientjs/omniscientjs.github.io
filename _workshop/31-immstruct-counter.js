@@ -13,6 +13,7 @@ slides: http://omniscientjs.github.io/workshop-slides/#57
 // Create a Counter component
 // The component should render a button that when clicked
 // will increate the value of the `counter` cursor it is passed
+// The component should show the number of clicks inside the button
 // This should make the component rerender
 var Counter;
 

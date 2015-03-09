@@ -6,7 +6,7 @@ section: 3
 name: 42-hello-omniscient-jsx
 next: 43-composing-omniscient-components
 prev: 41-hello-omniscient
-slides: http://omniscientjs.github.io/workshop-talk
+slides: http://omniscientjs.github.io/workshop-slides/#69
 ---
 
 // make local component creator that defaults

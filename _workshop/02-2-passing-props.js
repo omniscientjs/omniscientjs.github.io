@@ -6,7 +6,7 @@ section: 1
 name: 02-2-passing-props
 prev: 02-1-passing-props
 next: 03-composing-components
-slides: http://omniscientjs.github.io/workshop-talk
+slides: http://omniscientjs.github.io/workshop-slides/#10
 ---
 
 // In this exercise you can use JSX

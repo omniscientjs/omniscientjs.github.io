@@ -6,7 +6,7 @@ section: 2
 name: 24-cursors
 next: 30-immstruct-hello-hank
 prev: 23-curry
-slides: http://omniscientjs.github.io/workshop-talk
+slides: http://omniscientjs.github.io/workshop-slides/#54
 ---
 
 var { Map } = Immutable;
@@ -33,7 +33,7 @@ it('updates the value of the cursor', function () {
 
 
 it('should not modify the original cursor', function () {
-  // Write a test to make sure your previous update did not change the 
+  // Write a test to make sure your previous update did not change the
   // original message variable
   message.deref().should.equal(
     "Look behind you, a Three-Headed Monkey!");

@@ -6,7 +6,7 @@ section: 3
 name: 31-immstruct-counter
 next: 32-immstruct-clock
 prev: 30-immstruct-hello-hank
-slides: http://omniscientjs.github.io/workshop-talk
+slides: http://omniscientjs.github.io/workshop-slides/#57
 ---
 
 

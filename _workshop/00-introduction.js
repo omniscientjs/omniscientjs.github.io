@@ -7,7 +7,6 @@ section: 0
 start: true
 name: 00-introduction
 next: 01-basic-components
-slides: http://omniscientjs.github.io/workshop-talk
 ---
 
 // Creating components

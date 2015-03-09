@@ -6,7 +6,7 @@ section: 3
 name: 45-add-mixins-and-lifecycle-mixins
 next: 46-create-filtering-search
 prev: 44-omniscient-todo-app-with-cursors
-slides: http://omniscientjs.github.io/workshop-talk
+slides: http://omniscientjs.github.io/workshop-slides/#75
 ---
 
 var component = omniscient.withDefaults({ jsx: true });

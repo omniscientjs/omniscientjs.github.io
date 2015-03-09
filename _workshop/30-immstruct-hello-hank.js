@@ -6,14 +6,14 @@ section: 3
 name: 30-immstruct-hello-hank
 next: 31-immstruct-counter
 prev: 24-cursors
-slides: http://omniscientjs.github.io/workshop-talk
+slides: http://omniscientjs.github.io/workshop-slides/#57
 ---
 
 
 var data = immstruct({ name: 'World!' });
 
 // Create a Hello component that accepts a cursor for a name
-// and renders "Hello, <name>!" 
+// and renders "Hello, <name>!"
 var Hello = React.createClass({
   render: function () {
     return React.DOM.h1({}, 'Hello, ' + this.props.name.deref() + '!');

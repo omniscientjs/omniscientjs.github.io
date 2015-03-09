@@ -6,7 +6,7 @@ section: 3
 name: 32-immstruct-clock
 next: 33-mixins-never-rerender
 prev: 31-immstruct-counter
-slides: http://omniscientjs.github.io/workshop-talk
+slides: http://omniscientjs.github.io/workshop-slides/#57
 ---
 
 var data = immstruct({ time: new Date() });
@@ -22,7 +22,7 @@ var Clock = React.createClass({
 });
 
 // Create the render function. It should render the Clock component
-// passing a prop `time` with a cursor to `time` of the `data` structure 
+// passing a prop `time` with a cursor to `time` of the `data` structure
 var render = () => React.render(<Clock time={data.cursor('time')} />, el);
 render();
 

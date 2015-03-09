@@ -6,7 +6,7 @@ section: 3
 name: 43-composing-omniscient-components
 next: 44-omniscient-todo-app-with-cursors
 prev: 42-hello-omniscient-jsx
-slides: http://omniscientjs.github.io/workshop-talk
+slides: http://omniscientjs.github.io/workshop-slides/#72
 ---
 
 var component = omniscient.withDefaults({ jsx: true });

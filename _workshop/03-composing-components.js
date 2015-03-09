@@ -6,7 +6,7 @@ section: 1
 name: 03-composing-components
 prev: 02-2-passing-props
 next: 04-composing-through-children
-slides: http://omniscientjs.github.io/workshop-talk
+slides: http://omniscientjs.github.io/workshop-slides/#14
 ---
 
 // In this exercise you can use JSX

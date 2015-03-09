@@ -6,7 +6,7 @@ section: 1
 name: 06-render-two-times
 prev: 04-composing-through-children
 next: 07-render-twice-using-settimeout
-slides: http://omniscientjs.github.io/workshop-talk
+slides: http://omniscientjs.github.io/workshop-slides/#22
 ---
 
 // Make a React Class named Heading

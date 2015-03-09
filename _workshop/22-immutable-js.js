@@ -6,7 +6,7 @@ section: 2
 name: 22-immutable-js
 next: 23-curry
 prev: 21-recursive-sum
-slides: http://omniscientjs.github.io/workshop-talk
+slides: http://omniscientjs.github.io/workshop-slides/#43
 ---
 
 // ES6 Destructuring, get Range, Map and List from Immutable.js

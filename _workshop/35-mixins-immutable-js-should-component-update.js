@@ -6,7 +6,7 @@ section: 3
 name: 35-mixins-immutable-js-should-component-update
 next: 40-omniscients-shouldComponentUpdate-in-react
 prev: 34-mixins-only-show-odd-numbers
-slides: http://omniscientjs.github.io/workshop-talk
+slides: http://omniscientjs.github.io/workshop-slides/#61
 ---
 
 var { Range, List, Map } = Immutable;
@@ -19,7 +19,7 @@ var immutableMixin = {
     // if some data has changed. This method should return true only
     // when data has changed between this.props and nextProps
     //
-    // When your component receives a data-structure that has an .equals() 
+    // When your component receives a data-structure that has an .equals()
     // method (an immutable.js data structure), call it and use this to
     // decide wether to re-render or not
     //

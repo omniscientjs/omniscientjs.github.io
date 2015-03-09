@@ -6,7 +6,7 @@ section: 1
 name: 07-render-twice-using-settimeout
 prev: 06-render-two-times
 next: 08-render-a-clock-using-setinterval
-slides: http://omniscientjs.github.io/workshop-talk
+slides: http://omniscientjs.github.io/workshop-slides/#22
 ---
 
 // Make a React Class named Heading

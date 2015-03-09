@@ -6,7 +6,7 @@ section: 2
 name: 23-curry
 next: 24-cursors
 prev: 22-immutable-js
-slides: http://omniscientjs.github.io/workshop-talk
+slides: http://omniscientjs.github.io/workshop-slides/#52
 ---
 
 // Advanced Task: Making curry

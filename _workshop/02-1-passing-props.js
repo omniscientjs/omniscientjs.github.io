@@ -6,7 +6,7 @@ section: 1
 name: 02-1-passing-props
 prev: 01-basic-components
 next: 02-2-passing-props
-slides: http://omniscientjs.github.io/workshop-talk
+slides: http://omniscientjs.github.io/workshop-slides/#10
 ---
 
 

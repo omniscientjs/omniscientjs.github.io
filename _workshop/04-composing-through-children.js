@@ -6,7 +6,7 @@ section: 1
 name: 04-composing-through-children
 next: 06-render-two-times
 prev: 03-composing-components
-slides: http://omniscientjs.github.io/workshop-talk
+slides: http://omniscientjs.github.io/workshop-slides/#15
 ---
 
 var list = [

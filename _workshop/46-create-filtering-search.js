@@ -5,7 +5,7 @@ title: Create filtering search
 section: 3
 name: 46-create-filtering-search
 prev: 45-add-mixins-and-lifecycle-mixins
-slides: http://omniscientjs.github.io/workshop-talk
+slides: http://omniscientjs.github.io/workshop-slides/#79
 ---
 
 component = omniscient.withDefaults({ jsx: true });

@@ -17,31 +17,11 @@ slides: http://omniscientjs.github.io/workshop-slides/#52
 //    var addCurried = curry(add);
 //    addCurried(2)(6); // 8
 
-var curry = function (fn) {
-  var numargs = fn.length;
-  return createRecurser([]);
-
-  function createRecurser (acc) {
-    return function () {
-      var args = [].slice.call(arguments);
-      return recurse(acc, args);
-    };
-  }
-
-  function recurse (acc, args) {
-    var newacc = acc.concat(args);
-    if (newacc.length < numargs) {
-      return createRecurser(newacc);
-    }
-    else {
-      return fn.apply(this, newacc);
-    }
-  }
-};
+var curry = function (fn) { };
 
 
 
-// Tests are below here, for guiding you
+// Tests are below here, for guidence
 
 var add = curry(function (a, b, c) {
   return a + b + c;

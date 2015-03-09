@@ -14,31 +14,16 @@ slides: http://omniscientjs.github.io/workshop-slides/#14
 // make an React Class named User
 // the component should show <strong>John Smith</strong> if no name is given on props,
 // otherwise it should show <strong>«Passed Name»</strong>,
-var User = React.createClass({
-  render: function () {
-    var name = this.props.name || 'John Smith';
-    return <strong>{name}</strong>;
-  }
-});
+var User;
 
 
 // make an React Class named WelcomeBox
 // the component should show a div with a h1 with the text "Hello, USER!",
 // You can also show a welcome message beneeth the h1.
-var WelcomeBox = React.createClass({
-  render: function () {
-    return (
-      <div>
-        <h1>Hello, <User name={this.props.name} />!</h1>
-        <p>Welcome to this site!</p>
-      </div>
-    );
-  }
-});
+var WelcomeBox;
 
 // render the WelcomeBox class to the `el` element
 // with a prop name set to "The Doctor"
-React.render(<WelcomeBox name="The Doctor" />, el);
 
 
 

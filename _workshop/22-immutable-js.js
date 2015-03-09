@@ -13,7 +13,7 @@ slides: http://omniscientjs.github.io/workshop-slides/#43
 var { Range, Map, List } = Immutable;
 
 // 1: Create a list of numbers from 0 to 99.
-var numbers = Range(0, 100);
+var numbers;
 
 it('creates a range from 0 to 100', function () {
   numbers.get(0).should.equal(0);
@@ -21,7 +21,7 @@ it('creates a range from 0 to 100', function () {
 });
 
 // Transform all numbers to a multiplum of 3
-var tripled = numbers.map(x => 3 * x);
+var tripled;
 
 it('tripled every number', function () {
   tripled.get(40).should.equal(120);
@@ -29,7 +29,7 @@ it('tripled every number', function () {
 
 
 // Pick only items from "tripled" which is even numbers (dividable by 2)
-var filtered = tripled.filter(x => x % 2 == 0);
+var filtered;
 
 it('filters out/removes every number odd number', function () {
   filtered.get(2).should.equal(12);
@@ -37,7 +37,7 @@ it('filters out/removes every number odd number', function () {
 });
 
 // Use reduce to sum all items in list "filtered"
-var reduced = filtered.reduce((acc, x) => acc + x, 0);
+var reduced;
 
 it('reduces the numbers to find their sum', function () {
   reduced.should.equal(7350);

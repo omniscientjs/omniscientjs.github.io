@@ -18,44 +18,20 @@ var list = [
 
 // Make a React Class named Item
 // the component should show a <li> with the text passed as props as child
-var Item = React.createClass({
-  render: function () {
-    return <li>{this.props.text}</li>;
-  }
-});
+var Item ;
 
 // Make a React Class named List
 // the component should show a <ul> with children passed as props
-var List = React.createClass({
-  render: function () {
-    return (
-      <ul>
-        {this.props.children}
-      </ul>
-    );
-  }
-});
+var List;
 
 // Make a React Class named App
 // The component should show A <List> with four <Items> as children.
 // The children should get passed list-items passed as props (e.g. `this.props.list[0]`)
-var App = React.createClass({
-  render: function () {
-    return (
-      <List>
-        <Item text={this.props.list[0]} />
-        <Item text={this.props.list[1]} />
-        <Item text={this.props.list[2]} />
-        <Item text={this.props.list[3]} />
-      </List>
-    );
-  }
-});
+var App;
 
 
 // Render the App component to the `el` element
 // with a prop list set to the list defined above
-React.render(<App list={list} />, el);
 
 
 

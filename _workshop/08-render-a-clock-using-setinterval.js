@@ -11,22 +11,16 @@ slides: http://omniscientjs.github.io/workshop-slides/#22
 
 // Make a React Class named Clock
 // the component should show a p with time given on props
-var Clock = React.createClass({
-  render: function () {
-    return <p>{this.props.time}</p>;
-  }
-});
+var Clock;
 
 // Render the Clock component to the `el` element
 // with a prop time set to string of new Date
-React.render(<Clock time={new Date().toString()} />, el);
+
 
 // Inside setInterval with a interval of 1 second:
 //    Again: render the Clock component to the `el` element
 //    with a prop time set to string of new Date
-setInterval(function () {
-  React.render(<Clock time={new Date().toString()} />, el);
-}, 1000);
+setInterval(function () { }, 1000);
 
 
 

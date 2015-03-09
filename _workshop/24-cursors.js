@@ -15,7 +15,7 @@ var map = Map({ message: "Look behind you, a Three-Headed Monkey!" });
 
 // Create a cursor to the message property of the map
 // and store the reference to it in the message variable
-var message = Cursor.from(map, 'message');
+var message;
 
 it('creates a cursor from the message', function () {
   message.deref().should.equal(
@@ -24,7 +24,7 @@ it('creates a cursor from the message', function () {
 
 
 // Update the value of the message cursor to make the test pass
-var updatedMessage = message.update(v => "The ships hung in the sky in much the same way that bricks don't.");
+var updatedMessage;
 
 it('updates the value of the cursor', function () {
   updatedMessage.deref().should.equal(
@@ -46,10 +46,10 @@ it('calls the callback when a cursor is changed', function (done) {
   // Create a cursor from the data, and pass the changeHandler
   // function as a callback to get called when the value of the
   // cursor is modified
-  var cursor = Cursor.from(data, changeHandler);
+  var cursor;
 
   // Update the cursor with the correct value
-  cursor.set('meaningOfLife', 42);
+  // cursor[..]
 
   function changeHandler (newValue, oldValue, path) {
     // Assert that the new value of meaningOfLife is 42
@@ -69,14 +69,9 @@ it('creates a cursor and an accompanying function that when called will always r
     // to a new cursor with the new data
     var cursor;
 
-    cursor = Cursor.from(data, function changeHandler (newData, oldData) {
-      cursor = Cursor.from(newData, changeHandler);
-    });
 
     // Return a function that returns your cursor
-    return function () {
-      return cursor;
-    }
+    // return ...
   };
 
   var data = Map({ value: 1337 });

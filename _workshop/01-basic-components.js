@@ -12,15 +12,10 @@ slides: http://omniscientjs.github.io/workshop-slides/#9
 
 // 1) Make a React Class named Hello
 // the component should show a h1 with "Hello, World!"
-var HelloWorld = React.createClass({
-  render: function () {
-    return <h1>Hello, World!</h1>;
-  }
-});
+var HelloWorld;
 
 // 2) Render the Hello component to the `el` element
 // with a prop name set to "React"
-React.render(<HelloWorld />, el);
 
 
 

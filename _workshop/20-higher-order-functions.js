@@ -15,17 +15,14 @@ slides: http://omniscientjs.github.io/workshop-slides/#29
 // "adder" should return a function which takes another number as argument
 // the returned function should give result of adding the two arguments
 // e.g. adder(2)(3) === 6
-var adder = function (add) {
-  return function (x) {
-    return add + x;
-  };
-};
+var adder;
 
 // Make a "add2" from "adder" which can double any value
-var add2 = adder(2);
+var add2;
 it('adds 2 to numbers', () => {
   // Use "add2" to add 2 + 4 and save to "result"
-  var result = add2(4);
+  var result;
+
   result.should.equal(6);
 });
 
@@ -36,13 +33,12 @@ var list = [1, 2, 3];
 
 // Make function "square" which takes argument and
 // returns the squared result
-var square = function (n) {
-  return n * n;
-};
+var square;
+
 it('squares numbers', () => {
   // Transform items in list to their squares using map.
   // Save to result
-  var result = list.map(square);
+  var result;
 
   result.should.eql([1, 4, 9])
 });
@@ -56,16 +52,15 @@ var numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 // Make predicate function "isFizzOrBuzz" which takes argument number
 // and returns bool if argument is dividable by 5 or devidable by 3
-var isFizzOrBuzz = function (n) {
-  return n % 5 === 0 || n % 3 === 0;
-};
+var isFizzOrBuzz;
+
 it('keeps fizzbuzz numbers', () => {
   // Make new list (based on "numbers") with only items that
   // fulfills the isFizzOrBuzz predicate.
   // Save to result
-  var result = numbers.filter(isFizzOrBuzz);
+  var result;
 
-  result.filter(isFizzOrBuzz).should.eql([3, 5, 6, 9, 10])
+  result.should.eql([3, 5, 6, 9, 10])
 });
 
 
@@ -73,13 +68,12 @@ it('keeps fizzbuzz numbers', () => {
 
 // Make a function which takes two arguments and return
 // the multiplication result of the arguments
-var multiply = function (acc, n) {
-  return acc * n;
-};
+var multiply;
+
 it('multiplies numbers', () => {
   // Use reduce to multiply all numbers in "numbers" to one int.
   // Save to result
-  var result = numbers.reduce(multiply, 1);
+  var result;
 
   result.should.equal(3628800);
 });
@@ -100,18 +94,13 @@ var episodes = [
 // - "asName(obj)" returns "name" property of argument object
 // - "nth(list, i)" returns nth item (defined by second argument) of passed list
 
-function asName (obj) {
-  return obj.name;
-}
-function nth (list, i) {
-  return list[i];
-}
+
 it('maps episodes => name', function () {
   // make resultOne and resultTwo which contains
   // the first and second name of the episodes using
   // the functions you created (asName and nth)
-  var resultOne = nth(episodes.map(asName), 0);
-  var resultTwo = nth(episodes.map(asName), 1);
+  var resultOne;
+  var resultTwo;
 
   resultOne.should.equal("Cartman Gets an Anal Probe");
   resultTwo.should.equal("Weight Gain 4000");

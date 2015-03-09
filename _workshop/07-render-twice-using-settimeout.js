@@ -11,23 +11,16 @@ slides: http://omniscientjs.github.io/workshop-slides/#22
 
 // Make a React Class named Heading
 // the component should show a h1 with name given on props
-var Heading = React.createClass({
-  render: function () {
-    return <h1>{this.props.name}</h1>;
-  }
-});
+var Heading;
 
 // Render the Heading component to the `el` element
 // with a prop name set to "Janet van Dyne"
-React.render(<Heading name="Janet van Dyne" />, el);
 
 
 // Inside setTimeout with time of 2 seconds:
 // Again: render the Heading component to the `el` element
 // this time with a prop name set to "Wasp"
-setTimeout(function () {
-  React.render(<Heading name="Wasp" />, el);
-}, 2000);
+setTimeout(function () { }, 2000);
 
 
 

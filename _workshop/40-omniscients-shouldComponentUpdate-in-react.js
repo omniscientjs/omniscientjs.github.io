@@ -9,9 +9,6 @@ prev: 35-mixins-immutable-js-should-component-update
 slides: http://omniscientjs.github.io/workshop-slides/#66
 ---
 
-var { Range, List, Map } = Immutable;
-
-
 // Create the immutableMixin using  omniscient's shouldComponentUpdate
 // for your shouldComponentUpdate method
 var immutableMixin = {

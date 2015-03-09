@@ -15,13 +15,14 @@ var { Range, List, Map } = Immutable;
 // Create the immutableMixin using  omniscient's shouldComponentUpdate
 // for your shouldComponentUpdate method
 var immutableMixin = {
-  shouldComponentUpdate: omniscient.shouldComponentUpdate
+
 };
 
 // Enable debugging for the omniscient.shouldComponentUpdate mixin
 // and watch the debug output in the console.
 // Does all episodes render every time, or just the ones that
 // changed?
+
 
 var Episode = React.createClass({
   mixins: [immutableMixin],
@@ -32,14 +33,17 @@ var Episode = React.createClass({
 });
 
 var Show = React.createClass({
-
   mixins: [immutableMixin],
+
   render: function () {
-    var episodes = this.props.show.get('episodes').map(function (name) {
+    var episodes = this.props.show.get('episodes').toArray().map(function (name) {
       return <Episode key={name} name={name} />
     });
 
-    return <ul>{episodes.toArray()}</ul>;
+    return <div>
+      <h1>Shows</h1>
+      <ul>{episodes}</ul>
+    </div>;
   }
 });
 

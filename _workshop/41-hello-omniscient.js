@@ -13,14 +13,11 @@ slides: http://omniscientjs.github.io/workshop-slides/#68
 // the component should show "Hello, World!" if no name is given on props,
 // otherwise it should show "Hello, «Name»!",
 // where name is the name passed as prop
-var Hello = component(function (props) {
-  var name = props.name || 'World';
-  return <h1>Hello, {name}!</h1>;
-});
+var Hello;
 
 // Render the Hello component to the `el` element
 // with a prop name set to "React"
-React.render(Hello({ name: 'React' }), el);
+React.render(React.DOM.div(), el);
 
 
 

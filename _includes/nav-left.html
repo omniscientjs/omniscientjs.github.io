@@ -1,5 +1,6 @@
 <div class="nav-left">
   {% for collection in site.collections %}
+  {% if collection[1].hide != true %}
     <div class="guides-left-collection">
       <h3><a href="/{{ collection[1].label }}">{{ collection[1].collection }}</a></h3>
       <ol>
@@ -15,6 +16,7 @@
         {% endfor %}
       </ol>
     </div>
+  {% endif %}
   {% endfor %}
 
   <h3><a href="/changelog">Changelog</a></h3>

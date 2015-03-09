@@ -28,6 +28,7 @@ collections:
     collection: Playground
     permalink: /playground/:path/
   workshop:
+    hide: true
     output: true
     collection: Workshop
     permalink: /workshop/:path/

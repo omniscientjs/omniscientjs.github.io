@@ -6,7 +6,7 @@ section: 3
 name: 44-omniscient-todo-app-with-cursors
 next: 45-add-mixins-and-lifecycle-mixins
 prev: 43-composing-omniscient-components
-slides: http://omniscientjs.github.io/workshop-slides/#73
+slides: http://omniscientjs.github.io/workshop-slides/#72
 ---
 
 var component = omniscient.withDefaults({

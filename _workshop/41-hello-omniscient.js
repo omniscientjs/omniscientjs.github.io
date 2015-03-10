@@ -6,7 +6,7 @@ section: 3
 name: 41-hello-omniscient
 next: 42-hello-omniscient-jsx
 prev: 40-omniscients-shouldComponentUpdate-in-react
-slides: http://omniscientjs.github.io/workshop-slides/#68
+slides: http://omniscientjs.github.io/workshop-slides/#67
 ---
 
 // Make an omniscient component named Hello

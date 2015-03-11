@@ -9,6 +9,12 @@ prev: 42-hello-omniscient-jsx
 slides: http://omniscientjs.github.io/workshop-slides/#71
 ---
 
+// ---
+// Assignment: Create a List and an accompanying Item component
+// List out all the items of the data variable. Checked items
+// should show striked through.
+// ---
+
 var component = omniscient.withDefaults({ jsx: true });
 
 var data = {

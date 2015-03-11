@@ -9,6 +9,12 @@ prev: 33-mixins-never-rerender
 slides: http://omniscientjs.github.io/workshop-slides/#61
 ---
 
+// ---
+// Assignment: Create two components, one that renders all numbers
+// it is passed through props, and one that only renders odd
+// numbers passed through its props.
+// ---
+
 var onlyShowOddNumbers = {
   // Complete the shouldComponentUpdate mixin such that
   // it will only return true when the passed number

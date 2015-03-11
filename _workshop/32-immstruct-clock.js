@@ -9,6 +9,12 @@ prev: 31-immstruct-counter
 slides: http://omniscientjs.github.io/workshop-slides/#57
 ---
 
+// ---
+// Assignment: Create a clock component that will show
+// the current time. Update the time property of the
+// data structure at an interval and watch the time pass
+// ---
+
 var data = immstruct({ time: new Date() });
 
 // Create a Clock component that deref()'s its time prop

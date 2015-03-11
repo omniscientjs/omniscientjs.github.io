@@ -9,9 +9,13 @@ prev: 32-immstruct-clock
 slides: http://omniscientjs.github.io/workshop-slides/#61
 ---
 
-// Create the `neverRerender` mixin. It should comprise
-// a shouldComponentUpdate that tells the component never to
-// re-render
+// ---
+// Assignment: Create the `neverRerender` mixin that makes 
+// components never rerender.
+// ---
+
+// It should comprisea shouldComponentUpdate that tells
+// the component never to re-render
 var neverRerender = {
 
 };

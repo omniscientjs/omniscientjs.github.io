@@ -9,6 +9,12 @@ prev: 24-cursors
 slides: http://omniscientjs.github.io/workshop-slides/#57
 ---
 
+// ---
+// Assignment: Create the Hello component, and add a listener
+// for the swap event of the immstruct strucure that will
+// rerender the component with the new data. Update the data
+// structure and watch the outputted namename  change
+// ---
 
 var data = immstruct({ name: 'World!' });
 

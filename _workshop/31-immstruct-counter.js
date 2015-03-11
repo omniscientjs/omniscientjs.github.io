@@ -9,8 +9,11 @@ prev: 30-immstruct-hello-hank
 slides: http://omniscientjs.github.io/workshop-slides/#57
 ---
 
+// ---
+// Assignment: Create a Counter component that renders
+// a button showing how many times it has been pressed
+// ---
 
-// Create a Counter component
 // The component should render a button that when clicked
 // will increate the value of the `counter` cursor it is passed
 // The component should show the number of clicks inside the button

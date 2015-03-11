@@ -8,6 +8,13 @@ prev: 45-add-mixins-and-lifecycle-mixins
 slides: http://omniscientjs.github.io/workshop-slides/#78
 ---
 
+// ---
+// Assignment: Create a search box and and accompanying list
+// of the libraries found below. The search box should have
+// a listener that will filter the list of libraries as you
+// type.
+// ---
+
 component = omniscient.withDefaults({ jsx: true });
 component.debug();
 

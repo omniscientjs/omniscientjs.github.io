@@ -9,6 +9,11 @@ prev: 35-mixins-immutable-js-should-component-update
 slides: http://omniscientjs.github.io/workshop-slides/#65
 ---
 
+// ---
+// Assignment: Make use of omniscient's shouldComponentUpdate
+// instead of the one you wrote in the previous assignment
+// ---
+
 // Create the immutableMixin using  omniscient's shouldComponentUpdate
 // for your shouldComponentUpdate method
 var immutableMixin = {

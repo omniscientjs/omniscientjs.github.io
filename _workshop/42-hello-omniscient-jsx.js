@@ -9,6 +9,10 @@ prev: 41-hello-omniscient
 slides: http://omniscientjs.github.io/workshop-slides/#68
 ---
 
+// ---
+// Assignment:  Recreate the Hello component using jsx.
+// ---
+
 // make local component creator that defaults
 // to jsx by using omniscient.withDefaults().
 var component = omniscient.withDefaults({ jsx: true });

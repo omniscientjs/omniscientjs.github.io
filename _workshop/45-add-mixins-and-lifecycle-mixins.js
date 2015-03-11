@@ -9,6 +9,12 @@ prev: 44-omniscient-todo-app-with-cursors
 slides: http://omniscientjs.github.io/workshop-slides/#74
 ---
 
+// ---
+// Assignment: Create a component that automatically gains
+// focus when it is mounted. Next to the input, render
+// a div that reflects the value of the input.
+// ---
+
 var component = omniscient.withDefaults({ jsx: true });
 
 var focusOnRenderMixin = {

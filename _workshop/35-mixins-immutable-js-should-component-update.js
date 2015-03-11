@@ -9,6 +9,11 @@ prev: 34-mixins-only-show-odd-numbers
 slides: http://omniscientjs.github.io/workshop-slides/#61
 ---
 
+// ---
+// Assignment: Implement your own shouldComponentUpdate mixin
+// that will work with Immutable.js data
+// ---
+
 var { Range, List, Map } = Immutable;
 
 var immutableMixin = {

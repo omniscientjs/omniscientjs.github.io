@@ -9,6 +9,11 @@ prev: 43-composing-omniscient-components
 slides: http://omniscientjs.github.io/workshop-slides/#72
 ---
 
+// ---
+// Assignment: Create a simple todo-list, where completed
+// items are marked with striked through text
+// ---
+
 var component = omniscient.withDefaults({
   jsx: true
 });

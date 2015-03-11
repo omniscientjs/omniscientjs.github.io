@@ -9,6 +9,10 @@ prev: 40-omniscients-shouldComponentUpdate-in-react
 slides: http://omniscientjs.github.io/workshop-slides/#67
 ---
 
+// ---
+// Assignment: Create a component that greets a user.
+// ---
+
 // Make an omniscient component named Hello
 // the component should show "Hello, World!" if no name is given on props,
 // otherwise it should show "Hello, «Name»!",

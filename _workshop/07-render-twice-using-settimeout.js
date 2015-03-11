@@ -8,6 +8,12 @@ prev: 06-render-two-times
 next: 08-render-a-clock-using-setinterval
 slides: http://omniscientjs.github.io/workshop-slides/#22
 ---
+// ---
+// Assignment: Make a Heading component with a h1 and a name
+// and render it twice to the DOM. Add a delay between the rendering
+// to observe the update.
+// ---
+
 
 // Make a React Class named Heading
 // the component should show a h1 with name given on props

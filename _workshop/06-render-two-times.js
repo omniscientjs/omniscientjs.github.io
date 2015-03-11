@@ -8,6 +8,11 @@ prev: 04-composing-through-children
 next: 07-render-twice-using-settimeout
 slides: http://omniscientjs.github.io/workshop-slides/#22
 ---
+// ---
+// Assignment: Make a Heading component with a h1 and a name
+// and render it twice to the DOM.
+// ---
+
 
 // Make a React Class named Heading
 // the component should show a h1 with name given on props

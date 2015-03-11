@@ -8,6 +8,10 @@ prev: 01-basic-components
 next: 02-2-passing-props
 slides: http://omniscientjs.github.io/workshop-slides/#10
 ---
+// ---
+// Assignment: Make a "Hello, World" component which takes
+// input properties and render it to the DOM.
+// ---
 
 
 // 1) Make a React Class named Hello

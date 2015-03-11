@@ -7,6 +7,11 @@ name: 01-basic-components
 next: 02-1-passing-props
 slides: http://omniscientjs.github.io/workshop-slides/#9
 ---
+// ---
+// Assignment: Make a "Hello, World" component and
+// render it to the DOM.
+// ---
+
 
 // In this exercise you can use JSX
 

@@ -8,8 +8,12 @@ prev: 02-1-passing-props
 next: 03-composing-components
 slides: http://omniscientjs.github.io/workshop-slides/#10
 ---
+// ---
+// Assignment: Make a "Hello, World" component which takes
+// input properties and render it to the DOM. The inputted
+// properties should be transformed before output.
+// ---
 
-// In this exercise you can use JSX
 
 // 1) Make function uppercase which transforms input
 // to upper case.

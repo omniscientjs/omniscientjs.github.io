@@ -8,6 +8,10 @@ next: 30-immstruct-hello-hank
 prev: 23-curry
 slides: http://omniscientjs.github.io/workshop-slides/#54
 ---
+// ---
+// Assignment: Try out the Cursor Implementation of Immutable.js to
+// create and edit the contents of a cursor.
+// ---
 
 var { Map } = Immutable;
 

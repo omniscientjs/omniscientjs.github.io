@@ -8,8 +8,10 @@ next: 24-cursors
 prev: 22-immutable-js
 slides: http://omniscientjs.github.io/workshop-slides/#52
 ---
+// ---
+// Advanced Assignment For Fun: Implement your own curry function
+// ---
 
-// Advanced Task: Making curry
 
 // Make function curry which takes a function and returns curried functions.
 // E.g.

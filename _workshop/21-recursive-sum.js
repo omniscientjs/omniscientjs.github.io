@@ -8,6 +8,11 @@ next: 22-immutable-js
 prev: 20-higher-order-functions
 slides: http://omniscientjs.github.io/workshop-slides/#29
 ---
+// ---
+// Assignment: Use recursivity to sum numbers in a list.
+// ---
+
+
 
 // Make function "sum(list, acc)" which recursivly sums a list.
 // If acc is undefined it should be 0.

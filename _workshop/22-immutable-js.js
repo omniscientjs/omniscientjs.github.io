@@ -8,6 +8,10 @@ next: 23-curry
 prev: 21-recursive-sum
 slides: http://omniscientjs.github.io/workshop-slides/#43
 ---
+// ---
+// Assignment: Use Immutable.js API to create lists and operate on that list.
+// ---
+
 
 // ES6 Destructuring, get Range, Map and List from Immutable.js
 var { Range, Map, List } = Immutable;

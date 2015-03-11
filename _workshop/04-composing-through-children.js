@@ -8,6 +8,15 @@ next: 06-render-two-times
 prev: 03-composing-components
 slides: http://omniscientjs.github.io/workshop-slides/#15
 ---
+// ---
+// Assignment: Making a list of components through children.
+// Make a a App component which uses a
+// List component with four Item components as children.
+// Each Item should get passed a property as input with the text.
+// Render it to the DOM.
+// ---
+
+
 
 var list = [
   { text: 'React' },

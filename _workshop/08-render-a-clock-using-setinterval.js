@@ -8,9 +8,14 @@ prev: 07-render-twice-using-settimeout
 next: 20-higher-order-functions
 slides: http://omniscientjs.github.io/workshop-slides/#22
 ---
+// ---
+// Assignment: Make a clock which updates every second and render
+// it onto the DOM.
+// ---
+
 
 // Make a React Class named Clock
-// the component should show a p with time given on props
+// the component should show a paragraph (<p>) with time given on props
 var Clock;
 
 // Render the Clock component to the `el` element

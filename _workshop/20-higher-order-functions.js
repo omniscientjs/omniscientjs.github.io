@@ -8,6 +8,12 @@ next: 21-recursive-sum
 prev: 08-render-a-clock-using-setinterval
 slides: http://omniscientjs.github.io/workshop-slides/#29
 ---
+// ---
+// Assignment: Try out different higher order functions as
+// returning functions, using functions as arguments (map, filter, reduce)
+// ---
+
+
 
 // 1: Higher Order Functions
 

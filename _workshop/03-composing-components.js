@@ -8,8 +8,12 @@ prev: 02-2-passing-props
 next: 04-composing-through-children
 slides: http://omniscientjs.github.io/workshop-slides/#14
 ---
+// ---
+// Assignment: Make a a WelcomeBox component which uses an
+// User component which takes  input properties.
+// Render it to the DOM.
+// ---
 
-// In this exercise you can use JSX
 
 // make an React Class named User
 // the component should show <strong>John Smith</strong> if no name is given on props,

@@ -10,6 +10,7 @@ Changelog with fixes and additions between each release.
 
 ### Additions
 1. Now allows for automatic "unwrapping" of single cursors (and define what field to unwrap) #60. Example:
+
 ```jsx
 var localComponent = component.withDefaults({
   cursorField: 'foobar'
@@ -21,6 +22,7 @@ var Component = localComponent(function(myPassedCursor) {
 
 React.render(<Component foobar={myCursor} />, document.body)
 ```
+
 2. Added "hot swapping" of functions passed in statics. This is to swap out event handlers passed with a cursor reference. See #68
 3. As Omniscient encourages more work in the render function, you might have to do additional work even though some of your data is unchanged. We added `omniscient.cached` to allow for cached functions, dependent on input. Example:
 

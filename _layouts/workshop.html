@@ -56,30 +56,8 @@
         {% endif %}
       </div>
 
-      <h2>Help</h2>
-      <p>Use <code>el</code> to get to an element you can render to with your Omniscient components!</p>
-
-      <h3>Available globals</h3>
-      <ul>
-        <li><code>React</code>: React instance</li>
-        <li><code>omniscient</code>/<code>component</code>: Omniscient instance</li>
-        <li><code>immstruct</code>: Immstruct instance</li>
-        <li><code>Immutable</code>: Immutable.js instance</li>
-        <li><code>Cursor</code>: Cursor (Immutable.js contrib)</li>
-      </ul>
-
-      <h3>Testing</h3>
-      <ul>
-        <li><code>describe</code>: New test group (mocha)</li>
-        <li><code>it</code>: make a new test (mocha)</li>
-        <li><code>xit</code>: make pending test (mocha)</li>
-        <li><code>xdescribe</code>: make pending scenario (mocha)</li>
-        <li><code>before/after</code>: run code before or after all tests (mocha)</li>
-        <li><code>beforeEach/afterEach</code>: run code before or after each tests (mocha)</li>
-        <li><code>chai</code>: chai.js assertion library</li>
-      </ul>
+      {% include playground-help.html %}
     </main>
-
     {% include footer.html %}
   </body>
 </html>

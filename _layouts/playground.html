@@ -29,22 +29,8 @@
       {% endfor %}
       </ol>
 
-      <h3>Help</h3>
-      <p>Use <code>el</code> to get to an element you can render to with your Omniscient components!</p>
-
-      <h3>Other available globals</h3>
-      <ul>
-        <li><code>React</code>: React instance</li>
-        <li><code>omniscient</code>/<code>component</code>: Omniscient instance</li>
-        <li><code>immstruct</code>: Immstruct instance</li>
-        <li><code>Immutable</code>: Immutable.js instance</li>
-        <li><code>Cursor</code>: Cursor (Immutable.js contrib)</li>
-        <li><code>el</code>: A dom element you can render to</li>
-        <li><code>describe</code>/<code>it</code>: Methods for writing tests (<a href="http://mochajs.org"/>mocha.js</a>)</li>
-        <li><code>should</code>: All objects have a .should method for test assertions (<a href="http://chaijs.com/">chai.js</a>)</li>
-      </ul>
+      {% include playground-help.html %}
     </main>
-
     {% include footer.html %}
   </body>
 </html>

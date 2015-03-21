@@ -5,14 +5,14 @@ layout: homepage
 <h2>Rationale</h2>
 
 <ul>
-<li><strong>top-down rendering</strong> of components (<em>unidirectional</em> data flow)</li>
-<li>favors <strong>immutable</strong> data (with Immutable.js)</li>
-<li>encourages <strong>small, composable components</strong>, and <strong>shared functionality</strong> through mixins</li>
-<li><strong>Seperation of concern.</strong> Components only deal with their own piece of data</li>
-<li>components can only <strong>change their own data</strong>, via <em>cursors</em> (without knowing where their data resides in the outer immutable data structure)</li>
-<li>easily listen for changes <strong>across your data structure</strong> and trigger re-render</li>
-<li>immutable data can give even <strong>faster re-renders</strong> than with pure React, as React can be prevented from even considering to re-render component trees with unchanged data</li>
-<li><strong>efficient, centrally</strong> defined shouldComponentUpdate</li>
+<li><strong>Top-down rendering</strong> of components (<em>unidirectional</em> data flow)</li>
+<li>Favors <strong>immutable data</strong> (with Immutable.js)</li>
+<li>Encourages <strong>small, composable components</strong>, and <strong>shared functionality</strong> through mixins</li>
+<li><strong>Seperation of concerns</strong>, components only deal with their own piece of data</li>
+<li>Components only change their own data via <strong>cursors</strong>, without knowing where their data resides in the outer immutable data structure</li>
+<li>Easily <strong>listen for changes</strong> across your data structure and <strong>trigger re-render</strong></li>
+<li>Immutable data can give even <strong>faster re-renders</strong> than with pure React, as React can be prevented from even considering to re-render component trees with unchanged data</li>
+<li><strong>Efficient, centrally</strong> defined shouldComponentUpdate</li>
 </ul>
 
 <h2>Basic Usage</h2>

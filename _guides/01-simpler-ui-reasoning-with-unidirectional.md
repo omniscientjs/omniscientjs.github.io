@@ -87,7 +87,7 @@ firstItem(arr2); //=> 2
 
 As another major gain, using immutable objects, we can have easier checks if value has changed. We can do a simple object reference check instead of checking values. It is a simple check of *is this reference, a reference to the __same object__ as this reference?*. This is a **really** fast operation to do. We don't have to iterate over an object and check each key and value (possibly even nested). Another gain is that we can always have a history, as values are never mutated or changed. We can have a storage of previous instances of objects. This could take up more memory, but we can be smart about how we store large immutable structures and have data sharing in revision trees. There is more information about immutable object in [this Wikipedia-page](http://en.wikipedia.org/wiki/Immutable_object), for those interested.
 
-By introducing our components to immutable data structures we can have one top all-knowing structure holding the entire application or module data information, and have our components reflect this information – declaratively. We can pass a part of the immutable structure to a specific component, so that component only have information about it's relevant information, not information it doesn't need to know. Separation of concern, divide and conquer.
+By introducing our components to immutable data structures we can have one top all-knowing structure holding the entire application or module data information, and have our components reflect this information – declaratively. We can pass a part of the immutable structure to a specific component, so that component only have information about its relevant information, not information it doesn't need to know. Separation of concern, divide and conquer.
 
 ```jsx
 // Create a immutable object
@@ -286,7 +286,7 @@ React.render(App(Cursor.from(structure, [])), document.body);
 
 If we combine the Virtual DOM diff-ing of React, the object reference checks of immutable data and the thought pattern of Omniscient, we get a really fast top-down rendering with only representing state in the top of our modules or application.
 
-In the case of the example above, the `App` component will have changed data, as one of it's children is changed, but the React DOM diff will see that the HTML-element itself hasn't changed so it won't actually manipulate the DOM. And the `Header` component won't even check to see if the DOM has changed, as the data it is being passed hasn't changed at all.
+In the case of the example above, the `App` component will have changed data, as one of its children is changed, but the React DOM diff will see that the HTML-element itself hasn't changed so it won't actually manipulate the DOM. And the `Header` component won't even check to see if the DOM has changed, as the data it is being passed hasn't changed at all.
 
 This looks pretty good. We can easily reason with the application flow, it feels like regular markup, just in Javascript. We can have small reusable components with sharable mixins, and we won't have to handle the DOM at all – and it is really fast. Best of all, we can store the application state at the top, and given that structure the application will always turn out the same. We could even store the current state and pick it up from here after a refresh or even a server restart. This is pretty awesome for testing and developing as well.
 
@@ -339,7 +339,7 @@ As we see, we can swap values by updating the value the cursor is pointing at, f
 
 ## Object Reference Checking and the Virtual DOM
 
-As mentioned, several times, when the top-down render is initiated, a reference check is done for each component (from top to bottom). Omniscient components has smart checks (the function `shouldComponentUpdate`) which is used by React to see if a component should be re-rendered or not. But in addition, if Omniscient says that the cursor refers to an object which has changed, React will still do a diff with the Virtual DOM and if the output doesn't change it won't do any DOM manipulation. So even if the reference check results in `true` for each of the parents of a sub-component when a sub-tree is swapped in a bigger immutable structure, it won't necessarily re-render on to the page – as it's output doesn't change.
+As mentioned, several times, when the top-down render is initiated, a reference check is done for each component (from top to bottom). Omniscient components has smart checks (the function `shouldComponentUpdate`) which is used by React to see if a component should be re-rendered or not. But in addition, if Omniscient says that the cursor refers to an object which has changed, React will still do a diff with the Virtual DOM and if the output doesn't change it won't do any DOM manipulation. So even if the reference check results in `true` for each of the parents of a sub-component when a sub-tree is swapped in a bigger immutable structure, it won't necessarily re-render on to the page – as its output doesn't change.
 
 If we have the following application:
 

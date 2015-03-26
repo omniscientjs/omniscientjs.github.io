@@ -29,6 +29,8 @@ React.render(
 
 <p>The code below shows Omniscient used in cooperation with Immstruct and the cursors of Immutable.js - a "render loop" pattern you'll often see with Omniscient apps. Whenever the data of an Immstruct instance changes, an event is fired and React can be told to re-render your application. When using immutable data structures, Omniscient will take care to only re-render the parts of your application who's data actually changed. As components receive cursors that point into these immutable data structures, each component can easily update its own data without knowledge of the other parts of the data structure.</p>
 
+<a name="react-native"></a>
+
 <div class="editor"><textarea>
 var Count = component(({counter}) =>
   <div>
@@ -53,7 +55,6 @@ setInterval(
 
 <p>Immstruct along with Immutable.js is a perfect fit for your Omniscient apps.</p>
 
-<a name="react-native"></a>
 <h2>Curious to try Omniscient with React Native?</h2>
 
 <p>Omniscient should be a great fit for you React Native apps. You can try it out already from the omniscient `react-native` branch. Install omniscient from the branch into your application folder</p>

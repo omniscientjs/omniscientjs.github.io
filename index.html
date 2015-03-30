@@ -27,7 +27,9 @@ React.render(
   Greet({ name: 'Omniscient' }),
   el);</textarea></div>
 
-<p>The code below shows Omniscient used in cooperation with Immstruct and the cursors of Immutable.js - a "render loop" pattern you'll often see with Omniscient apps. Whenever the data of an Immstruct instance changes, an event is fired and React can be told to re-render your application. When using immutable data structures, Omniscient will take care to only re-render the parts of your application who's data actually changed. As components receive cursors that point into these immutable data structures, each component can easily update its own data without knowledge of the other parts of the data structure.</p>
+<p>The code below shows Omniscient used in cooperation with <a href="https://github.com/omniscientjs/immstruct/blob/master/README.md">
+  Immstruct</a> and the cursors of <a href="https://github.com/facebook/immutable-js/tree/master/contrib/cursor">Immutable.js</a> 
+  - a "render loop" pattern you'll often see with Omniscient apps. Whenever the data of an Immstruct instance changes, an event is fired and React can be told to re-render your application. When using immutable data structures, Omniscient will take care to only re-render the parts of your application who's data actually changed. As components receive cursors that point into these immutable data structures, each component can easily update its own data without knowledge of the other parts of the data structure.</p>
 
 <a name="react-native"></a>
 

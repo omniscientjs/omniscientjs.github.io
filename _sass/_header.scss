@@ -114,18 +114,9 @@ body {
 
 .mainNavigation-inner h1 a {
   display: block;
-  svg {
-    display: block;
 
-    path {
-      transition: all 300ms;
-      fill: $color-header-linkColor;
-      filter: drop-shadow(1px 1px 3px rgba(0,0,0, .4));
-    }
-  }
-
-  &:hover svg path {
-    filter: drop-shadow(1px 1px 3px rgba(0,0,0, .7));
+  img {
+    height: 33px;
   }
 }
 

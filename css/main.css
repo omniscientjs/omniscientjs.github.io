@@ -81,8 +81,8 @@ ul, ol {
   padding-left: 20px; }
 
 .mainHeader {
-  background: -webkit-linear-gradient(top, #2980B9 0%, #3e5771 100%);
-  background: linear-gradient(to bottom, #2980B9 0%, #3e5771 100%); }
+  background: -webkit-linear-gradient(top, #0098C6 0%, #3e5771 100%);
+  background: linear-gradient(to bottom, #0098C6 0%, #3e5771 100%); }
 
 body {
   padding-top: 63px; }
@@ -135,7 +135,7 @@ body {
   top: 0;
   left: 0;
   width: 100%;
-  background: #2980B9; }
+  background: #0098C6; }
 
 .mainNavigation-inner {
   width: 93%;
@@ -182,17 +182,8 @@ body {
 
 .mainNavigation-inner h1 a {
   display: block; }
-  .mainNavigation-inner h1 a svg {
-    display: block; }
-    .mainNavigation-inner h1 a svg path {
-      -webkit-transition: all 300ms;
-              transition: all 300ms;
-      fill: #fafafa;
-      -webkit-filter: drop-shadow(1px 1px 3px rgba(0, 0, 0, 0.4));
-              filter: drop-shadow(1px 1px 3px rgba(0, 0, 0, 0.4)); }
-  .mainNavigation-inner h1 a:hover svg path {
-    -webkit-filter: drop-shadow(1px 1px 3px rgba(0, 0, 0, 0.7));
-            filter: drop-shadow(1px 1px 3px rgba(0, 0, 0, 0.7)); }
+  .mainNavigation-inner h1 a img {
+    height: 33px; }
 
 .chevronDown {
   height: 25px;
@@ -531,11 +522,21 @@ input[type=text], textarea {
    Animation example, for spinners
 */
 .animate-spin {
+  -o-animation: spin 2s infinite linear;
   -webkit-animation: spin 2s infinite linear;
   animation: spin 2s infinite linear;
   display: inline-block; }
 
 @-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg); }
+
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg); } }
+
+@-o-keyframes spin {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg); }

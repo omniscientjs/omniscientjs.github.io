@@ -52,7 +52,7 @@ We can compose `Header` with another component, `Welcome`, by using `Header` as 
 
 ```jsx
 var Welcome = component(function (data) {
-  return div(null, Header({ 'Hello, ' + data.user }));
+  return div(null, Header({ text: 'Hello, ' + data.user }));
 });
 
 render(Welcome({ user: 'Dr. Brown' }), document.body);

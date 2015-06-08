@@ -382,7 +382,8 @@ pre code {
   display: block;
   padding: 10px;
   border-radius: 3px;
-  overflow: auto; }
+  overflow: auto;
+  font-size: 1.2em; }
 
 p code, ul code, li code {
   background: #fdefed;

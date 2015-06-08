@@ -5,6 +5,7 @@ title: Simpler UI Reasoning with Unidirectional Dataflow and Immutable Data
 name: 01-simpler-ui-reasoning-with-unidirectional
 prev: 00-all-guides
 next: 02-editing-using-immutable-cursors-with-omniscient
+date: October 27, 2014
 ---
 
 _This article was originally posted on [open.bekk.no](http://open.bekk.no/easier-reasoning-with-unidirectional-dataflow-and-immutable-data)_

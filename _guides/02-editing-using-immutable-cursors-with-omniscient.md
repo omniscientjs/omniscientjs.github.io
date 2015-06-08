@@ -4,6 +4,7 @@ collection: guides
 title: Editing Using Immutable Cursors with Omniscient
 name: 02-editing-using-immutable-cursors-with-omniscient
 prev: 01-simpler-ui-reasoning-with-unidirectional
+date: March 1, 2015
 ---
 
 This is a small writeup on how to use [Immutable.js](https://github.com/facebook/immutable-js) and [immstruct](https://github.com/omniscientjs/immstruct). It's not strictly an Omniscient specific guide, but immstruct is often used with Omniscient, and works great with it.

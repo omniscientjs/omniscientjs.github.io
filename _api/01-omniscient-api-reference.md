@@ -7,9 +7,10 @@ prev: 00-apis
 next: 02-immstruct-api-reference
 ---
 
-*API Reference for `Omniscient v3.1.0`*
+*API Reference for `Omniscient v3.2.0`*
 
 More information can be found on the [Omniscient repo](https://github.com/omniscientjs/omniscient).
+
 
 ### `omniscient(displayName, mixins, render)`
 
@@ -57,16 +58,17 @@ unwrap cursors, etc.
 ```js
 {
   // Goes directly to component
-  shouldComponentUpdate: function(nextProps, nextState), // check update
+  shouldComponentUpdate: function (nextProps, nextState), // check update
   jsx: false, // whether or not to default to jsx components
   cursorField: '__singleCursor', // cursor property name to "unwrap" before passing in to render
-  isNode: function(propValue), // determines if propValue is a valid React node
+  isNode: function (propValue), // determines if propValue is a valid React node
 
   // Passed on to `shouldComponentUpdate`
-  isCursor: function(cursor), // check if prop is cursor
+  isCursor: function (cursor), // check if prop is cursor
   unCursor: function (cursor), // convert cursor to object
   isEqualCursor: function (oneCursor, otherCursor), // compares cursor
   isEqualState: function (currentState, nextState), // compares state
+  isIgnorable: function (propertyValue, propertyKey), // check if property item is ignorable
   isEqualProps: function (currentProps, nextProps), // compares props
   isImmutable: function (maybeImmutable) // check if object is immutable
 }
@@ -219,11 +221,12 @@ Create a “local” instance of the shouldComponentUpdate with overriden defaul
 ### Options
 ```js
 {
-  isCursor: function(cursor), // check if is props
+  isCursor: function (cursor), // check if is props
   isEqualCursor: function (oneCursor, otherCursor), // check cursor
   isEqualState: function (currentState, nextState), // check state
   isImmutable: function (currentState, nextState), // check if object is immutable
   isEqualProps: function (currentProps, nextProps), // check props
+  isIgnorable: function (propertyValue, propertyKey), // check if property item is ignorable
   unCursor: function (cursor) // convert from cursor to object
 }
 ```
@@ -352,6 +355,27 @@ Immutable.js cursors). Can override through `.withDefaults()`.
 **Returns** `Boolean`,
 
 
+### `shouldComponentUpdate.isIgnorable(value, key)`
+
+Predicate to check if a property on props should be ignored or not.
+For now this defaults to ignore if property key is `statics`, but that
+is deprecated behaviour, and will be removed by the next major release.
+
+Override through `shouldComponentUpdate.withDefaults`.
+
+
+### Parameters
+
+| param   | type   | description |
+| ------- | ------ | ----------- |
+| `value` | Object |             |
+| `key`   | String |             |
+
+
+
+**Returns** `Boolean`,
+
+
 ### `cached(Function)`
 
 Directly fetch `cache` to use outside of Omniscient.
@@ -420,4 +444,4 @@ but adjusted to not accept objects to avoid collision with props & statics.
 
 
 
-**Returns** `Boolean`,
+**Returns** `Boolean`

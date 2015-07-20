@@ -6,7 +6,7 @@ name: 02-immstruct-api-reference
 prev: 01-omniscient-api-reference
 ---
 
-*API Reference for `Immstruct v1.4.0`*
+*API Reference for `Immstruct v2.0.0`*
 
 More information can be found on the [immstruct repo](https://github.com/omniscientjs/immstruct).
 
@@ -16,10 +16,11 @@ Creates a new instance of Immstruct, having it's own list
 of Structure instances.
 
 ### Examples:
-
-    var ImmstructInstance = require('immstruct').Immstruct;
-    var immstruct = new ImmstructInstance();
-    var structure = immstruct.get({ data: });
+```js
+var ImmstructInstance = require('immstruct').Immstruct;
+var immstruct = new ImmstructInstance();
+var structure = immstruct.get({ data: });
+```
 
 
 ### Properties
@@ -57,16 +58,32 @@ var structure = immstruct.get('myStruct', { foo: 'Hello' });
 **Returns** `Structure`,
 
 
+### `immstruct.getInstances([name])`
+
+Get list of all instances created.
+
+
+### Parameters
+
+| param    | type   | description                                                                |
+| -------- | ------ | -------------------------------------------------------------------------- |
+| `[name]` | String | _optional:_ - Name of the instance to get. If undefined get all instances  |
+
+
+
+**Returns** `Array`,
+
+
 ### `immstruct.clear`
 
 Clear the entire list of `Structure` instances from the Immstruct
 instance. You would do this to start from scratch, freeing up memory.
 
 ### Examples:
-
-    var immstruct = require('immstruct');
-    immstruct.clear();
-
+```js
+var immstruct = require('immstruct');
+immstruct.clear();
+```
 
 
 ### `immstruct.remove(key)`
@@ -75,11 +92,11 @@ Remove one `Structure` instance from the Immstruct instances list.
 Provided by key
 
 ### Examples:
-
-    var immstruct = require('immstruct');
-    immstruct('myKey', { foo: 'hello' });
-    immstruct.remove('myKey');
-
+```js
+var immstruct = require('immstruct');
+immstruct('myKey', { foo: 'hello' });
+immstruct.remove('myKey');
+```
 
 ### Parameters
 
@@ -92,7 +109,7 @@ Provided by key
 **Returns** `Boolean`,
 
 
-### `immstruct.withHistory([key], [data])`
+### `immstruct.withHistory([key], [limit], [data])`
 
 Gets or creates a new instance of `Structure` with history (undo/redo)
 activated per default. Same usage and signature as regular `Immstruct.get`.
@@ -100,18 +117,28 @@ activated per default. Same usage and signature as regular `Immstruct.get`.
 Provide optional key to be able to retrieve it from list of instances.
 If no key is provided, a random key will be generated.
 
-### Examples:
+Provide optional limit to cap the last number of history references
+that will be kept. Once limit is reached, a new history record
+shifts off the oldest record. The default if omitted is Infinity.
+Setting to 0 is the as not having history enabled in the first place.
 
-    var immstruct = require('immstruct');
-    var structure = immstruct.withHistory('myStruct', { foo: 'Hello' });
+### Examples:
+```js
+var immstruct = require('immstruct');
+var structure = immstruct.withHistory('myStruct', 10, { foo: 'Hello' });
+var structure = immstruct.withHistory(10, { foo: 'Hello' });
+var structure = immstruct.withHistory('myStruct', { foo: 'Hello' });
+var structure = immstruct.withHistory({ foo: 'Hello' });
+```
 
 
 ### Parameters
 
-| param    | type             | description                             |
-| -------- | ---------------- | --------------------------------------- |
-| `[key]`  | String           | _optional:_ - defaults to random string |
-| `[data]` | Object,Immutable | _optional:_ - defaults to empty data    |
+| param     | type             | description                             |
+| --------- | ---------------- | --------------------------------------- |
+| `[key]`   | String           | _optional:_ - defaults to random string |
+| `[limit]` | Number           | _optional:_ - defaults to Infinity      |
+| `[data]`  | Object,Immutable | _optional:_ - defaults to empty data    |
 
 
 
@@ -131,12 +158,13 @@ key to be able to retrieve it from list of instances. If no key
 is provided, a random key will be generated.
 
 ### Examples:
-
-    var immstruct = require('immstruct');
-    var structure = immstruct('myStruct', { foo: 'Hello' });
-    var structure2 = immstruct.withHistory({ bar: 'Bye' });
-    immstruct.remove('myStruct');
-    // ...
+```js
+var immstruct = require('immstruct');
+var structure = immstruct('myStruct', { foo: 'Hello' });
+var structure2 = immstruct.withHistory({ bar: 'Bye' });
+immstruct.remove('myStruct');
+// ...
+```
 
 
 ### Parameters
@@ -156,30 +184,94 @@ is provided, a random key will be generated.
 Creates a new `Structure` instance. Also accessible through
 `Immstruct.Structre`.
 
+A structure is also an EventEmitter object, so it has methods as
+`.on`, `.off`, and all other EventEmitter methods.
+
+
+For the `swap` event, the root structure (see `structure.current`) is passed
+as arguments, but for type specific events (`add`, `change` and `delete`), the
+actual changed value is passed.
+
+For instance:
+```js
+var structure = new Structure({ 'foo': { 'bar': 'hello' } });
+
+structure.on('swap', function (newData, oldData, keyPath) {
+  keyPath.should.eql(['foo', 'bar']);
+  newData.toJS().should.eql({ 'foo': { 'bar': 'bye' } });
+  oldData.toJS().should.eql({ 'foo': { 'bar': 'hello' } });
+});
+
+structure.cursor(['foo', 'bar']).update(function () {
+ return 'bye';
+});
+```
+
+But for `change`
+```js
+var structure = new Structure({ 'foo': { 'bar': 'hello' } });
+
+structure.on('change', function (newData, oldData, keyPath) {
+  keyPath.should.eql(['foo', 'bar']);
+  newData.should.eql('bye');
+  oldData.should.eql('hello');
+});
+
+structure.cursor(['foo', 'bar']).update(function () {
+ return 'bye';
+});
+```
+
+**All `keyPath`s passed to listeners are the full path to where the actual
+ change happened**
+
 ### Examples:
+```js
+var Structure = require('immstruct/structure');
+var s = new Structure({ data: { foo: 'bar' }});
 
-    var Structure = require('immstruct/structure');
-    var s = new Structure({ data: { foo: 'bar' }});
+// Or:
+// var Structure = require('immstruct').Structure;
+```
 
-    // Or:
-    // var Structure = require('immstruct').Structure;
+### Events
+
+* `swap`: Emitted when cursor is updated (new information is set). Is emitted
+  on all types of changes, additions and deletions. The passed structures are
+  always the root structure.
+  One use case for this is to re-render design components. Callback
+  is passed arguments: `newStructure`, `oldStructure`, `keyPath`.
+* `next-animation-frame`: Same as `swap`, but only emitted on animation frame.
+  Could use with many render updates and better performance. Callback is passed
+  arguments: `newStructure`, `oldStructure`, `keyPath`.
+* `change`: Emitted when data/value is updated and it existed before. Emits
+  values: `newValue`, `oldValue` and `path`.
+* `delete`: Emitted when data/value is removed. Emits value:  `removedValue` and `path`.
+* `add`: Emitted when new data/value is added. Emits value: `newValue` and `path`.
+* `any`: With the same semantics as `add`, `change` or `delete`, `any` is triggered for
+   all types of changes. Differs from swap in the arguments that it is passed.
+   Is passed `newValue` (or undefined), `oldValue` (or undefined) and full `keyPath`.
+   New and old value are the changed value, not relative/scoped to the reference path as
+   with `swap`.
 
 ### Options
 
-```
+```json
 {
   key: String, // Defaults to random string
   data: Object|Immutable, // defaults to empty Map
-  history: Boolean // Defaults to false
+  history: Boolean, // Defaults to false
+  historyLimit: Number, // If history enabled, Defaults to Infinity
 }
 ```
 
 
 ### Parameters
 
-| param       | type                                                                                   | description                                                                            |
-| ----------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `[options]` | { key: <code>String</code>, data: <code>Object</code>, history: <code>Boolean</code> } | _optional:_ - defaults to random key and empty data (immutable structure). No history  |
+| param       | type                                                                                   | description                                                                             |
+| ----------- | -------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `[options]` | { key: <code>String</code>, data: <code>Object</code>, history: <code>Boolean</code> } | _optional:_ - defaults  to random key and empty data (immutable structure). No history
+ |
 
 
 ### Properties
@@ -201,13 +293,18 @@ Creates a new `Structure` instance. Also accessible through
 Create a Immutable.js Cursor for a given `path` on the `current` structure (see `Structure.current`).
 Changes made through created cursor will cause a `swap` event to happen (see `Events`).
 
-### Examples:
+**This method returns a
+[Immutable.js Cursor](https://github.com/facebook/immutable-js/blob/master/contrib/cursor/index.d.ts).
+See the Immutable.js docs for more info on how to use cursors.**
 
-    var Structure = require('immstruct/structure');
-    var s = new Structure({ data: { foo: 'bar', a: { b: 'foo' } }});
-    s.cursor().set('foo', 'hello');
-    s.cursor('foo').update(function () { return 'Changed'; });
-    s.cursor(['a', 'b']).update(function () { return 'bar'; });
+### Examples:
+```js
+var Structure = require('immstruct/structure');
+var s = new Structure({ data: { foo: 'bar', a: { b: 'foo' } }});
+s.cursor().set('foo', 'hello');
+s.cursor('foo').update(function () { return 'Changed'; });
+s.cursor(['a', 'b']).update(function () { return 'bar'; });
+```
 
 See more examples in the [tests](https://github.com/omniscientjs/immstruct/blob/master/tests/structure_test.js)
 
@@ -223,7 +320,7 @@ See more examples in the [tests](https://github.com/omniscientjs/immstruct/blob/
 **Returns** `Cursor`, Gives a Cursor from Immutable.js
 
 
-### `structure.reference([path])`
+### `structure.reference([path|cursor])`
 
 Creates a reference. A reference can be a pointer to a cursor, allowing
 you to create cursors for a specific path any time. This is essentially
@@ -233,34 +330,36 @@ for better understanding the concept.
 References also allow you to listen for changes specific for a path.
 
 ### Examples:
+```js
+var structure = immstruct({
+  someBox: { message: 'Hello World!' }
+});
+var ref = structure.reference(['someBox']);
 
-    var structure = immstruct({
-      someBox: { message: 'Hello World!' }
-    });
-    var ref = structure.reference(['someBox']);
+var unobserve = ref.observe(function () {
+  // Called when data the path 'someBox' is changed.
+  // Also called when the data at ['someBox', 'message'] is changed.
+});
 
-    var unobserve = ref.observe(function () {
-      // Called when data the path 'someBox' is changed.
-      // Also called when the data at ['someBox', 'message'] is changed.
-    });
+// Update the data using the ref
+ref.cursor().update(function () { return 'updated'; });
 
-    // Update the data using the ref
-    ref.cursor().update(function () { return 'updated'; });
+// Update the data using the initial structure
+structure.cursor(['someBox', 'message']).update(function () { return 'updated again'; });
 
-    // Update the data using the initial structure
-    structure.cursor(['someBox', 'message']).update(function () { return 'updated again'; });
-
-    // Remove the listener
-    unobserve();
+// Remove the listener
+unobserve();
+```
 
 See more examples in the [readme](https://github.com/omniscientjs/immstruct)
 
 
 ### Parameters
 
-| param    | type         | description                                                                              |
-| -------- | ------------ | ---------------------------------------------------------------------------------------- |
-| `[path]` | String,Array | _optional:_ - defaults to empty string. Can be array for path. See Immutable.js Cursors  |
+| param           | type                | description                                                                                                    |
+| --------------- | ------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `[path|cursor]` | String,Array,Cursor | _optional:_ - defaults to empty string. Can be array for path or use path of cursor. See Immutable.js Cursors
+ |
 
 
 
@@ -269,25 +368,74 @@ See more examples in the [readme](https://github.com/omniscientjs/immstruct)
 
 ### `reference.observe([eventName], callback)`
 
-Observe for changes on a reference.
+Observe for changes on a reference. On references you can observe for changes,
+but a reference **is not** an EventEmitter it self.
+
+The passed `keyPath` for swap events are relative to the reference, but
+
+
+**Note**: As on `swap` for normal immstruct events, the passed arguments for
+the event is the root, not guaranteed to be the actual changed value.
+The structure is how ever scoped to the path passed in to the reference.
+All values passed to the eventlistener for the swap event are relative
+to the path used as key path to the reference.
+
+For instance:
+
+```js
+var structure = immstruct({ 'foo': { 'bar': 'hello' } });
+var ref = structure.reference('foo');
+ref.observe(function (newData, oldData, keyPath) {
+  keyPath.should.eql(['bar']);
+  newData.toJS().should.eql({ 'bar': 'updated' });
+  oldData.toJS().should.eql({ 'bar': 'hello' });
+});
+ref.cursor().update(['bar'], function () { return 'updated'; });
+```
+
+For type specific events, how ever, the actual changed value is passed,
+not the root data. In these cases, the full keyPath to the change is passed.
+
+For instance:
+
+```js
+var structure = immstruct({ 'foo': { 'bar': 'hello' } });
+var ref = structure.reference('foo');
+ref.observe('change', function (newValue, oldValue, keyPath) {
+  keyPath.should.eql(['foo', 'bar']);
+  newData.should.eql('updated');
+  oldData.should.eql('hello');
+});
+ref.cursor().update(['bar'], function () { return 'updated'; });
+```
+
 
 ### Examples:
+```js
+var ref = structure.reference(['someBox']);
 
-    var ref = structure.reference(['someBox']);
-
-    var unobserve = ref.observe('delete', function () {
-      // Called when data the path 'someBox' is removed from the structure.
-    });
+var unobserve = ref.observe('delete', function () {
+  // Called when data the path 'someBox' is removed from the structure.
+});
+```
 
 See more examples in the [readme](https://github.com/omniscientjs/immstruct)
 
-### Event names
-Event names can be either
-
- * `add`: When new data/value is added
- * `delete`: When data/value is removed
- * `change`: When data/value is updated and it existed before
- * `swap`: When cursor is updated (new information is set). Emits no values. One use case for this is to re-render design components
+### Events
+* `swap`: Emitted when any cursor is updated (new information is set).
+  Triggered in any data swap is made on the structure. One use case for
+  this is to re-render design components. Data passed as arguments
+  are scoped/relative to the path passed to the reference, this also goes for keyPath.
+  Callback is passed arguments: `newStructure`, `oldStructure`, `keyPath`.
+* `change`: Emitted when data/value is updated and it existed before.
+  Emits values: `newValue`, `oldValue` and `path`.
+* `delete`: Emitted when data/value is removed. Emits value:  `removedValue` and `path`.
+* `add`: Emitted when new data/value is added. Emits value: `newValue` and `path`.
+* `any`: With the same semantics as `add`, `change` or `delete`, `any` is triggered for
+   all types of changes. Differs from swap in the arguments that it is passed.
+   Is passed `newValue` (or undefined), `oldValue` (or undefined) and full `keyPath`.
+   New and old value are the changed value, not relative/scoped to the reference path as
+   with `swap`.
 
 
 ### Parameters
@@ -310,10 +458,11 @@ cursor method. You can also provide a sub-path to create a reference
 in a deeper level.
 
 ### Examples:
-
-    var ref = structure.reference(['someBox']);
-    var cursor = ref.cursor('someSubPath');
-    var cursor2 = ref.cursor();
+```js
+var ref = structure.reference(['someBox']);
+var cursor = ref.cursor('someSubPath');
+var cursor2 = ref.cursor();
+```
 
 See more examples in the [readme](https://github.com/omniscientjs/immstruct)
 
@@ -327,6 +476,34 @@ See more examples in the [readme](https://github.com/omniscientjs/immstruct)
 
 
 **Returns** `Cursor`, Immutable.js cursor
+
+
+### `reference.reference([path])`
+
+Creates a reference on a lower level path. See creating normal references.
+
+### Examples:
+```js
+var structure = immstruct({
+  someBox: { message: 'Hello World!' }
+});
+var ref = structure.reference('someBox');
+
+var newReference = ref.reference('message');
+```
+
+See more examples in the [readme](https://github.com/omniscientjs/immstruct)
+
+
+### Parameters
+
+| param    | type         | description                                                                              |
+| -------- | ------------ | ---------------------------------------------------------------------------------------- |
+| `[path]` | String,Array | _optional:_ - defaults to empty string. Can be array for path. See Immutable.js Cursors  |
+
+
+
+**Returns** `Reference`,
 
 
 ### `reference.unobserveAll`

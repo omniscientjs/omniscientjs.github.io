@@ -2,8 +2,8 @@
 layout: guides
 collection: api
 title: Omnipotent API Reference
-name: 02-omnipotent-api-reference
-prev: 01-immstruct-api-reference
+name: 03-omnipotent-api-reference
+prev: 02-immstruct-api-reference
 ---
 
 *API Reference for `Omnipotent v1.1.0`*

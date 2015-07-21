@@ -2,9 +2,9 @@
 layout: guides
 collection: api
 title: Immstruct API Reference
-name: 02-immstruct-api-reference
 prev: 01-omniscient-api-reference
-next: 02-omnipotent-api-reference
+name: 02-immstruct-api-reference
+next: 03-omnipotent-api-reference
 ---
 
 *API Reference for `Immstruct v2.0.0`*

@@ -18,6 +18,7 @@ eventemitters for communicating throuch a channel with parents, callbacks,
 csps, etc.
 
 Require the decorator by doing:
+
 ```js
 var ignore = require('omnipotent/decorator/ignore');
 // or
@@ -25,6 +26,7 @@ var ignore = require('omnipotent').decorator.ignore;
 ```
 
 ### Examples:
+
 ```js
 var struct = immstruct({
   hero: 'Natasha Romanoff',
@@ -74,6 +76,7 @@ dependencies. If you require one of your components to get injected data
 automatically and update everytime that data changes.
 
 Fields passed to observer should be defined as the following:
+
 ```js
 {
   namePassedAsProps: ['nested', 'key', 'path'],
@@ -89,7 +92,8 @@ var observer = require('omnipotent/decorator/observer');
 var observer = require('omnipotent').decorator.observer;
 ```
 
-### Examples:
+### Examples
+
 ```jsx
 var structure = immstruct({ hero { name: 'Natalia Romanova' } });
 

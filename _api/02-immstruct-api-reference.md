@@ -16,7 +16,8 @@ More information can be found on the [immstruct repo](https://github.com/omnisci
 Creates a new instance of Immstruct, having it's own list
 of Structure instances.
 
-### Examples:
+### Examples
+
 ```js
 var ImmstructInstance = require('immstruct').Immstruct;
 var immstruct = new ImmstructInstance();
@@ -41,7 +42,8 @@ Gets or creates a new instance of {Structure}. Provide optional
 key to be able to retrieve it from list of instances. If no key
 is provided, a random key will be generated.
 
-### Examples:
+### Examples
+
 ```js
 var immstruct = require('immstruct');
 var structure = immstruct.get('myStruct', { foo: 'Hello' });
@@ -80,7 +82,8 @@ Get list of all instances created.
 Clear the entire list of `Structure` instances from the Immstruct
 instance. You would do this to start from scratch, freeing up memory.
 
-### Examples:
+### Examples
+
 ```js
 var immstruct = require('immstruct');
 immstruct.clear();
@@ -92,7 +95,8 @@ immstruct.clear();
 Remove one `Structure` instance from the Immstruct instances list.
 Provided by key
 
-### Examples:
+### Examples
+
 ```js
 var immstruct = require('immstruct');
 immstruct('myKey', { foo: 'hello' });
@@ -123,7 +127,8 @@ that will be kept. Once limit is reached, a new history record
 shifts off the oldest record. The default if omitted is Infinity.
 Setting to 0 is the as not having history enabled in the first place.
 
-### Examples:
+### Examples
+
 ```js
 var immstruct = require('immstruct');
 var structure = immstruct.withHistory('myStruct', 10, { foo: 'Hello' });
@@ -158,7 +163,8 @@ instance. A link to `immstruct.get()`. Provide optional
 key to be able to retrieve it from list of instances. If no key
 is provided, a random key will be generated.
 
-### Examples:
+### Examples
+
 ```js
 var immstruct = require('immstruct');
 var structure = immstruct('myStruct', { foo: 'Hello' });
@@ -193,7 +199,8 @@ For the `swap` event, the root structure (see `structure.current`) is passed
 as arguments, but for type specific events (`add`, `change` and `delete`), the
 actual changed value is passed.
 
-For instance:
+For instance
+
 ```js
 var structure = new Structure({ 'foo': { 'bar': 'hello' } });
 
@@ -257,7 +264,7 @@ var s = new Structure({ data: { foo: 'bar' }});
 
 ### Options
 
-```json
+```js
 {
   key: String, // Defaults to random string
   data: Object|Immutable, // defaults to empty Map
@@ -298,7 +305,8 @@ Changes made through created cursor will cause a `swap` event to happen (see `Ev
 [Immutable.js Cursor](https://github.com/facebook/immutable-js/blob/master/contrib/cursor/index.d.ts).
 See the Immutable.js docs for more info on how to use cursors.**
 
-### Examples:
+### Examples
+
 ```js
 var Structure = require('immstruct/structure');
 var s = new Structure({ data: { foo: 'bar', a: { b: 'foo' } }});
@@ -330,7 +338,8 @@ for better understanding the concept.
 
 References also allow you to listen for changes specific for a path.
 
-### Examples:
+### Examples
+
 ```js
 var structure = immstruct({
   someBox: { message: 'Hello World!' }
@@ -458,7 +467,8 @@ reference. This returns a Immutable.js Cursor as the regular
 cursor method. You can also provide a sub-path to create a reference
 in a deeper level.
 
-### Examples:
+### Examples
+
 ```js
 var ref = structure.reference(['someBox']);
 var cursor = ref.cursor('someSubPath');
@@ -483,7 +493,8 @@ See more examples in the [readme](https://github.com/omniscientjs/immstruct)
 
 Creates a reference on a lower level path. See creating normal references.
 
-### Examples:
+### Examples
+
 ```js
 var structure = immstruct({
   someBox: { message: 'Hello World!' }

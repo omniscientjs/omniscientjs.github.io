@@ -55,6 +55,7 @@ This also allows you to override any defaults that Omniscient use to check equal
 unwrap cursors, etc.
 
 ### Options
+
 ```js
 {
   // Goes directly to component
@@ -75,7 +76,9 @@ unwrap cursors, etc.
 ```
 
 ### Examples
+
 #### Always use JSX
+
 ```js
 var component = require('omniscient');
 var jsxComponent = component.withDefaults({
@@ -89,6 +92,7 @@ React.render(, document.body);
 ```
 
 #### Un-wrapping curors
+
 ```jsx
 var localComponent = component.withDefaults({
   cursorField: 'foobar'
@@ -126,6 +130,7 @@ Activate debugging for components. Will log when a component renders,
 the outcome of `shouldComponentUpdate`, and why the component re-renders.
 
 ### Example
+
 ```js
 Search>: shouldComponentUpdate => true (cursors have changed)
 Search>: render
@@ -219,6 +224,7 @@ You can do this if you don't want to use Omniscients syntactic sugar.
 Create a “local” instance of the shouldComponentUpdate with overriden defaults.
 
 ### Options
+
 ```js
 {
   isCursor: function (cursor), // check if is props
@@ -407,6 +413,7 @@ call.
 Create a “local” instance of the `cache` with overriden defaults.
 
 ### Options
+
 ```js
 {
   isEqualProps: function (currentProps, nextProps), // check props

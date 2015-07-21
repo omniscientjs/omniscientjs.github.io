@@ -6,6 +6,15 @@ title: Changelog
 
 Changelog with fixes and additions between each release.
 
+## Version `v3.2.0`
+
+Minor release adding some features. Most notably the transition for new API for ignorable fields. Currently all properties under the `statics` property name is ignored, but this is a poor and weak API. We'll transition to a more explicit API through decorator helpers. This release is obviously non-breaking, so the `statics` property behaviour isn't removed yet, but will be with the next major release.
+
+## Additions
+
+1. Allow for nested mixins for `shouldComponentUpdate`. See [#99](https://github.com/omniscientjs/omniscient/pull/99)
+2. Changes isStatics to be isIgnorable and overridable. See [a28d59](https://github.com/omniscientjs/omniscient/commit/a28d595433dce99dda193fba1be6178dcbe0b5f7)
+
 ## Version `v3.1.0`
 
 ### Additions

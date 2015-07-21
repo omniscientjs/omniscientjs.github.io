@@ -20,6 +20,7 @@ csps, etc.
 Require the decorator by doing:
 
 ```js
+
 var ignore = require('omnipotent/decorator/ignore');
 // or
 var ignore = require('omnipotent').decorator.ignore;
@@ -78,6 +79,7 @@ automatically and update everytime that data changes.
 Fields passed to observer should be defined as the following:
 
 ```js
+
 {
   namePassedAsProps: ['nested', 'key', 'path'],
   anotherNamePassedAsProps: 'shallowKeyPath'
@@ -87,6 +89,7 @@ Fields passed to observer should be defined as the following:
 Require the decorator by doing:
 
 ```js
+
 var observer = require('omnipotent/decorator/observer');
 // or
 var observer = require('omnipotent').decorator.observer;

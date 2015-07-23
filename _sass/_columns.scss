@@ -1,13 +1,13 @@
 @import "globals/size";
 
 .column {
-  margin-left: calc(#{$column-sidebar-width} + #{$column-sidebar-margin + 1});
+  margin-right: calc(#{$column-sidebar-width} + #{$column-sidebar-margin + 1});
 }
 
 .nav-left {
-  float: left;
+  float: right;
   width: $column-sidebar-width;
-  margin-right: $column-sidebar-margin;
+  margin-left: $column-sidebar-margin;
 
   font-size: 0.9rem;
 }

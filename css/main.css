@@ -462,12 +462,12 @@ p img {
   background: #2980B9; }
 
 .column {
-  margin-left: calc(31% + 2rem); }
+  margin-right: calc(31% + 3rem); }
 
 .nav-left {
-  float: left;
+  float: right;
   width: 31%;
-  margin-right: 1rem;
+  margin-left: 2rem;
   font-size: 0.9rem; }
 
 .nav-left ul, .nav-left ol {

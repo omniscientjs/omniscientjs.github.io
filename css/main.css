@@ -458,6 +458,9 @@ p img {
 .column ul, .column ol {
   margin: 20px 0; }
 
+.logo-white {
+  background: #2980B9; }
+
 .column {
   margin-left: calc(31% + 2rem); }
 

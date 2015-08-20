@@ -515,7 +515,7 @@ p img {
   .nav-left {
     display: none; }
   .column {
-    margin-left: 0; } }
+    margin-right: 0; } }
 
 .docs-prevnext {
   margin: 20px 0; }

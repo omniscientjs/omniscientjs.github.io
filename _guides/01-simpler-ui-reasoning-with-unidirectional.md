@@ -4,7 +4,7 @@ collection: guides
 title: Simpler UI Reasoning with Unidirectional Dataflow and Immutable Data
 name: 01-simpler-ui-reasoning-with-unidirectional
 prev: 00-all-guides
-next: 02-editing-using-immutable-cursors-with-omniscient
+next: 02-immutable-data-cursors-and-omniscient
 date: October 27, 2014
 ---
 

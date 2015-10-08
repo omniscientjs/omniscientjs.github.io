@@ -20,9 +20,7 @@
   }
 
   .CodeMirror {
-    border-top-left-radius: 3px;
-    border-top-right-radius: 0;
-    border-bottom-left-radius: 3px;
+    border-radius: 0;
   }
 
   .CodeMirror-line-numbers {
@@ -44,6 +42,7 @@
   }
   .inner--code {
     flex: 1 65%;
+    min-width: 500px;
   }
   .inner--result {
     flex: 1 35%;

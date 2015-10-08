@@ -5,8 +5,9 @@
   @include width-constraint;
   margin-top: 30px;
   display: block;
-
+  
   &.playground {
+    margin-top: -20px;
     @include width-constraint-large;
   }
 }
@@ -56,6 +57,18 @@
 .playground h2,
 .playground h3 {
   margin-top: 1rem;
+}
+
+.playground .padded-info {
+  padding: 0 0.35rem;
+}
+
+.playground--help {
+  columns: 300px 2;
+  padding: 0.5rem;
+  margin-top: 30px;
+  font-size: 0.7rem;
+  background: $color-gray-offsetbackground;
 }
 
 .mainContent p {

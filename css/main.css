@@ -295,9 +295,7 @@ body {
   padding: 0; }
 
 .playground .CodeMirror {
-  border-top-left-radius: 3px;
-  border-top-right-radius: 0;
-  border-bottom-left-radius: 3px; }
+  border-radius: 0; }
 
 .playground .CodeMirror-line-numbers {
   font-size: 0.2rem; }
@@ -325,7 +323,8 @@ body {
   -webkit-box-flex: 1;
   -webkit-flex: 1 65%;
       -ms-flex: 1 65%;
-          flex: 1 65%; }
+          flex: 1 65%;
+  min-width: 500px; }
 
 .playground .inner--result {
   -webkit-box-flex: 1;
@@ -413,9 +412,9 @@ p code, ul code, li code {
   margin-top: 30px;
   display: block; }
   .mainContent.playground {
+    margin-top: -20px;
     width: auto;
-    max-width: none;
-    margin: 3rem 63px; }
+    max-width: none; }
 
 .mainContent h1,
 .mainContent h2,
@@ -453,6 +452,18 @@ p code, ul code, li code {
 .playground h2,
 .playground h3 {
   margin-top: 1rem; }
+
+.playground .padded-info {
+  padding: 0 0.35rem; }
+
+.playground--help {
+  -webkit-columns: 300px 2;
+     -moz-columns: 300px 2;
+          columns: 300px 2;
+  padding: 0.5rem;
+  margin-top: 30px;
+  font-size: 0.7rem;
+  background: #eee; }
 
 .mainContent p {
   margin-bottom: 20px; }

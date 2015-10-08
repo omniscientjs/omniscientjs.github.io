@@ -7,7 +7,7 @@ prev: 00-apis
 next: 02-immstruct-api-reference
 ---
 
-*API Reference for `Omniscient v3.2.0`*
+*API Reference for `Omniscient v4.0.0`*
 
 More information can be found on the [Omniscient repo](https://github.com/omniscientjs/omniscient).
 
@@ -16,32 +16,34 @@ More information can be found on the [Omniscient repo](https://github.com/omnisc
 
 Create components for functional views.
 
-The API of Omniscient is pretty simple, you create a component
-with a render function and the mixins you need.
+The API of Omniscient is pretty simple, you create a Stateless React Component
+but memoized with a smart implemented `shouldComponentUpdate`.
 
-When using the created component, you can pass a cursor or an object
-as data to it. This data will be the render function's first argument,
-and it will also be available on `this.props`.
+The provided `shouldComponentUpdate` handles immutable data and cursors by default.
+It also falls back to a deep value check if passed props isn't immutable structures.
+
+You can use an Omniscient component in the same way you'd use a React Stateless Function,
+or you can use some of the additional features, such as string defined display name and
+pass in life cycle methods. These are features normally not accessible for vanilla
+Stateless React Components.
 
 If you simply pass one cursor, the cursor will be accessible on the
-`props.cursor` accessor. Data placed on the property `statics` of the
-component's arguments will not be tracked for changes.
-
+`props.cursor` accessor.
 
 ### Parameters
 
-| param         | type         | description                                                                                          |
-| ------------- | ------------ | ---------------------------------------------------------------------------------------------------- |
-| `displayName` | String       | Component's display name. Used when debug()'ing and by React                                         |
-| `mixins`      | Array,Object | React mixins. Object literals with functions, or array of object literals with functions.            |
-| `render`      | Function     | Properties that do not trigger update when changed. Can be cursors, object and immutable structures  |
+| param         | type         | description                                                                               |
+| ------------- | ------------ | ----------------------------------------------------------------------------------------- |
+| `displayName` | String       | Component's display name. Used when debug()'ing and by React                              |
+| `mixins`      | Array,Object | React mixins. Object literals with functions, or array of object literals with functions. |
+| `render`      | Function     | Stateless component to add memoization on.                                                |
 
 
 ### Properties
 
-| property                | type     | description                        |
-| ----------------------- | -------- | ---------------------------------- |
-| `shouldComponentUpdate` | Function | Get default shouldComponentUpdate  |
+| property                | type     | description                       |
+| ----------------------- | -------- | --------------------------------- |
+| `shouldComponentUpdate` | Function | Get default shouldComponentUpdate |
 
 
 
@@ -55,21 +57,18 @@ This also allows you to override any defaults that Omniscient use to check equal
 unwrap cursors, etc.
 
 ### Options
-
 ```js
 {
   // Goes directly to component
-  shouldComponentUpdate: function (nextProps, nextState), // check update
-  jsx: false, // whether or not to default to jsx components
+  shouldComponentUpdate: function(nextProps, nextState), // check update
   cursorField: '__singleCursor', // cursor property name to "unwrap" before passing in to render
-  isNode: function (propValue), // determines if propValue is a valid React node
+  isNode: function(propValue), // determines if propValue is a valid React node
 
   // Passed on to `shouldComponentUpdate`
-  isCursor: function (cursor), // check if prop is cursor
+  isCursor: function(cursor), // check if prop is cursor
   unCursor: function (cursor), // convert cursor to object
   isEqualCursor: function (oneCursor, otherCursor), // compares cursor
   isEqualState: function (currentState, nextState), // compares state
-  isIgnorable: function (propertyValue, propertyKey), // check if property item is ignorable
   isEqualProps: function (currentProps, nextProps), // compares props
   isImmutable: function (maybeImmutable) // check if object is immutable
 }
@@ -77,22 +76,7 @@ unwrap cursors, etc.
 
 ### Examples
 
-#### Always use JSX
-
-```js
-var component = require('omniscient');
-var jsxComponent = component.withDefaults({
-  jsx: true
-});
-
-var Greeting = jsxComponent(function () {
-  return Hello!
-});
-React.render(, document.body);
-```
-
 #### Un-wrapping curors
-
 ```jsx
 var localComponent = component.withDefaults({
   cursorField: 'foobar'
@@ -105,19 +89,18 @@ var Component = localComponent(function (myCursor) {
 React.render(, document.body);
 ```
 
-
 ### Parameters
 
-| param     | type   | description                        |
-| --------- | ------ | ---------------------------------- |
-| `Options` | Object | Options with defaults to override  |
+| param     | type   | description                       |
+| --------- | ------ | --------------------------------- |
+| `Options` | Object | Options with defaults to override |
 
 
 ### Properties
 
-| property                | type     | description                        |
-| ----------------------- | -------- | ---------------------------------- |
-| `shouldComponentUpdate` | Function | Get default shouldComponentUpdate  |
+| property                | type     | description                       |
+| ----------------------- | -------- | --------------------------------- |
+| `shouldComponentUpdate` | Function | Get default shouldComponentUpdate |
 
 
 
@@ -130,7 +113,6 @@ Activate debugging for components. Will log when a component renders,
 the outcome of `shouldComponentUpdate`, and why the component re-renders.
 
 ### Example
-
 ```js
 Search>: shouldComponentUpdate => true (cursors have changed)
 Search>: render
@@ -138,19 +120,11 @@ SearchBox>: shouldComponentUpdate => true (cursors have changed)
 SearchBox>: render
 ```
 
-
 ### Parameters
 
-| param     | type   | description                                          |
-| --------- | ------ | ---------------------------------------------------- |
-| `pattern` | RegExp | Filter pattern. Only show messages matching pattern  |
-
-
-### Properties
-
-| property | type   | description                   |
-| -------- | ------ | ----------------------------- |
-| `jsx`    | Object | Get component for use in JSX  |
+| param     | type   | description                                         |
+| --------- | ------ | --------------------------------------------------- |
+| `pattern` | RegExp | Filter pattern. Only show messages matching pattern |
 
 
 ### Example
@@ -163,26 +137,17 @@ omniscient.debug(/Search/i);
 **Returns** `Immstruct`,
 
 
-### `Component(displayName, props, statics, ..rest)`
+### `Component(displayName, props, ...rest)`
 
 Invoke component (rendering it)
 
-
 ### Parameters
 
-| param         | type   | description                                                                                          |
-| ------------- | ------ | ---------------------------------------------------------------------------------------------------- |
-| `displayName` | String | Component display name. Used in debug and by React                                                   |
-| `props`       | Object | Properties that **do** trigger update when changed. Can be cursors, object and immutable structures  |
-| `statics`     | Object | Properties that do not trigger update when changed. Can be cursors, object and immutable structuress |
-| `..rest`      | Object | Child components (React elements, scalar values)                                                     |
-
-
-### Properties
-
-| property | type   | description                   |
-| -------- | ------ | ----------------------------- |
-| `jsx`    | Object | Get component for use in JSX  |
+| param         | type   | description                                                                                |
+| ------------- | ------ | ------------------------------------------------------------------------------------------ |
+| `displayName` | String | Component display name. Used in debug and by React                                         |
+| `props`       | Object | Properties (triggers update when changed). Can be cursors, object and immutable structures |
+| `...rest`     | Object | Child components (React elements, scalar values)                                           |
 
 
 
@@ -193,7 +158,6 @@ Invoke component (rendering it)
 
 Directly fetch `shouldComponentUpdate` mixin to use outside of Omniscient.
 You can do this if you don't want to use Omniscients syntactic sugar.
-
 
 ### Parameters
 
@@ -212,6 +176,7 @@ You can do this if you don't want to use Omniscients syntactic sugar.
 | `isEqualProps`  | Function | Get default isEqualProps  |
 | `isEqualCursor` | Function | Get default isEqualCursor |
 | `isImmutable`   | Function | Get default isImmutable   |
+| `isIgnorable`   | Function | Get default isIgnorable   |
 | `debug`         | Function | Get default debug         |
 
 
@@ -224,7 +189,6 @@ You can do this if you don't want to use Omniscients syntactic sugar.
 Create a “local” instance of the shouldComponentUpdate with overriden defaults.
 
 ### Options
-
 ```js
 {
   isCursor: function (cursor), // check if is props
@@ -237,12 +201,11 @@ Create a “local” instance of the shouldComponentUpdate with overriden defaul
 }
 ```
 
-
 ### Parameters
 
-| param       | type   | description                                    |
-| ----------- | ------ | ---------------------------------------------- |
-| `[Options]` | Object | _optional:_ Options with defaults to override  |
+| param       | type   | description                                   |
+| ----------- | ------ | --------------------------------------------- |
+| `[Options]` | Object | _optional:_ Options with defaults to override |
 
 
 
@@ -255,7 +218,6 @@ Predicate to check if state is equal. Checks in the tree for immutable structure
 and if it is, check by reference. Does not support cursors.
 
 Override through `shouldComponentUpdate.withDefaults`.
-
 
 ### Parameters
 
@@ -276,7 +238,6 @@ and if it is, check by reference.
 
 Override through `shouldComponentUpdate.withDefaults`.
 
-
 ### Parameters
 
 | param   | type   | description |
@@ -294,7 +255,6 @@ Override through `shouldComponentUpdate.withDefaults`.
 Predicate to check if cursors are equal through reference checks. Uses `unCursor`.
 Override through `shouldComponentUpdate.withDefaults` to support different cursor
 implementations.
-
 
 ### Parameters
 
@@ -314,12 +274,11 @@ Predicate to check if a potential is an immutable structure or not.
 Override through `shouldComponentUpdate.withDefaults` to support different cursor
 implementations.
 
-
 ### Parameters
 
-| param   | type           | description                   |
-| ------- | -------------- | ----------------------------- |
-| `value` | maybeImmutable | to check if it is immutable.  |
+| param   | type           | description                  |
+| ------- | -------------- | ---------------------------- |
+| `value` | maybeImmutable | to check if it is immutable. |
 
 
 
@@ -332,12 +291,11 @@ Transforming function to take in cursor and return a non-cursor.
 Override through `shouldComponentUpdate.withDefaults` to support different cursor
 implementations.
 
-
 ### Parameters
 
-| param    | type   | description   |
-| -------- | ------ | ------------- |
-| `cursor` | cursor | to transform  |
+| param    | type   | description  |
+| -------- | ------ | ------------ |
+| `cursor` | cursor | to transform |
 
 
 
@@ -349,12 +307,11 @@ implementations.
 Predicate to check if `potential` is Immutable cursor or not (defaults to duck testing
 Immutable.js cursors). Can override through `.withDefaults()`.
 
-
 ### Parameters
 
-| param       | type      | description            |
-| ----------- | --------- | ---------------------- |
-| `potential` | potential | to check if is cursor  |
+| param       | type      | description           |
+| ----------- | --------- | --------------------- |
+| `potential` | potential | to check if is cursor |
 
 
 
@@ -368,7 +325,6 @@ For now this defaults to ignore if property key is `statics`, but that
 is deprecated behaviour, and will be removed by the next major release.
 
 Override through `shouldComponentUpdate.withDefaults`.
-
 
 ### Parameters
 
@@ -396,12 +352,11 @@ of state. Although note that only last result is cached so it is
 not practical to call it mulitple times with in the same `render`
 call.
 
-
 ### Parameters
 
-| param      | type     | description               |
-| ---------- | -------- | ------------------------- |
-| `Function` | Function | that does a computation.  |
+| param      | type     | description              |
+| ---------- | -------- | ------------------------ |
+| `Function` | Function | that does a computation. |
 
 
 
@@ -413,19 +368,17 @@ call.
 Create a “local” instance of the `cache` with overriden defaults.
 
 ### Options
-
 ```js
 {
   isEqualProps: function (currentProps, nextProps), // check props
 }
 ```
 
-
 ### Parameters
 
-| param       | type   | description                                    |
-| ----------- | ------ | ---------------------------------------------- |
-| `[Options]` | Object | _optional:_ Options with defaults to override  |
+| param       | type   | description                                   |
+| ----------- | ------ | --------------------------------------------- |
+| `[Options]` | Object | _optional:_ Options with defaults to override |
 
 
 
@@ -440,15 +393,14 @@ Predicate showing whether or not the argument is a valid React Node
 or not. Can be numbers, strings, bools, and React Elements.
 
 React's isNode check from ReactPropTypes validator
-but adjusted to not accept objects to avoid collision with props & statics.
-
+but adjusted to not accept objects to avoid collision with props.
 
 ### Parameters
 
-| param       | type   | description                                     |
-| ----------- | ------ | ----------------------------------------------- |
-| `propValue` | String | Property value to check if is valid React Node  |
+| param       | type   | description                                    |
+| ----------- | ------ | ---------------------------------------------- |
+| `propValue` | String | Property value to check if is valid React Node |
 
 
 
-**Returns** `Boolean`
+**Returns** `Boolean`.

@@ -5,7 +5,7 @@
   @include width-constraint;
   margin-top: 30px;
   display: block;
-  
+
   &.playground {
     margin-top: -20px;
     @include width-constraint-large;
@@ -52,6 +52,21 @@
   }
 }
 
+.video-container {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+    margin-bottom: 20px;
+
+    iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+}
 
 .playground h1,
 .playground h2,

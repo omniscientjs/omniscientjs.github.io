@@ -451,6 +451,19 @@ p code, ul code, li code {
   .mainContent table tr:nth-child(odd) td {
     background: #fdf3f2; }
 
+.video-container {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%;
+  margin-bottom: 20px; }
+  .video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; }
+
 .playground h1,
 .playground h2,
 .playground h3 {

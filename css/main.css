@@ -86,8 +86,8 @@ ul, ol {
   padding-left: 20px; }
 
 .mainHeader {
-  background: -webkit-linear-gradient(top, #0098C6 0%, #3e5771 100%);
-  background: linear-gradient(to bottom, #0098C6 0%, #3e5771 100%); }
+  background: -webkit-linear-gradient(top, #0098C6 0%, #9CFFCE 100%);
+  background: linear-gradient(to bottom, #0098C6 0%, #9CFFCE 100%); }
 
 body {
   padding-top: 63px; }
@@ -238,8 +238,11 @@ body {
   .chevronDown:hover i {
     opacity: 1; }
 
+.graphNode {
+  fill: #2C3E50; }
+
 .graphNode--blue {
-  fill: #2C3E50;
+  fill: #272361;
   -webkit-animation-name: 'pulse_animation';
   -webkit-animation-duration: 2500ms;
   -webkit-animation-iteration-count: infinite;

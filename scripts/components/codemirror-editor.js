@@ -34,6 +34,7 @@ export default component([{
         throttledReplaceState(source);
       }
     };
+
     var domNode = ReactDOM.findDOMNode(this);
     this.editor = CodeMirror.fromTextArea(domNode, options);
     this.editor.on('change', onCodeMirrorChange);

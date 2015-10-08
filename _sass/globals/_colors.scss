@@ -7,6 +7,8 @@ $color-organge-normal: #E74C3C;
 
 $color-omniscient-blue: #0098C6;
 
+$color-omniscient-highlight: #9CFFCE;
+
 $color-white-bg: #fafafa;
 $color-darkGray-background: $color-white-bg;
 $color-white-fontColor: #2d2d2d;
@@ -15,7 +17,7 @@ $color-gray-offsetbackground: #eee;
 
 $color-header-border: $color-blue-light;
 $color-header-background: $color-omniscient-blue;
-$color-header-background--bottom: lighten($color-blue-darkest, 10%);
+$color-header-background--bottom: $color-omniscient-highlight;
 $color-header-background--small: $color-omniscient-blue;
 
 $color-header-linkColor: $color-white-bg;
@@ -23,7 +25,8 @@ $color-header-linkColor: $color-white-bg;
 
 // Graph colors:
 
-$color-topNode: $color-blue-darkest;
+$color-topNode: #272361;
+$color-otherNodes: $color-blue-darkest;
 
 $color-infoBoxes: $color-white-bg;
 

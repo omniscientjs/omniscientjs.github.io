@@ -3,7 +3,7 @@
 .CodeMirror {
   /* Set height, width, borders, and global font properties here */
   font-family: monospace;
-  font-size: 1rem;
+  font-size: 1.2rem;
   height: auto; /*torgeir added this*/
 }
 
@@ -310,4 +310,3 @@ div.CodeMirror-cursors {
 
 /* Help users use markselection to safely style text background */
 span.CodeMirror-selectedtext { background: none; }
-

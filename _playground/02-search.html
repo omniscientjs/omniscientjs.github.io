@@ -69,5 +69,5 @@ render();
 structure.on('next-animation-frame', render);
 
 function render () {
-  React.render(Search(structure.cursor()), el);
+  ReactDOM.render(Search(structure.cursor()), el);
 }

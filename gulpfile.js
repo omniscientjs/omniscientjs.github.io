@@ -18,24 +18,21 @@ gulp.task('sass', function () {
     includePaths: ['_sass']
   }))
   .on('error', console.error.bind(console))
-  .pipe(prefix(['last 15 versions', '> 1%', 'ie 8', 'ie 7']))
+  .pipe(prefix(['last 2 versions']))
   .pipe(gulp.dest('_site/css'))
   .pipe(gulp.dest('css'));
 });
 
 gulp.task('js', js({}));
 gulp.task('js-watch', js({ watch: true }));
+gulp.task('sass-watch', function () {
+  return gulp.watch('_sass/**/*.scss', ['sass']);
+});
 
-gulp.task('watch', ['default'], function () {
-  gulp.watch([
-    '!scripts/*.build.js',
-    'scripts/**.js',
-    'scripts/**/*.js',
+gulp.task('asset-watch', ['js-watch', 'sass-watch']);
 
-  ], ['js-watch']);
-  gulp.watch('_sass/**/*.scss', ['sass']);
+gulp.task('watch', ['default', 'js-watch', 'sass-watch'], function () {
   gulp.watch([
-    // 'scripts/**/*.js',
     '_workshop/*.js',
     '**/*.html',
     '!_site/**/*',

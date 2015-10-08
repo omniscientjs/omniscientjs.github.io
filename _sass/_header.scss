@@ -112,6 +112,13 @@ body {
   }
 }
 
+@media (max-width: $cap-logo-header-width) {
+  .mainNavigation-inner h1 a {
+    width: 40px;
+    overflow: hidden;
+  }
+}
+
 .mainNavigation-inner h1 a {
   display: block;
 

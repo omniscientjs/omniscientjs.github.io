@@ -1,5 +1,5 @@
 import React from 'react';
-import component from './component';
+import component from 'omniscient';
 
 export default component(function Result ({ stats, failures, errorResult }) {
 
@@ -49,5 +49,3 @@ export default component(function Result ({ stats, failures, errorResult }) {
       : null}
   </div>;
 });
-
-

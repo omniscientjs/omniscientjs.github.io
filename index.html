@@ -30,32 +30,41 @@ React.render(
   Greet({ name: 'Omniscient' }),
   el);</textarea></div>
 
-<p>The code below shows Omniscient used in cooperation with <a href="https://github.com/omniscientjs/immstruct/blob/master/README.md">
-  Immstruct</a> and the cursors of <a href="https://github.com/facebook/immutable-js/tree/master/contrib/cursor">Immutable.js</a>
-  - a "render loop" pattern you'll often see with Omniscient apps. Whenever the data of an Immstruct instance changes, an event is fired and React can be told to re-render your application. When using immutable data structures, Omniscient will take care to only re-render the parts of your application which data actually changed. As components receive cursors that point into these immutable data structures, each component can easily update its own data without knowledge of the other parts of the data structure.</p>
+<p>
+  Below you can see conceptually how to update and propagate changes through stateless components.
+  The example is a more functional style alternative to the counter example shown in the
+  <a href="http://facebook.github.io/react/#timerExample">React homepage timer example</a>.
+</p>
 
+<p>
+  Note in the example, that we call render everytime the data changes. Normally, you
+  wouldn't handle the render loop manually, but use something like
+  <a href="https://github.com/omniscientjs/immstruct">Immstruct</a> to handle it
+  for you. Read more about this in the project readme.
+</p>
 
 <div class="editor"><textarea>
-var Count = component(({counter}) =>
-  <div>
-    <span>Count {counter.deref()}! </span>
-    <button onClick={() => counter.update(n => n + 1)}>inc</button>
-    <button onClick={() => counter.update(n => n - 1)}>dec</button>
-  </div>);
+var stop;
+var Timer = component({
+  // Attaching life cycle methods
+  componentDidMount: () => stop = createTicker(),
+  componentWillUnmount: () => stop()
+}, ({time}) => <div>Seconds Elapsed: {time}</div>);
 
-var data = immstruct({ counter: 42 });
-data.on('swap', render);
+function render (appState = { seconds: 0 }) {
+  ReactDOM.render(<Timer time={appState.seconds} />, el);
+}
 render();
 
-function render () {
-  React.render(
-    Count({ counter: data.cursor('counter') }),
-    el);
+function createTicker () {
+  var seconds = 0;
+  var interval = setInterval(() =>
+    render({ seconds: ++seconds }), 1000);
+  return function stop() {
+    clearInterval(interval);
+  };
 }
-
-setInterval(
-  () => data.cursor('counter').update(i => i + 1),
-  2000);</textarea></div>
+</textarea></div>
 
 <h2>Getting Started</h2>
 <p>

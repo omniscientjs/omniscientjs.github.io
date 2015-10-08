@@ -15,7 +15,7 @@ component.debug();
 
 var Item = component('Item', function ({item}) {
   var onChecked = () => item.update('checked', state => !state);
-  var style = { 
+  var style = {
     textDecoration: item.get('checked') ? 'line-through' : 'none',
     // color: item.get('checked') ? 'green' : ''
   };
@@ -27,7 +27,7 @@ var Item = component('Item', function ({item}) {
        {item.get('text')}
     </label>
   );
-}).jsx;
+});
 
 var List = component('List', ({items}) =>
   <form>
@@ -44,7 +44,7 @@ render();
 data.on('swap', render);
 
 function render () {
-  React.render(
+  ReactDOM.render(
     List({ items: data.cursor('items') }),
     el);
 }

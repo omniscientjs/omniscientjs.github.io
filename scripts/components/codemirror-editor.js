@@ -21,7 +21,7 @@ export default component([{
       lineNumbers: isLarge,
       lineWrapping: false,
       viewportMargin: Infinity,
-      theme: 'base16-mocha-dark',
+      theme: 'xq-light',
       tabSize: 2,
       extraKeys: { Tab }
     };

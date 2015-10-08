@@ -23,12 +23,10 @@ layout: homepage
 </p>
 
 <div class="editor"><textarea>
-var Greet = component(({name}) =>
-  <div>Hello from {name}!</div>);
+var Greet = component(({name}) => <div>Hello from {name}!</div>);
 
-React.render(
-  Greet({ name: 'Omniscient' }),
-  el);</textarea></div>
+React.render(Greet({ name: 'Omniscient' }), el);
+</textarea></div>
 
 <p>
   Below you can see conceptually how to update and propagate changes through stateless components.

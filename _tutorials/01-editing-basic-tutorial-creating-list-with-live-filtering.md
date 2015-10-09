@@ -15,7 +15,8 @@ For this example, we're creating a small application where we can search for dif
 ```jsx
 var React     = require('react'),
     immstruct = require('immstruct'),
-    component = require('omniscient');
+    component = require('omniscient'),
+    d = React.DOM;
 ```
 
 To show a list of different JavaScript projects, we should have a top structure with our data defined as a immutable structure. We are creating a list of different project and their URLs, but also an empty string with `search`. This will be the current search query, that we want as an active filter. The entire application state is defined in that structure alone. If we wanted, we could have started the application with a predefined search – making it easier to test and demo.
@@ -78,7 +79,7 @@ Now we us start implementing `Search`, which will consist of a `SearchBox` and a
 
 ```jsx
 var Search = component('Search', function (cursor) {
-  return React.DOM.div({ },
+  return d.div({ },
               SearchBox(cursor.cursor('search')),
               Matches(cursor));
 });
@@ -114,7 +115,7 @@ var Matches = component('Matches', function (cursor) {
   });
 
   // Present the matches
-  return React.DOM.ul({}, matches.toArray().map(function (lib, i) {
+  return d.ul({}, matches.toArray().map(function (lib, i) {
     // Add key through first argument
     return Match('match-' + lib.get('title'), lib);
   }));
@@ -134,7 +135,7 @@ var structure = immstruct({
 
 ```jsx
 var SearchBox = component('SearchBox', function (cursor) {
-  return React.DOM.div({}, d.input({
+  return d.div({}, d.input({
     placeholder: "Search..",
     value: cursor.deref(),
     onChange: this.changeHandler

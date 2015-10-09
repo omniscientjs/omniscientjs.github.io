@@ -87,7 +87,7 @@ var Search = component('Search', function (cursor) {
 
 As we see, a component can be created by using Omniscient. The first argument is a string representation of the component and is used for debugging, as well as Component name for React. The second argument is the component implementation it self as a function. This function is a render function. When a component should render this function is executed, and its return value will be the presentation of this component. The render function of a component is passed a cursor, which is the cursor a parent component or the top renderer is serving. In our case we, `Search` will get passed an object literal with a property of our cursor to the entire application state through `structure.cursor()` as defined in our `render` function above.
 
-As we can see, `Search` is a small component that only outputs a div with two sub-components; `SearchBox` and `Matches`. The empty object as first argument to the React div-element is HTML metadata to the div. We see that `Matches` gets the same cursor as `Search` has (a cursor to the entire structure), as it is a representation of the entire state, but the `SearchBox` only needs information about the search query. It should't concern it self with how the list is stored or handled.
+As we can see, `Search` is a small component that only outputs a div with two sub-components; `SearchBox` and `Matches`. The empty object as first argument to the React div-element is HTML metadata to the div. We see that `Matches` gets the same cursor as `Search` has (a cursor to the entire structure), as it is a representation of the entire state, but `SearchBox` only needs information about the search query. It should't concern it self with how the list is stored or handled.
 
 The next natural step is to list out all the matches based on the search query - as is the main part of our application. We don't have any way of altering the search query yet, but that doesn't matter. We have the search query as a value inside our global application state, and with it being empty, we should list out all our JavaScript projects.
 
@@ -200,7 +200,7 @@ While having the debug-mode activated, we try to go from `e` to `en` in the inpu
 <Match key=match-Moment>: shouldComponentUpdate => false
 ```
 
-We see that all the parent components and the SearchBox are re-rendered. What is interesting is that none of the `Match` components are re-rendering. `Matches` re-renders, and removes several elements that don't match our query. The libraries that do match our query, are output, but they haven't changed, so they don't re-render - they just remain from the previous render.
+We see that all the parent components and the SearchBox are re-rendered. What is interesting is that none of the `Match` components are re-rendering. `Matches` re-renders, and removes several elements that don't match our query. The libraries that do match our query are output, but they haven't changed, so they don't re-render - they just remain from the previous render.
 
 If we remove a letter from the search query (making it `e` again), the debug-output for the `Match` component show:
 

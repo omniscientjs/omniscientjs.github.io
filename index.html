@@ -28,8 +28,8 @@ React.render(
   el);</textarea></div>
 
 <p>The code below shows Omniscient used in cooperation with <a href="https://github.com/omniscientjs/immstruct/blob/master/README.md">
-  Immstruct</a> and the cursors of <a href="https://github.com/facebook/immutable-js/tree/master/contrib/cursor">Immutable.js</a> 
-  - a "render loop" pattern you'll often see with Omniscient apps. Whenever the data of an Immstruct instance changes, an event is fired and React can be told to re-render your application. When using immutable data structures, Omniscient will take care to only re-render the parts of your application whose data actually changed. As components receive cursors that point into these immutable data structures, each component can easily update its own data without knowledge of the other parts of the data structure.</p>
+  Immstruct</a> and the cursors of <a href="https://github.com/facebook/immutable-js/tree/master/contrib/cursor">Immutable.js</a>
+  - a "render loop" pattern you'll often see with Omniscient apps. Whenever the data of an Immstruct instance changes, an event is fired and React can be told to re-render your application. When using immutable data structures, Omniscient will take care to only re-render the parts of your application which data actually changed. As components receive cursors that point into these immutable data structures, each component can easily update its own data without knowledge of the other parts of the data structure.</p>
 
 <a name="react-native"></a>
 
@@ -96,7 +96,7 @@ Or you can include the code through a CDN. Remember to also include React in you
 </div>
 
 
-<p>As Omniscient is wrapped in a UMD you can use it many different ways, through CommonJS, AMD or just through the window-object</p>
+<p>As Omniscient is wrapped in a UMD you can use it many different ways, through CommonJS, AMD or just through the window object:</p>
 
 <div class="window window--code">
   <pre><code class="js">// Common.js (recommended)
@@ -107,7 +107,6 @@ var component = require('omniscient');
 require(['omniscient'], function (component) {
   // do something with component
 });
-
 
 // or as fallback Window-object:
 var component = window.omniscient;

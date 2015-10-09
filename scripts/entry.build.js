@@ -30775,6 +30775,10 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _reactDom = __webpack_require__(158);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
 	var _codemirror = __webpack_require__(202);
 
 	var _codemirror2 = _interopRequireDefault(_codemirror);
@@ -30800,7 +30804,7 @@
 	      lineNumbers: isLarge,
 	      lineWrapping: false,
 	      viewportMargin: Infinity,
-	      theme: 'base16-mocha-dark',
+	      theme: 'xq-light',
 	      tabSize: 2,
 	      extraKeys: { Tab: Tab }
 	    };
@@ -30816,7 +30820,8 @@
 	      }
 	    };
 
-	    this.editor = _codemirror2['default'].fromTextArea(this.getDOMNode(), options);
+	    var domNode = _reactDom2['default'].findDOMNode(this);
+	    this.editor = _codemirror2['default'].fromTextArea(domNode, options);
 	    this.editor.on('change', onCodeMirrorChange);
 
 	    if (isLarge) {
@@ -40811,10 +40816,11 @@
 
 	exports['default'] = component({
 	  renderResults: function renderResults(data) {
-	    _react2['default'].render(_react2['default'].createElement(_runResult2['default'], {
+	    var domNode = _reactDom2['default'].findDOMNode(this).querySelector('.results');
+	    _reactDom2['default'].render(_react2['default'].createElement(_runResult2['default'], {
 	      stats: data.cursor('stats'),
 	      failures: data.cursor('failures'),
-	      errorResult: data.cursor('errorResult') }), this.getDOMNode().querySelector('.results'));
+	      errorResult: data.cursor('errorResult') }), domNode);
 	  },
 
 	  componentDidMount: function componentDidMount() {
@@ -40841,7 +40847,7 @@
 	});
 
 	var runCode = function runCode() {
-	  // console.clear();
+	  console.clear();
 
 	  var _props = this.props;
 	  var source = _props.source;
@@ -40854,7 +40860,7 @@
 
 	  var hasTest = /it\(/.test(src);
 
-	  var container = this.getDOMNode();
+	  var container = _reactDom2['default'].findDOMNode(this);
 	  var resultEl = container.querySelector('.react-result');
 	  resultEl.innerHTML = ''; // clear previous results when compilation fails
 

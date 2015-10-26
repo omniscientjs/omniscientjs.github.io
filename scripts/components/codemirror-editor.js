@@ -1,5 +1,6 @@
-import component from './component';
+import component from 'omniscient';
 import React from 'react';
+import ReactDOM from 'react-dom';
 
 import CodeMirror from 'codemirror';
 import 'codemirror/mode/javascript/javascript';
@@ -20,7 +21,7 @@ export default component([{
       lineNumbers: isLarge,
       lineWrapping: false,
       viewportMargin: Infinity,
-      theme: 'base16-mocha-dark',
+      theme: 'xq-light',
       tabSize: 2,
       extraKeys: { Tab }
     };
@@ -34,7 +35,8 @@ export default component([{
       }
     };
 
-    this.editor = CodeMirror.fromTextArea(this.getDOMNode(), options);
+    var domNode = ReactDOM.findDOMNode(this);
+    this.editor = CodeMirror.fromTextArea(domNode, options);
     this.editor.on('change', onCodeMirrorChange);
 
     if (isLarge) {
@@ -81,4 +83,3 @@ function throttle (fn, ms) {
     }, ms);
   };
 }
-

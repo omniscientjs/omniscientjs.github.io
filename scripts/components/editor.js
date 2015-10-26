@@ -1,11 +1,10 @@
 import React from 'react';
-import omniscient from 'omniscient';
+import component from 'omniscient';
 
-import component from './component';
 import CodeMirrorEditor from './codemirror-editor';
 import RunCode from './run-code';
 
-export default component(function Editor ({ source }, { isLarge, timers }) {
+export default component(function Editor ({ source, isLarge, timers }) {
 
   return <div className='window editor'>
     <div className='inner inner--code'>
@@ -17,9 +16,8 @@ export default component(function Editor ({ source }, { isLarge, timers }) {
     <div className="inner inner--result">
       <RunCode
         source={source}
-        statics={{timers}}
+        timers={timers}
         />
     </div>
   </div>;
 });
-

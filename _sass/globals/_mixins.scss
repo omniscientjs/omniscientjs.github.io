@@ -8,7 +8,6 @@
 @mixin width-constraint-large() {
   width: auto;
   max-width: none;
-  margin: 3rem $header-height;
 }
 
 @mixin chevron ($color, $height: 30px, $width: 200px) {

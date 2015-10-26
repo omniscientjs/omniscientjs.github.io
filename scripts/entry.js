@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import immstruct from 'immstruct';
 
 import Editor from './components/editor';
@@ -20,10 +21,11 @@ function createEditorRenderLoop (container, source, isLarge) {
   const data = immstruct({ source });
   const timers = { intervals: [], timeouts: [] };
   const render = () =>
-    React.render(
+    ReactDOM.render(
       <Editor
         source={data.cursor('source')}
-        statics={{ timers, isLarge }} />,
+        timers={timers}
+        isLarge={isLarge} />,
       container);
 
   data.on('swap', () => render());

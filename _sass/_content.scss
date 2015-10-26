@@ -7,6 +7,7 @@
   display: block;
 
   &.playground {
+    margin-top: -20px;
     @include width-constraint-large;
   }
 }
@@ -34,7 +35,7 @@
 }
 
 .mainContent p {
-  line-height: 1.7rem;
+  line-height: 1.9rem;
 }
 
 .mainContent table {
@@ -51,11 +52,38 @@
   }
 }
 
+.video-container {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+    margin-bottom: 20px;
+
+    iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+}
 
 .playground h1,
 .playground h2,
 .playground h3 {
   margin-top: 1rem;
+}
+
+.playground .padded-info {
+  padding: 0 0.35rem;
+}
+
+.playground--help {
+  columns: 300px 2;
+  padding: 0.5rem;
+  margin-top: 30px;
+  font-size: 0.7rem;
+  background: $color-gray-offsetbackground;
 }
 
 .mainContent p {

@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import Immutable from 'immutable';
 import Cursor from 'immutable/contrib/cursor';
 import immstruct from 'immstruct';
@@ -13,17 +14,19 @@ import CodeMirrorEditor from './codemirror-editor';
 import RunResult from './run-result';
 import PlaygroundReporter from '../playground-reporter';
 import omniscient from 'omniscient';
-import component from './component';
+
+var component = omniscient;
 
 export default component(
   {
     renderResults: function (data) {
-      React.render(
+      var domNode = ReactDOM.findDOMNode(this).querySelector('.results');
+      ReactDOM.render(
         <RunResult
           stats={data.cursor('stats')}
           failures={data.cursor('failures')}
           errorResult={data.cursor('errorResult')} />,
-        this.getDOMNode().querySelector('.results'));
+        domNode);
     },
 
     componentDidMount: function () {
@@ -45,9 +48,9 @@ export default component(
   });
 
 const runCode = function () {
-  // console.clear();
+  console.clear();
 
-  const { source, statics } = this.props;
+  const { source, timers } = this.props;
 
   const src = source.deref();
 
@@ -56,7 +59,7 @@ const runCode = function () {
 
   const hasTest = (/it\(/.test(src));
 
-  const container = this.getDOMNode();
+  const container = ReactDOM.findDOMNode(this);
   const resultEl = container.querySelector('.react-result');
   resultEl.innerHTML = ''; // clear previous results when compilation fails
 
@@ -71,8 +74,6 @@ const runCode = function () {
   const context = {};
   const mocha = new Mocha({ reporter: PlaygroundReporter });
   mocha.suite.emit('pre-require', context, null, mocha);
-
-  const timers = statics.timers;
 
   timers.timeouts.forEach(id => clearTimeout(id));
   timers.intervals.forEach(id => clearInterval(id));
@@ -98,7 +99,7 @@ const runCode = function () {
     const compiledCode = to5.transform(srcWithoutComments).code;
 
     const fn = Function.apply(null, [
-      'React', 'Immutable', 'Cursor', 'immstruct', 'component', 'omniscient',
+      'React', 'ReactDOM', 'Immutable', 'Cursor', 'immstruct', 'component', 'omniscient',
       'el',
       'setTimeout', 'setInterval',
       'chai', 'expect',
@@ -111,7 +112,7 @@ const runCode = function () {
     const it = context.it.bind(context);
     it.only = context.it.only.bind(context);
 
-    fn(React, Immutable, Cursor, immstruct, omniscient, omniscient,
+    fn(React, ReactDOM, Immutable, Cursor, immstruct, omniscient, omniscient,
        resultEl,
        newSetTimeout, newSetInterval,
        chai, chai.expect,

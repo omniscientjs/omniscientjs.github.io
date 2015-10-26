@@ -7,29 +7,31 @@
 
     <a class="anchor-link" id="content"></a>
     <main class="mainContent playground" >
-      <h1>Omniscient Playground</h1>
-
       {% assign codeContent = content | strip_newlines %}
       <div class="editor" data-is-large=true><textarea>{% if (codeContent == "") %}{% include _playground-default.html %}{% else %}{{ content }}{% endif %}</textarea></div>
 
-      <h3>Help</h3>
-      <p>Use <code>el</code> to get to a dom element you can render to with your Omniscient components!</p>
+      <div class="padded-info">
+        <h3>Help</h3>
+        <p>Use <code>el</code> to get to a dom element you can render to with your Omniscient components!</p>
 
-      <h3>Playground examples</h3>
-      <ol>
-      {% for item in site.playground %}
-      {% if item.hide != true %}
-        {% assign pageID = @context.registers[:page]["id"] %}
-        {% assign itemID = item["name"]%}
-        {% assign className = pageID == itemID ? ' class="active"' : '' %}
-          <li>
-            <a href="/{{item["collection"]}}/{{itemID}}"{{className}}>{{item["title"]}}</a>
-          </li>
-      {% endif %}
-      {% endfor %}
-      </ol>
+        <h3>Playground examples</h3>
+        <ol>
+        {% for item in site.playground %}
+        {% if item.hide != true %}
+          {% assign pageID = @context.registers[:page]["id"] %}
+          {% assign itemID = item["name"]%}
+          {% assign className = pageID == itemID ? ' class="active"' : '' %}
+            <li>
+              <a href="/{{item["collection"]}}/{{itemID}}"{{className}}>{{item["title"]}}</a>
+            </li>
+        {% endif %}
+        {% endfor %}
+        </ol>
 
-      {% include playground-help.html %}
+        <div class="playground--help">
+          {% include playground-help.html %}
+        </div>
+      </div>
     </main>
     {% include footer.html %}
   </body>

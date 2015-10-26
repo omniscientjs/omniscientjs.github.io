@@ -1,5 +1,9 @@
 @import "./globals/colors";
 
+.graphNode {
+  fill: $color-otherNodes;
+}
+
 .graphNode--blue {
   fill: $color-topNode;
 
@@ -9,7 +13,6 @@
   -webkit-animation-timing-function: linear;
   -webkit-transform-origin:70% 70%;
 }
-
 
 .graphEdge--fade,
 .graphNode--fade {
@@ -34,4 +37,3 @@
   70% { opacity: .2; }
   100% { opacity: 1; }
 }
-

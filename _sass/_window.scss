@@ -6,7 +6,7 @@
 }
 .CodeMirror,
 .inner--result {
-  font-size: 1rem;
+  font-size: 1.2rem;
 }
 .window .CodeMirror-lines {
   padding: 0;
@@ -20,9 +20,7 @@
   }
 
   .CodeMirror {
-    border-top-left-radius: 3px;
-    border-top-right-radius: 0;
-    border-bottom-left-radius: 3px;
+    border-radius: 0;
   }
 
   .CodeMirror-line-numbers {
@@ -31,7 +29,7 @@
 
   .CodeMirror,
   .inner--result {
-    font-size: 1.15rem;
+    font-size: 1.2rem;
   }
 
   .window {
@@ -44,6 +42,7 @@
   }
   .inner--code {
     flex: 1 65%;
+    min-width: 500px;
   }
   .inner--result {
     flex: 1 35%;
@@ -115,7 +114,7 @@ $color-pending: #f7ac3c;
 
 pre code {
   padding: 0 10px;
-  background: #141414;
+  background: #ffffff;
   display: block;
   padding: 10px;
   border-radius: 3px;

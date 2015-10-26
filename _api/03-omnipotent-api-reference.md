@@ -6,7 +6,7 @@ name: 03-omnipotent-api-reference
 prev: 02-immstruct-api-reference
 ---
 
-*API Reference for `Omnipotent v1.1.0`*
+*API Reference for `Omnipotent v1.2.0`*
 
 More information can be found on the [omnipotent repo](https://github.com/omniscientjs/omnipotent).
 
@@ -17,17 +17,17 @@ the should component update. This could be values of complex objects such as
 eventemitters for communicating throuch a channel with parents, callbacks,
 csps, etc.
 
+Functions passed on ignored fields are reused when unchanged, keeping the
+implementations/references cross renders.
+
 Require the decorator by doing:
-
 ```js
-
 var ignore = require('omnipotent/decorator/ignore');
 // or
 var ignore = require('omnipotent').decorator.ignore;
 ```
 
 ### Examples:
-
 ```js
 var struct = immstruct({
   hero: 'Natasha Romanoff',
@@ -77,9 +77,7 @@ dependencies. If you require one of your components to get injected data
 automatically and update everytime that data changes.
 
 Fields passed to observer should be defined as the following:
-
 ```js
-
 {
   namePassedAsProps: ['nested', 'key', 'path'],
   anotherNamePassedAsProps: 'shallowKeyPath'
@@ -89,14 +87,12 @@ Fields passed to observer should be defined as the following:
 Require the decorator by doing:
 
 ```js
-
 var observer = require('omnipotent/decorator/observer');
 // or
 var observer = require('omnipotent').decorator.observer;
 ```
 
-### Examples
-
+### Examples:
 ```jsx
 var structure = immstruct({ hero { name: 'Natalia Romanova' } });
 

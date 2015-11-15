@@ -2,7 +2,7 @@ var webpack = require('webpack');
 
 module.exports = function (options) {
   return {
-    plugins: options.watch ? [] : [],
+    plugins: options.watch ? [ new webpack.DefinePlugin({ DEBUG: true }) ] : [],
     watch: options.watch,
     module: {
       loaders: [
@@ -10,9 +10,7 @@ module.exports = function (options) {
           test: /\.js$/,
           exclude: /node_modules/,
           loaders: [
-            // 'react-hot',
             'babel-loader'
-            //'6to5-loader?experimental&optional=selfContained' // http://6to5.org/docs/usage/experimental/
           ]
         },
         {

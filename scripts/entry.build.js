@@ -42188,6 +42188,8 @@
 	  value: true
 	});
 
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 	var _react = __webpack_require__(2);
@@ -42209,6 +42211,18 @@
 	var _immstruct = __webpack_require__(160);
 
 	var _immstruct2 = _interopRequireDefault(_immstruct);
+
+	var _redux = __webpack_require__(167);
+
+	var redux = _interopRequireWildcard(_redux);
+
+	var _reactRedux = __webpack_require__(176);
+
+	var reactRedux = _interopRequireWildcard(_reactRedux);
+
+	var _reduxThunk = __webpack_require__(185);
+
+	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
 	var _chai = __webpack_require__(229);
 
@@ -42279,12 +42293,12 @@
 	    var srcWithoutComments = src.replace(/\s+?\/\/.*/g, '');
 	    var compiledCode = to5.transform(srcWithoutComments).code;
 
-	    var fn = Function.apply(null, ['React', 'ReactDOM', 'Immutable', 'Cursor', 'immstruct', 'component', 'omniscient', 'el', 'setTimeout', 'setInterval', 'chai', 'expect', 'describe', 'xdescribe', 'it', 'xit', 'before', 'beforeEach', 'after', 'afterEach', compiledCode]);
+	    var fn = Function.apply(null, ['React', 'ReactDOM', 'Immutable', 'Cursor', 'immstruct', 'component', 'omniscient', 'redux', 'reduxThunk', 'reactRedux', 'el', 'setTimeout', 'setInterval', 'chai', 'expect', 'describe', 'xdescribe', 'it', 'xit', 'before', 'beforeEach', 'after', 'afterEach', compiledCode]);
 
 	    var it = context.it.bind(context);
 	    it.only = context.it.only.bind(context);
 
-	    fn(_react2['default'], _reactDom2['default'], _immutable2['default'], _immutableContribCursor2['default'], _immstruct2['default'], _omniscient2['default'], _omniscient2['default'], resultEl, newSetTimeout, newSetInterval, _chai2['default'], _chai2['default'].expect, context.describe.bind(context), context.xdescribe.bind(context), it, context.xit.bind(context), context.before.bind(context), context.beforeEach.bind(context), context.after.bind(context), context.afterEach.bind(context));
+	    fn(_react2['default'], _reactDom2['default'], _immutable2['default'], _immutableContribCursor2['default'], _immstruct2['default'], _omniscient2['default'], _omniscient2['default'], redux, _reduxThunk2['default'], reactRedux, resultEl, newSetTimeout, newSetInterval, _chai2['default'], _chai2['default'].expect, context.describe.bind(context), context.xdescribe.bind(context), it, context.xit.bind(context), context.before.bind(context), context.beforeEach.bind(context), context.after.bind(context), context.afterEach.bind(context));
 
 	    if (hasTest) {
 	      mocha.run(function (reporter) {

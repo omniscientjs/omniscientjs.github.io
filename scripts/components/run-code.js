@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom';
 import Immutable from 'immutable';
 import Cursor from 'immutable/contrib/cursor';
 import immstruct from 'immstruct';
+import * as redux from 'redux';
+import * as reactRedux from 'react-redux';
+import reduxThunk from 'redux-thunk';
 import chai from 'chai';
 chai.should();
 
@@ -64,6 +67,7 @@ function runCode () {
 
     const fn = Function.apply(null, [
       'React', 'ReactDOM', 'Immutable', 'Cursor', 'immstruct', 'component', 'omniscient',
+      'redux', 'reduxThunk', 'reactRedux',
       'el',
       'setTimeout', 'setInterval',
       'chai', 'expect',
@@ -77,6 +81,7 @@ function runCode () {
     it.only = context.it.only.bind(context);
 
     fn(React, ReactDOM, Immutable, Cursor, immstruct, omniscient, omniscient,
+       redux, reduxThunk, reactRedux,
        resultEl,
        newSetTimeout, newSetInterval,
        chai, chai.expect,

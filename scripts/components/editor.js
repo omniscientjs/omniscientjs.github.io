@@ -1,23 +1,19 @@
 import React from 'react';
-import component from 'omniscient';
+import component from './component';
 
 import CodeMirrorEditor from './codemirror-editor';
 import RunCode from './run-code';
+import RunResult from './run-result';
 
-export default component(function Editor ({ source, isLarge, timers }) {
+export default component(function Editor (props) {
 
   return <div className='window editor'>
     <div className='inner inner--code'>
-      <CodeMirrorEditor
-        source={source}
-        statics={{isLarge}}
-        />
+    <CodeMirrorEditor { ...props }/>
     </div>
     <div className="inner inner--result">
-      <RunCode
-        source={source}
-        timers={timers}
-        />
+      <RunCode />
+      <RunResult />
     </div>
   </div>;
 });

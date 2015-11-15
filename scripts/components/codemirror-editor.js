@@ -1,4 +1,4 @@
-import component from 'omniscient';
+import component from './component-redux';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -10,10 +10,11 @@ import 'codemirror/addon/edit/matchbrackets';
 
 const throttledReplaceState = throttle(replaceStateValue, 2000);
 
-export default component([{
+export default component((state) => ({ code: state.code }),
+                         [{
 
   componentDidMount: function () {
-    const isLarge = this.props.statics.isLarge;
+    const { isLarge, dispatch } = this.props;
 
     const options = {
       autoCloseBrackets: true,
@@ -26,16 +27,16 @@ export default component([{
       extraKeys: { Tab }
     };
 
-    const onCodeMirrorChange = editor => {
-      const source = editor.doc.getValue();
-      this.props.source.update(_ => source);
+    const onCodeMirrorChange = (editor) => {
+      const src = editor.doc.getValue();
+      dispatch({ type: "CODE_UPDATED", src: src });
 
       if (isLarge) {
-        throttledReplaceState(source);
+        throttledReplaceState(src);
       }
     };
 
-    var domNode = ReactDOM.findDOMNode(this);
+    const domNode = ReactDOM.findDOMNode(this);
     this.editor = CodeMirror.fromTextArea(domNode, options);
     this.editor.on('change', onCodeMirrorChange);
 
@@ -45,8 +46,8 @@ export default component([{
         initialCode = decodeURIComponent(initialCode);
       }
       catch (ignore) { }
-      const source = initialCode || this.props.source.deref();
-      this.editor.setValue(source);
+      const src = initialCode || this.props.code.src;
+      this.editor.setValue(src);
     }
   },
 
@@ -54,20 +55,21 @@ export default component([{
     return false;
   }
 
-}], function CodeMirrorEditor ({source}) {
-  return <textarea defaultValue={source}></textarea>;
+}], function CodeMirrorEditor ({ code }) {
+  return <textarea defaultValue={ code.src }></textarea>;
 });
 
 function Tab (cm) {
   if (cm.somethingSelected()) {
     cm.indentSelection("add");
-  } else {
-    cm.execCommand('insertSoftTab')
+  }
+  else {
+    cm.execCommand('insertSoftTab');
   }
 }
 
 function replaceStateValue (value) {
-  history.replaceState(null, 'playground', '#' + encodeURIComponent(value));
+  history.replaceState(null, 'playground', `#${encodeURIComponent(value)}`);
 }
 
 function throttle (fn, ms) {

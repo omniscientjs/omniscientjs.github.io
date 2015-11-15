@@ -2,7 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import immstruct from 'immstruct';
 
+import { applyMiddleware, compose, createStore } from 'redux';
+import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
+
 import Editor from './components/editor';
+import reducers from './reducers';
 
 const runnables = document.querySelectorAll('.editor');
 for (let i = 0; i < runnables.length; i++) {
@@ -13,21 +18,16 @@ for (let i = 0; i < runnables.length; i++) {
   runnable.removeChild(textarea);
 
   const isLarge = runnable.dataset.isLarge;
-  createEditorRenderLoop(runnable, source, isLarge);
+  createEditor(runnable, source, isLarge);
 }
 
-function createEditorRenderLoop (container, source, isLarge) {
+function createEditor(container, source, isLarge) {
+  const debugStore = compose(applyMiddleware(thunk));
+  const store = debugStore(createStore)(reducers(source));
 
-  const data = immstruct({ source });
-  const timers = { intervals: [], timeouts: [] };
-  const render = () =>
-    ReactDOM.render(
-      <Editor
-        source={data.cursor('source')}
-        timers={timers}
-        isLarge={isLarge} />,
-      container);
-
-  data.on('swap', () => render());
-  render();
+  ReactDOM.render(
+    <Provider store={ store }>
+      <Editor isLarge={ isLarge }/>
+     </Provider>,
+    container);
 }

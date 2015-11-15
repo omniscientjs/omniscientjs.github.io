@@ -10,92 +10,56 @@ chai.should();
 // import Mocha from 'mocha/mocha';
 // import to5 from '6to5/browser';
 
-import CodeMirrorEditor from './codemirror-editor';
-import RunResult from './run-result';
 import PlaygroundReporter from '../playground-reporter';
 import omniscient from 'omniscient';
-
-var component = omniscient;
+import component from './component-redux';
 
 export default component(
+  (state) => ({ code: state.code }),
   {
-    renderResults: function (data) {
-      var domNode = ReactDOM.findDOMNode(this).querySelector('.results');
-      ReactDOM.render(
-        <RunResult
-          stats={data.cursor('stats')}
-          failures={data.cursor('failures')}
-          errorResult={data.cursor('errorResult')} />,
-        domNode);
-    },
-
-    componentDidMount: function () {
-      this.data = immstruct({});
-      this.data.on('swap', () => this.renderResults(this.data.cursor()));
-      runCode.call(this, this.data.cursor());
-    },
-
-    componentDidUpdate: function () {
-      if (!this.data) return;
-      runCode.call(this, this.data.cursor());
-    }
+    componentDidMount: runCode,
+    componentDidUpdate: runCode
   },
   function RunCode () {
-    return <div>
-      <div className='results'></div>
-      <div className='react-result'></div>
-    </div>
+    return <div ref="result"></div>;
   });
 
-const runCode = function () {
+function runCode () {
   console.clear();
 
-  const { source, timers } = this.props;
+  const { code, dispatch } = this.props;
 
-  const src = source.deref();
+  const src = code.src;
 
   if (/\{this\}/.test(src)) // everything hangs when you do this, so don't run with it
     return;
 
   const hasTest = (/it\(/.test(src));
 
-  const container = ReactDOM.findDOMNode(this);
-  const resultEl = container.querySelector('.react-result');
+  const resultEl = this.refs.result;
   resultEl.innerHTML = ''; // clear previous results when compilation fails
 
-  const cursor = this.data.cursor();
-
-  cursor.update(data => {
-    data = data.removeIn(['stats']);
-    data = data.removeIn(['errorResult']);
-    return data;
-  });
+  dispatch({ type: "STATS_REMOVE" });
+  dispatch({ type: "ERRORS_REMOVE" });
+  dispatch({ type: "TIMERS_CLEAR" });
 
   const context = {};
   const mocha = new Mocha({ reporter: PlaygroundReporter });
   mocha.suite.emit('pre-require', context, null, mocha);
 
-  timers.timeouts.forEach(id => clearTimeout(id));
-  timers.intervals.forEach(id => clearInterval(id));
-
-  timers.timeouts = [];
-  timers.intervals = [];
-
   const newSetTimeout = function () {
     const id = setTimeout.apply(this, arguments);
-    timers.timeouts.push(id);
+    dispatch({ type: "TIMERS_TIMEOUT_ADD", id: id });
     return id;
   };
   const newSetInterval = function () {
     const id = setInterval.apply(this, arguments);
-    timers.intervals.push(id);
+    dispatch({ type: "TIMERS_INTERVAL_ADD", id: id });
     return id;
   };
 
   try {
-
     const srcWithoutComments = src.replace(/\s+?\/\/.*/g, '');
-
     const compiledCode = to5.transform(srcWithoutComments).code;
 
     const fn = Function.apply(null, [
@@ -122,22 +86,17 @@ const runCode = function () {
        context.after.bind(context), context.afterEach.bind(context));
 
     if (hasTest) {
-      mocha.run(reporter =>
-        cursor.update(data => {
-          data = data.removeIn(['errorResult']);
-          data = data.updateIn(['stats'], _ => Immutable.fromJS(reporter.stats));
-          data = data.updateIn(['failures'], _ => Immutable.fromJS(reporter.failures));
-          return data;
-        }));
+      mocha.run(reporter => {
+        dispatch({ type: "ERRORS_REMOVE" });
+        dispatch({ type: "STATS_SET", stats: reporter.stats });
+        dispatch({ type: "FAILURES_SET", failures: reporter.failures });
+      });
     }
   }
   catch (e) {
     console.error(e);
-    cursor.update(data => {
-      data = data.updateIn(['errorResult'], _ => e.message);
-      data = data.removeIn(['stats']);
-      data = data.removeIn(['failures']);
-      return data;
-    });
+    dispatch({ type: "ERRORS_SET", errors: e.message });
+    dispatch({ type: "STATS_REMOVE" });
+    dispatch({ type: "FAILURES_REMOVE" });
   }
 }

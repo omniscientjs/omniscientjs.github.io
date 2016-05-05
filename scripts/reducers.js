@@ -70,7 +70,7 @@ const initialLogs = () => ([]);
 function logs (state = initialLogs(), action) {
   switch (action.type) {
   case 'LOGS_ADD':
-    return action.logs;
+    return action.logs.slice();
 
   case 'LOGS_REMOVE':
     return initialLogs();

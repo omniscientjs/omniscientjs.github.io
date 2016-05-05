@@ -64,8 +64,10 @@ function runCode () {
   const logs = [];
   const newConsole = ['error', 'warn', 'log'].reduce(function (acc, name) {
     acc[name] = function () {
-      logs.push([].slice.call(arguments).map(arg => JSON.stringify(arg, replacingFunctionsWithSource, 2)));
       console[name].apply(console, arguments);
+      const logLine = [].slice.call(arguments).map(arg => JSON.stringify(arg, replacingFunctionsWithSource, 2));
+      logs.push(logLine);
+      setTimeout(() => dispatch({ type: "LOGS_ADD", logs }), 0);
     };
     return acc;
   }, {});
@@ -117,8 +119,6 @@ function runCode () {
     dispatch({ type: "STATS_REMOVE" });
     dispatch({ type: "FAILURES_REMOVE" });
   }
-
-  dispatch({ type: "LOGS_ADD", logs });
 }
 
 function replacingFunctionsWithSource (key, value) {

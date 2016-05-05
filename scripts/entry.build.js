@@ -43512,10 +43512,14 @@
 	  var logs = [];
 	  var newConsole = ['error', 'warn', 'log'].reduce(function (acc, name) {
 	    acc[name] = function () {
-	      logs.push([].slice.call(arguments).map(function (arg) {
-	        return JSON.stringify(arg, replacingFunctionsWithSource, 2);
-	      }));
 	      console[name].apply(console, arguments);
+	      var logLine = [].slice.call(arguments).map(function (arg) {
+	        return JSON.stringify(arg, replacingFunctionsWithSource, 2);
+	      });
+	      logs.push(logLine);
+	      setTimeout(function () {
+	        return dispatch({ type: "LOGS_ADD", logs: logs });
+	      }, 0);
 	    };
 	    return acc;
 	  }, {});
@@ -43546,8 +43550,6 @@
 	    dispatch({ type: "STATS_REMOVE" });
 	    dispatch({ type: "FAILURES_REMOVE" });
 	  }
-
-	  dispatch({ type: "LOGS_ADD", logs: logs });
 	}
 
 	function replacingFunctionsWithSource(key, value) {
@@ -51950,7 +51952,7 @@
 
 	  switch (action.type) {
 	    case 'LOGS_ADD':
-	      return action.logs;
+	      return action.logs.slice();
 
 	    case 'LOGS_REMOVE':
 	      return initialLogs();

@@ -222,7 +222,6 @@ body {
       width: 51%;
       background: #0EC2DB;
       -webkit-transform: skew(0deg, 6deg);
-      -ms-transform: skew(0deg, 6deg);
       transform: skew(0deg, 6deg); }
     .chevronDown i:after {
       content: '';
@@ -233,7 +232,6 @@ body {
       width: 50%;
       background: #0EC2DB;
       -webkit-transform: skew(0deg, -6deg);
-      -ms-transform: skew(0deg, -6deg);
       transform: skew(0deg, -6deg); }
   .chevronDown:hover i {
     opacity: 1; }
@@ -302,6 +300,10 @@ body {
 
 .playground .CodeMirror-line-numbers {
   font-size: 0.2rem; }
+
+.playground .logs-line {
+  font-size: 0.8rem;
+  color: #aaa; }
 
 .playground .CodeMirror,
 .playground .inner--result {
@@ -473,9 +475,6 @@ p code, ul code, li code {
   padding: 0 0.35rem; }
 
 .playground--help {
-  -webkit-columns: 300px 2;
-     -moz-columns: 300px 2;
-          columns: 300px 2;
   padding: 0.5rem;
   margin-top: 30px;
   font-size: 0.7rem;

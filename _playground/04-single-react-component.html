@@ -1,0 +1,19 @@
+---
+layout: playground
+collection: playground
+title: Single react component
+name: 04-single-react-component
+prev: 03-tests
+---
+
+const Comp = React.createClass({
+
+  render: function () {
+    const { prop } = this.props;
+    return <div>
+      { prop }
+    </div>;
+  }
+});
+
+ReactDOM.render(<Comp prop="value" />, el)

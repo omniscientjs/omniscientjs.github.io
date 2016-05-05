@@ -66,10 +66,23 @@ function stats (state = initialStats(), action) {
   return state;
 }
 
+const initialLogs = () => ([]);
+function logs (state = initialLogs(), action) {
+  switch (action.type) {
+  case 'LOGS_ADD':
+    return action.logs;
+
+  case 'LOGS_REMOVE':
+    return initialLogs();
+  }
+  return state;
+}
+
 export default (source) => combineReducers({
   code: initCodeReducer(source),
   timers,
   stats,
   errors,
-  failures
+  failures,
+  logs
 });

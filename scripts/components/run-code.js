@@ -11,7 +11,6 @@ chai.should();
 
 // TODO y no worky?
 // import Mocha from 'mocha/mocha';
-// import to5 from '6to5/browser';
 
 import PlaygroundReporter from '../playground-reporter';
 import omniscient from 'omniscient';
@@ -45,6 +44,7 @@ function runCode () {
   dispatch({ type: "STATS_REMOVE" });
   dispatch({ type: "ERRORS_REMOVE" });
   dispatch({ type: "TIMERS_CLEAR" });
+  dispatch({ type: "LOGS_REMOVE" });
 
   const context = {};
   const mocha = new Mocha({ reporter: PlaygroundReporter });
@@ -61,12 +61,23 @@ function runCode () {
     return id;
   };
 
+  const logs = [];
+  const newConsole = ['error', 'warn', 'log'].reduce(function (acc, name) {
+    acc[name] = function () {
+      logs.push([].slice.call(arguments).map(arg => JSON.stringify(arg, null, 2)));
+      console[name].apply(console, arguments);
+    };
+    return acc;
+  }, {});
+
   try {
     const srcWithoutComments = src.replace(/\s+?\/\/.*/g, '');
-    const compiledCode = to5.transform(srcWithoutComments).code;
+    const compiledCode = Babel.transform(srcWithoutComments, {
+      presets: ["es2015","stage-2","react"]
+    }).code;
 
     const fn = Function.apply(null, [
-      'React', 'ReactDOM', 'Immutable', 'Cursor', 'immstruct', 'component', 'omniscient',
+      'React', 'ReactDom', 'ReactDOM', 'Immutable', 'Cursor', 'immstruct', 'component', 'omniscient',
       'redux', 'reduxThunk', 'reactRedux',
       'el',
       'setTimeout', 'setInterval',
@@ -75,12 +86,13 @@ function runCode () {
       'it', 'xit',
       'before', 'beforeEach',
       'after', 'afterEach',
-        compiledCode]);
+      'console',
+      compiledCode]);
 
     const it = context.it.bind(context);
     it.only = context.it.only.bind(context);
 
-    fn(React, ReactDOM, Immutable, Cursor, immstruct, omniscient, omniscient,
+    fn(React, ReactDOM, ReactDOM, Immutable, Cursor, immstruct, omniscient, omniscient,
        redux, reduxThunk, reactRedux,
        resultEl,
        newSetTimeout, newSetInterval,
@@ -88,7 +100,8 @@ function runCode () {
        context.describe.bind(context), context.xdescribe.bind(context),
        it, context.xit.bind(context),
        context.before.bind(context), context.beforeEach.bind(context),
-       context.after.bind(context), context.afterEach.bind(context));
+       context.after.bind(context), context.afterEach.bind(context),
+       newConsole);
 
     if (hasTest) {
       mocha.run(reporter => {
@@ -104,4 +117,6 @@ function runCode () {
     dispatch({ type: "STATS_REMOVE" });
     dispatch({ type: "FAILURES_REMOVE" });
   }
+
+  dispatch({ type: "LOGS_ADD", logs });
 }

@@ -64,7 +64,7 @@ function runCode () {
   const logs = [];
   const newConsole = ['error', 'warn', 'log'].reduce(function (acc, name) {
     acc[name] = function () {
-      logs.push([].slice.call(arguments).map(arg => JSON.stringify(arg, null, 2)));
+      logs.push([].slice.call(arguments).map(arg => JSON.stringify(arg, replacingFunctionsWithSource, 2)));
       console[name].apply(console, arguments);
     };
     return acc;
@@ -119,4 +119,11 @@ function runCode () {
   }
 
   dispatch({ type: "LOGS_ADD", logs });
+}
+
+function replacingFunctionsWithSource (key, value) {
+  if (typeof value == 'function') {
+    return value.toString();
+  }
+  return value;
 }

@@ -43513,7 +43513,7 @@
 	  var newConsole = ['error', 'warn', 'log'].reduce(function (acc, name) {
 	    acc[name] = function () {
 	      logs.push([].slice.call(arguments).map(function (arg) {
-	        return JSON.stringify(arg, null, 2);
+	        return JSON.stringify(arg, replacingFunctionsWithSource, 2);
 	      }));
 	      console[name].apply(console, arguments);
 	    };
@@ -43548,6 +43548,13 @@
 	  }
 
 	  dispatch({ type: "LOGS_ADD", logs: logs });
+	}
+
+	function replacingFunctionsWithSource(key, value) {
+	  if (typeof value == 'function') {
+	    return value.toString();
+	  }
+	  return value;
 	}
 	module.exports = exports['default'];
 

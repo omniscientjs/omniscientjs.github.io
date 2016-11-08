@@ -46,7 +46,7 @@ Fonts: `Chalet ParisNineteenSixty` and `Chalet NewYorkNineteenSixty`
 
 # Resources
 
-* Final `.AI` file: [http://omniscientjs.github.io/assets/media/Omniscient_Guide-Colors.png](/assets/media/Omniscient_logoIdentity-Final.ai)
+* Final `.AI` file: [http://omniscientjs.github.io/assets/media/Omniscient_logoIdentity-Final.ai](/assets/media/Omniscient_logoIdentity-Final.ai)
 * Final `.PDF` file: [http://omniscientjs.github.io/assets/media/Omniscient.pdf](/assets/media/Omniscient.pdf)
 * Logo Black Stacked SVG: [http://omniscientjs.github.io/assets/media/Omniscient-Stack.svg](/assets/media/Omniscient-Stack.svg)
 * Logo Black Horizontal SVG: [http://omniscientjs.github.io/assets/media/Omniscient-Horiz.svg](/assets/media/Omniscient-Stack.svg)

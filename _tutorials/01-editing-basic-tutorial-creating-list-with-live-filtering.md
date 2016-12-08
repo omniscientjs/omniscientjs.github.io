@@ -3,8 +3,8 @@ layout: guides
 collection: tutorials
 title: Editing Basic Tutorial Creating List with Live Filtering
 name: 01-editing-basic-tutorial-creating-list-with-live-filtering
-prev: 00-all-tutorials
-next: 02-editing-basic-tutorial-creating-list-with-live-filtering-jsx-edition
+om_prev: ''
+om_next: 02-editing-basic-tutorial-creating-list-with-live-filtering-jsx-edition
 
 ---
 

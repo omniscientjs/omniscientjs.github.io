@@ -2,8 +2,8 @@
 layout: guides
 title: Omniscient API Reference
 name: 01-omniscient-api-reference
-prev: 00-apis
-next: 02-immstruct-api-reference
+om_prev: ''
+om_next: 02-immstruct-api-reference
 ---
 
 
@@ -419,4 +419,4 @@ but adjusted to not accept objects to avoid collision with props.
 
 
 
-**Returns** `Boolean`, 
+**Returns** `Boolean`,

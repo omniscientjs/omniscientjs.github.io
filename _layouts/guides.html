@@ -18,10 +18,11 @@ layout: default
 </div>
 
 <div class="docs-prevnext">
-  {% if page.prev %}
-    <a class="docs-prev" href="/{{ page.collection }}/{{ page.prev }}">&larr; Prev</a>
+  {% if page.om_prev %}
+  <a class="docs-prev" href="/{{ page.collection }}/{{ page.om_prev }}">&larr; Prev</a>
   {% endif %}
-  {% if page.next %}
-    <a class="docs-next" href="/{{ page.collection }}/{{ page.next }}">Next &rarr;</a>
+
+  {% if page.om_next %}
+  <a class="docs-next" href="/{{ page.collection }}/{{ page.om_next }}">Next &rarr;</a>
   {% endif %}
 </div>

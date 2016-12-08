@@ -8,7 +8,7 @@
     <a class="anchor-link" id="content"></a>
     <main class="mainContent playground" >
       {% assign codeContent = content | strip_newlines %}
-      <div class="editor" data-is-large=true><textarea>{% if (codeContent == "") %}{% include _playground-default.html %}{% else %}{{ content }}{% endif %}</textarea></div>
+      <div class="editor" data-is-large=true><textarea>{% if codeContent == "" %}{% include _playground-default.html %}{% else %}{{ content }}{% endif %}</textarea></div>
 
       <div class="padded-info">
         <h3>Help</h3>

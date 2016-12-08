@@ -1,11 +1,10 @@
 ---
 layout: guides
-collection: guides
 title: All Guides
 hide: true
 permalink: /guides/
 name: 00-all-guides
-next: 01-simpler-ui-reasoning-with-unidirectional
+om_next: 01-simpler-ui-reasoning-with-unidirectional
 ---
 
 <p>Here is a complete list of all the guides that exist in the Omniscient documentation. If you feel
@@ -14,11 +13,11 @@ like there's something missing, please help us out by sending a pull request or 
 <ol>
 {% for item in site.guides %}
 {% if item.hide != true %}
-  {% assign pageID = @context.registers[:page]["id"] %}
-  {% assign itemID = item["name"]%}
+  {% assign pageID = @context.registers[:page].id %}
+  {% assign itemID = item.name %}
   {% assign className = pageID == itemID ? ' class="active"' : '' %}
     <li>
-      <a href="/{{item["collection"]}}/{{itemID}}"{{className}}>{{item["title"]}}</a>
+      <a href="/{{ item.collection }}/{{ itemID }}"{{ className }}>{{ item.title }}</a>
     </li>
 {% endif %}
 {% endfor %}

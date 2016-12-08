@@ -3,7 +3,7 @@ layout: guides
 collection: tutorials
 title: Editing Basic Tutorial Creating List with Live Filtering - JSX Edition
 name: 02-editing-basic-tutorial-creating-list-with-live-filtering-jsx-edition
-prev: 01-editing-basic-tutorial-creating-list-with-live-filtering
+om_prev: 01-editing-basic-tutorial-creating-list-with-live-filtering
 ---
 
 **Disclaimer: This tutorial is currently for Omniscient <code>v2.0.0</code> and is in the process of being updated to match the new syntax of Immutable.js 3.0.0 and Omniscient 3.0.0. See the [changelog](http://omniscientjs.github.io/changelog/)**

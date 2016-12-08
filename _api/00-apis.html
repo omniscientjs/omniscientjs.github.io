@@ -1,10 +1,9 @@
 ---
 layout: guides
-collection: api
 title: APIs
 name: 00-apis
 hide: true
-next: 01-omniscient-api-reference
+om_next: 01-omniscient-api-reference
 permalink: /api/
 ---
 
@@ -24,11 +23,11 @@ of yet. You can see all projects on the <a href="https://github.com/omniscientjs
 <ol>
 {% for item in site.api %}
 {% if item.hide != true %}
-  {% assign pageID = @context.registers[:page]["id"] %}
-  {% assign itemID = item["name"]%}
+  {% assign pageID = @context.registers[:page].id %}
+  {% assign itemID = item.name %}
   {% assign className = pageID == itemID ? ' class="active"' : '' %}
     <li>
-      <a href="/{{item["collection"]}}/{{itemID}}"{{className}}>{{item["title"]}}</a>
+      <a href="/{{ item.collection }}/{{ itemID }}"{{ className }}>{{ item.title }}</a>
     </li>
 {% endif %}
 {% endfor %}

@@ -1,6 +1,5 @@
 ---
 layout: guides
-collection: api
 title: Omniscient API Reference
 name: 01-omniscient-api-reference
 prev: 00-apis

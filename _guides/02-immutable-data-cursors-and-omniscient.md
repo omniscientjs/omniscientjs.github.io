@@ -1,6 +1,5 @@
 ---
 layout: guides
-collection: guides
 title: Immutable data, Cursors and Omniscient
 name: 02-immutable-data-cursors-and-omniscient
 prev: 01-simpler-ui-reasoning-with-unidirectional

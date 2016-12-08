@@ -1,6 +1,5 @@
 ---
 layout: guides
-collection: api
 title: Immstruct API Reference
 prev: 01-omniscient-api-reference
 name: 02-immstruct-api-reference

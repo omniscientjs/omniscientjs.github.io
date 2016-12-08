@@ -6,8 +6,9 @@ layout: default
   {{ page.title }}
   <a class="edit-page-link" href="https://github.com/omniscientjs/omniscientjs.github.io/blob/master/{{ page.relative_path }}" target="_blank">Edit on GitHub</a>
 </h1>
-{% if page.date %}
-  <p><strong>Originally posted <time>{{page.date}}</time></strong></p>
+
+{% if page.hide != true %}
+  <p><strong>Originally posted <time>{{ page.date }}</time></strong></p>
 {% endif %}
 
 <div class="subHeader">{{ page.description }}</div>
